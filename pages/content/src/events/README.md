@@ -1,6 +1,6 @@
 # Events Module
 
-This directory contains the core event management system for the MCP-SuperAssistant content script.
+This directory contains the core event management system for the Nyx content script.
 
 ## Overview
 

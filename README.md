@@ -1,16 +1,16 @@
 
 <div align="center">
-   <!-- <img src="chrome-extension/public/icon-34.png" alt="MCP SuperAssistant Logo" width="100" height="100"> -->
-   <h1>MCP SuperAssistant Chrome Extension</h1>
+   <!-- <img src="chrome-extension/public/icon-34.png" alt="Nyx Logo" width="100" height="100"> -->
+   <h1>Nyx Chrome Extension</h1>
 </div>
 
 <p align="center">
 Brings MCP to ChatGPT, Perplexity, Grok, Gemini, Google AI Studio, OpenRouter, Kimi, Github Copilot, Mistral and more...
 </p>
 
-<!-- ![MCP SuperAssistant](chrome-extension/public/Cover3.jpg) -->
+<!-- ![Nyx](chrome-extension/public/Cover3.jpg) -->
 <div align="center">
- <img src="chrome-extension/public/Cover3.jpg" alt="MCP SuperAssistant Cover" width="800">
+ <img src="chrome-extension/public/Cover3.jpg" alt="Nyx Cover" width="800">
 </div>
 
 ## Installation
@@ -28,12 +28,12 @@ Brings MCP to ChatGPT, Perplexity, Grok, Gemini, Google AI Studio, OpenRouter, K
 
 <div align="center">
    <h3>🚀 Quick Install</h3>
-   <p>Get MCP SuperAssistant for your browser:</p>
+   <p>Get Nyx for your browser:</p>
 </div>
 
 ## Overview
 
-MCP SuperAssistant is a Chrome extension that integrates the Model Context Protocol (MCP) tools with AI platforms like Perplexity, ChatGPT, Google Gemini, Google AI Studio, Grokand more. It allows users to execute MCP tools directly from these platforms and insert the results back into the conversation, enhancing the capabilities of web-based AI assistants.
+Nyx is a Chrome extension that integrates the Model Context Protocol (MCP) tools with AI platforms like Perplexity, ChatGPT, Google Gemini, Google AI Studio, Grok and more. It allows users to execute MCP tools directly from these platforms and insert the results back into the conversation, enhancing the capabilities of web-based AI assistants.
 
 ## Currently Supported Platforms
 
@@ -54,11 +54,11 @@ MCP SuperAssistant is a Chrome extension that integrates the Model Context Proto
 
 ## Demo Video
 
-[![MCP SuperAssistant Demo](https://img.youtube.com/vi/PY0SKjtmy4E/0.jpg)](https://www.youtube.com/watch?v=PY0SKjtmy4E)
+[![Nyx Demo](https://img.youtube.com/vi/PY0SKjtmy4E/0.jpg)](https://www.youtube.com/watch?v=PY0SKjtmy4E)
 
-Watch the demo to see MCP SuperAssistant in action!
+Watch the demo to see Nyx in action!
 
-[MCP SuperAssistant Demo Playlist](https://www.youtube.com/playlist?list=PLOK1DBnkeaJFzxC4M-z7TU7_j04SShX_w)
+[Nyx Demo Playlist](https://www.youtube.com/playlist?list=PLOK1DBnkeaJFzxC4M-z7TU7_j04SShX_w)
 
 ## What is MCP?
 
@@ -82,7 +82,7 @@ The Model Context Protocol (MCP) is an open standard developed by Anthropic that
 
 ## Architecture
 
-MCP SuperAssistant uses a modern, modular architecture with the following key components:
+Nyx uses a modern, modular architecture with the following key components:
 
 ### Plugin System
 - **Plugin Registry**: Centralized management of all plugins and adapters
@@ -115,7 +115,7 @@ flowchart TD
 
 To connect the Chrome extension to a local server for proxying connections:
 
-#### Run MCP SuperAssistant Proxy via npx:
+#### Run Nyx Proxy via npx:
 
    ```bash
    npx @srbhptl39/mcp-superassistant-proxy@latest --config ./config.json
@@ -150,7 +150,7 @@ To connect the Chrome extension to a local server for proxying connections:
 #### Connection Steps:
 
 1. Start the proxy server using one of the commands above
-2. Open the MCP SuperAssistant sidebar in your AI platform
+2. Open the Nyx sidebar in your AI platform
 3. Click on the server status indicator (usually showing as "Disconnected")
 4. Enter the local server URL (default: `http://localhost:3006/sse`)
 5. Click "Connect" to establish the connection
@@ -159,7 +159,7 @@ To connect the Chrome extension to a local server for proxying connections:
 ## Usage
 
 1. Navigate to a supported AI platform.
-2. The MCP SuperAssistant sidebar will appear on the right side of the page
+2. The Nyx sidebar will appear on the right side of the page
 3. Configure your MCP server by clicking on the server status indicator
 4. Interact with the AI and use MCP tools by:
    - Waiting for the AI to suggest a tool (auto-detected)
@@ -169,16 +169,16 @@ To connect the Chrome extension to a local server for proxying connections:
 
 ## Tips & Tricks
 
-1. **Turn off search mode** (chatgpt, perplexity) in AI chat interfaces for better tool call prompt experience and to prevent MCP SuperAssistant from getting derail.
+1. **Turn off search mode** (chatgpt, perplexity) in AI chat interfaces for better tool call prompt experience and to prevent Nyx from getting derailed.
 2. **Turn on Reasoning mode** (chatgpt, perplexity, grok) in AI chat interfaces, which will help the AI to understand the context better and generate the correct tool calls.
 3. Use newer high-end models as they are better at understanding the context and generating the correct tool calls.
 4. Copy the MCP instructions prompt and paste it in the AI chat system prompt (Google AI Studio).
 5. Mention the specific tools you want to use in your conversation.
 6. Use the MCP Auto toggles to control the tool execution.
 
-## Common Issues with MCP SuperAssistant
+## Common Issues with Nyx
 
-This page covers the most common issues users encounter with MCP SuperAssistant and provides solutions to resolve them.
+This page covers the most common issues users encounter with Nyx and provides solutions to resolve them.
 
 ### 1. Extension Not Detecting Tool Calls
 
@@ -197,7 +197,7 @@ This page covers the most common issues users encounter with MCP SuperAssistant 
 
 - Ensure that your MCP server is running and accessible.
 - Check the server URL in the extension settings.
-- First start the npx mcp-SuperAssistant-proxy server and then reload/restart the extension from chrome://extensions/ page.
+- First start the npx nyx-proxy server and then reload/restart the extension from chrome://extensions/ page.
 - Check the proxy server logs for any errors or issues.
 - Ensure that your firewall or antivirus software is not blocking the connection.
 - Make sure the server shows the proper connected status and exposes the `/sse` endpoint.
@@ -206,7 +206,7 @@ This page covers the most common issues users encounter with MCP SuperAssistant 
 ### Manual Installation (Development)
 
 #### Release Version
-1. Download the latest release from [Releases](https://github.com/srbhptl39/MCP-SuperAssistant/releases)
+1. Download the latest release from [Releases](https://github.com/srbhptl39/Nyx/releases)
 2. Unzip the downloaded file
 3. Navigate to `chrome://extensions/` in Chrome
 4. Enable "Developer mode"
@@ -259,4 +259,4 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 ## Star History
 
-[![Star History Chart](https://api.star-history.com/svg?repos=srbhptl39/MCP-SuperAssistant&type=Date)](https://www.star-history.com/#srbhptl39/MCP-SuperAssistant&Date)
+[![Star History Chart](https://api.star-history.com/svg?repos=srbhptl39/Nyx&type=Date)](https://www.star-history.com/#srbhptl39/Nyx&Date)

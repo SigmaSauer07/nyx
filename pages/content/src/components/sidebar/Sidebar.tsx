@@ -647,7 +647,7 @@ const Sidebar: React.FC<SidebarProps> = ({ initialPreferences }) => {
           onResize={handleResize}
           minWidth={SIDEBAR_DEFAULT_WIDTH}
           maxWidth={500}
-          className="absolute left-0 top-0 bottom-0 w-1 cursor-ew-resize hover:bg-indigo-400 dark:hover:bg-indigo-600 z-[60] transition-colors duration-300"
+          className="absolute left-0 top-0 bottom-0 w-1 cursor-ew-resize hover:bg-alsania-primary dark:hover:bg-alsania-primary z-[60] transition-colors duration-300"
         />
       )}
 
@@ -658,38 +658,38 @@ const Sidebar: React.FC<SidebarProps> = ({ initialPreferences }) => {
             <div className="flex items-center space-x-2">
               {/* Always show the header content immediately */}
               <a
-                href="https://mcpsuperassistant.ai/"
+                href="https://alsania.com/"
                 target="_blank"
                 rel="noopener noreferrer"
-                aria-label="Visit MCP Super Assistant Website"
+                aria-label="Visit Nyx Website"
                 className="block">
                 {' '}
                 {/* Make link block for sizing */}
                 <img
                   src={chrome.runtime.getURL('icon-34.png')}
-                  alt="MCP Logo"
+                  alt="Nyx Logo"
                   className="w-8 h-8 rounded-md " // Increase size & add rounded corners
                 />
               </a>
               <>
                 {/* Wrap title in link */}
                 <a
-                  href="https://mcpsuperassistant.ai/"
+                  href="https://alsania.com/"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-slate-800 dark:text-slate-100 hover:text-slate-600 dark:hover:text-slate-300 transition-colors duration-150 no-underline"
-                  aria-label="Visit MCP Super Assistant Website">
+                  aria-label="Visit Nyx Website">
                   <Typography variant="h4" className="font-semibold">
-                    MCP SuperAssistant
+                    Nyx
                   </Typography>
                 </a>
                 {/* Existing icon link */}
                 <a
-                  href="https://mcpsuperassistant.ai/"
+                  href="https://alsania.com/"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="ml-1 text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-300 transition-colors duration-150"
-                  aria-label="Visit MCP Super Assistant Website">
+                  aria-label="Visit Nyx Website">
                   <Icon name="arrow-up-right" size="xs" className="inline-block align-baseline" />
                 </a>
               </>
@@ -705,7 +705,7 @@ const Sidebar: React.FC<SidebarProps> = ({ initialPreferences }) => {
                 <Icon
                   name={getCurrentThemeIcon()}
                   size="sm"
-                  className="transition-all text-indigo-600 dark:text-indigo-400"
+                  className="transition-all text-alsania-primary dark:text-alsania-primary"
                 />
                 <span className="sr-only">Toggle theme</span>
               </Button>

@@ -1,6 +1,6 @@
 # Plugin System Core
 
-This directory contains the core components for the MCP-SuperAssistant's plugin architecture, implementing a modern Zustand-based system for extensible website adapters.
+This directory contains the core components for the Nyx's plugin architecture, implementing a modern Zustand-based system for extensible website adapters.
 
 ## Overview
 

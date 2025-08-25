@@ -8,8 +8,22 @@ export default {
   },
   theme: {
     extend: {
-      // Add any custom theme extensions here
-      // This keeps the default Tailwind theme and adds your customizations
+      colors: {
+        'alsania-primary': '#39FF14',
+        'alsania-secondary': '#0A2472',
+        'alsania-black': '#0A0A0A',
+        'alsania-charcoal': '#1A1A1A',
+        'alsania-silver': '#B3B3B3',
+        'alsania-cyan': '#00F6FF',
+        'alsania-violet': '#2A004F',
+        'alsania-magenta': '#FF2E92',
+        'alsania-orange': '#FF5A36',
+      },
+      fontFamily: {
+        sans: ['Open Sans', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+        heading: ['Orbitron', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+        mono: ['JetBrains Mono', 'ui-monospace', 'SFMono-Regular', 'Menlo', 'monospace'],
+      },
     },
   },
   // plugins: [

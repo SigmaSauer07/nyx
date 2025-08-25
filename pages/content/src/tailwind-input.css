@@ -2,4 +2,30 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Minimal styling only */ 
+/* Minimal styling only */
+
+/* Alsania Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Open+Sans:wght@300;400;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+@layer base {
+  :root {
+    --alsania-primary: #39FF14;
+    --alsania-secondary: #0A2472;
+    --alsania-black: #0A0A0A;
+    --alsania-charcoal: #1A1A1A;
+    --alsania-silver: #B3B3B3;
+  }
+
+  body {
+    font-family: 'Open Sans', ui-sans-serif, system-ui, sans-serif;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Orbitron', ui-sans-serif, system-ui, sans-serif;
+  }
+}
+
+@layer utilities {
+  .text-brand { color: var(--alsania-primary); }
+  .bg-brand { background-color: var(--alsania-secondary); }
+} 

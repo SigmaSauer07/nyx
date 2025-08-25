@@ -1,6 +1,6 @@
 # Zustand State Management Stores
 
-This directory contains all Zustand state management stores for the MCP-SuperAssistant content script. The stores provide centralized, reactive, and type-safe state management with optimal performance characteristics.
+This directory contains all Zustand state management stores for the Nyx content script. The stores provide centralized, reactive, and type-safe state management with optimal performance characteristics.
 
 ## Overview
 
