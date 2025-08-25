@@ -1,0 +1,23 @@
+<svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bridgeGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#39FF14;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#2A004F;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#39FF14;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  <!-- Bridge pillars -->
+  <rect x="8" y="40" width="4" height="16" fill="url(#bridgeGradient)" stroke="#39FF14" stroke-width="1"/>
+  <rect x="52" y="40" width="4" height="16" fill="url(#bridgeGradient)" stroke="#39FF14" stroke-width="1"/>
+  <!-- Bridge span -->
+  <path d="M12 40L52 40" stroke="url(#bridgeGradient)" stroke-width="4" stroke-linecap="round"/>
+  <!-- Trust connections -->
+  <path d="M20 40L20 36M32 40L32 36M44 40L44 36" stroke="#39FF14" stroke-width="2" stroke-linecap="round"/>
+  <!-- Data flow -->
+  <circle cx="16" cy="38" r="1" fill="#39FF14">
+    <animate attributeName="cx" values="16;48;16" dur="3s" repeatCount="indefinite"/>
+  </circle>
+  <circle cx="48" cy="38" r="1" fill="#00F6FF">
+    <animate attributeName="cx" values="48;16;48" dur="3s" repeatCount="indefinite"/>
+  </circle>
+</svg> 

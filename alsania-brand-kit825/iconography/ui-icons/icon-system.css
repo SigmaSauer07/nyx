@@ -1,0 +1,230 @@
+/* Alsania UI Icon System */
+
+/* Base icon styles */
+.alsania-ui-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    fill: currentColor;
+    stroke: currentColor;
+    stroke-width: 1.5;
+    transition: all 0.2s ease;
+}
+
+/* Icon sizes */
+.alsania-ui-icon--xs {
+    width: 16px;
+    height: 16px;
+}
+
+.alsania-ui-icon--sm {
+    width: 20px;
+    height: 20px;
+}
+
+.alsania-ui-icon--md {
+    width: 24px;
+    height: 24px;
+}
+
+.alsania-ui-icon--lg {
+    width: 32px;
+    height: 32px;
+}
+
+.alsania-ui-icon--xl {
+    width: 48px;
+    height: 48px;
+}
+
+/* Icon colors */
+.alsania-ui-icon--primary {
+    color: var(--alsania-primary);
+}
+
+.alsania-ui-icon--secondary {
+    color: var(--alsania-secondary);
+}
+
+.alsania-ui-icon--white {
+    color: white;
+}
+
+.alsania-ui-icon--muted {
+    color: #B3B3B3;
+}
+
+/* Icon states */
+.alsania-ui-icon--hover:hover {
+    transform: scale(1.1);
+    filter: drop-shadow(0 0 5px currentColor);
+}
+
+.alsania-ui-icon--glow {
+    filter: drop-shadow(0 0 8px currentColor);
+}
+
+/* Icon animations */
+.alsania-ui-icon--spin {
+    animation: alsania-icon-spin 1s linear infinite;
+}
+
+@keyframes alsania-icon-spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.alsania-ui-icon--pulse {
+    animation: alsania-icon-pulse 2s ease-in-out infinite;
+}
+
+@keyframes alsania-icon-pulse {
+    0%, 100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+    50% {
+        opacity: 0.7;
+        transform: scale(1.1);
+    }
+}
+
+/* Common UI icons */
+.alsania-ui-icon--home::before {
+    content: "🏠";
+}
+
+.alsania-ui-icon--settings::before {
+    content: "⚙️";
+}
+
+.alsania-ui-icon--user::before {
+    content: "👤";
+}
+
+.alsania-ui-icon--search::before {
+    content: "🔍";
+}
+
+.alsania-ui-icon--close::before {
+    content: "✕";
+    font-weight: bold;
+}
+
+.alsania-ui-icon--menu::before {
+    content: "☰";
+}
+
+.alsania-ui-icon--arrow-right::before {
+    content: "→";
+}
+
+.alsania-ui-icon--arrow-left::before {
+    content: "←";
+}
+
+.alsania-ui-icon--arrow-up::before {
+    content: "↑";
+}
+
+.alsania-ui-icon--arrow-down::before {
+    content: "↓";
+}
+
+.alsania-ui-icon--check::before {
+    content: "✓";
+    font-weight: bold;
+}
+
+.alsania-ui-icon--warning::before {
+    content: "⚠️";
+}
+
+.alsania-ui-icon--error::before {
+    content: "❌";
+}
+
+.alsania-ui-icon--info::before {
+    content: "ℹ️";
+}
+
+.alsania-ui-icon--success::before {
+    content: "✅";
+}
+
+/* Web3 specific icons */
+.alsania-ui-icon--wallet::before {
+    content: "💳";
+}
+
+.alsania-ui-icon--blockchain::before {
+    content: "🔗";
+}
+
+.alsania-ui-icon--token::before {
+    content: "🪙";
+}
+
+.alsania-ui-icon--nft::before {
+    content: "🖼️";
+}
+
+.alsania-ui-icon--defi::before {
+    content: "📈";
+}
+
+.alsania-ui-icon--swap::before {
+    content: "🔄";
+}
+
+.alsania-ui-icon--stake::before {
+    content: "🔒";
+}
+
+.alsania-ui-icon--yield::before {
+    content: "🌱";
+}
+
+/* Social media icons */
+.alsania-ui-icon--twitter::before {
+    content: "🐦";
+}
+
+.alsania-ui-icon--discord::before {
+    content: "🎮";
+}
+
+.alsania-ui-icon--github::before {
+    content: "📚";
+}
+
+.alsania-ui-icon--telegram::before {
+    content: "📱";
+}
+
+.alsania-ui-icon--reddit::before {
+    content: "🤖";
+}
+
+.alsania-ui-icon--medium::before {
+    content: "��";
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .alsania-ui-icon--xl {
+        width: 40px;
+        height: 40px;
+    }
+    
+    .alsania-ui-icon--lg {
+        width: 28px;
+        height: 28px;
+    }
+} 
