@@ -1,7 +1,7 @@
 {
   "name": "chrome-extension",
   "version": "0.5.5",
-  "description": "chrome extension - core settings",
+  "description": "Nyx Chrome Extension - Core Settings",
   "type": "module",
   "private": true,
   "sideEffects": false,

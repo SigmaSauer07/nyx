@@ -652,7 +652,7 @@ const Sidebar: React.FC<SidebarProps> = ({ initialPreferences }) => {
       )}
 
       {/* Header - Adjust content based on isMinimized */}
-      <div className="bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 p-4 flex items-center justify-between flex-shrink-0 shadow-sm sidebar-header">
+      <div className="bg-gradient-to-r from-alsania-secondary to-alsania-navy-dark border-b border-alsania-primary p-4 flex items-center justify-between flex-shrink-0 shadow-lg sidebar-header">
         {!isMinimized ? (
           <>
             <div className="flex items-center space-x-2">
@@ -667,29 +667,29 @@ const Sidebar: React.FC<SidebarProps> = ({ initialPreferences }) => {
                 {/* Make link block for sizing */}
                 <img
                   src={chrome.runtime.getURL('icon-34.png')}
-                  alt="MCP Logo"
-                  className="w-8 h-8 rounded-md " // Increase size & add rounded corners
+                  alt="Nyx Logo"
+                  className="w-8 h-8 rounded-md shadow-lg" // Increase size & add rounded corners
                 />
               </a>
               <>
                 {/* Wrap title in link */}
                 <a
-                  href="https://mcpsuperassistant.ai/"
+                  href="https://alsania.com/"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-slate-800 dark:text-slate-100 hover:text-slate-600 dark:hover:text-slate-300 transition-colors duration-150 no-underline"
-                  aria-label="Visit MCP Super Assistant Website">
-                  <Typography variant="h4" className="font-semibold">
-                    MCP SuperAssistant
+                  aria-label="Visit Alsania Website">
+                  <Typography variant="h4" className="alsania-heading text-2xl">
+                    Nyx
                   </Typography>
                 </a>
                 {/* Existing icon link */}
                 <a
-                  href="https://mcpsuperassistant.ai/"
+                  href="https://alsania.com/"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="ml-1 text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-300 transition-colors duration-150"
-                  aria-label="Visit MCP Super Assistant Website">
+                  aria-label="Visit Alsania Website">
                   <Icon name="arrow-up-right" size="xs" className="inline-block align-baseline" />
                 </a>
               </>
@@ -705,7 +705,7 @@ const Sidebar: React.FC<SidebarProps> = ({ initialPreferences }) => {
                 <Icon
                   name={getCurrentThemeIcon()}
                   size="sm"
-                  className="transition-all text-indigo-600 dark:text-indigo-400"
+                  className="transition-all text-alsania-primary"
                 />
                 <span className="sr-only">Toggle theme</span>
               </Button>
@@ -734,7 +734,7 @@ const Sidebar: React.FC<SidebarProps> = ({ initialPreferences }) => {
       </div>
 
       {/* Main Content Area - Using sliding panel approach */}
-      <div className="sidebar-inner-content flex-1 relative overflow-hidden bg-white dark:bg-slate-900">
+      <div className="sidebar-inner-content flex-1 relative overflow-hidden bg-gradient-to-b from-alsania-white to-alsania-silver dark:from-alsania-charcoal dark:to-alsania-black">
         {/* Virtual slide - content always at full width */}
         <div
           ref={contentRef}
@@ -747,7 +747,7 @@ const Sidebar: React.FC<SidebarProps> = ({ initialPreferences }) => {
           <div className="flex flex-col h-full">
             {/* Critical Error Display - Only show for severe failures, never block UI */}
             {initializationError && (
-              <div className="bg-red-50 dark:bg-red-900/20 border-b border-red-200 dark:border-red-800 p-3 flex-shrink-0">
+              <div className="bg-red-50 dark:bg-red-900/20 border-b border-alsania-orange dark:border-alsania-orange p-3 flex-shrink-0">
                 <div className="flex items-center justify-between">
                   <div className="flex items-start space-x-2">
                     <Icon name="alert-triangle" size="sm" className="text-red-600 dark:text-red-400 mt-0.5" />

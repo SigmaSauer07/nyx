@@ -1,7 +1,7 @@
 /**
- * Main Application Initializer (Session 10)
+ * Main Application Initializer for Nyx
  *
- * This module orchestrates the complete initialization sequence for the MCP SuperAssistant
+ * This module orchestrates the complete initialization sequence for the Nyx
  * application, ensuring all components are initialized in the correct order with proper
  * dependency management and error handling.
  */

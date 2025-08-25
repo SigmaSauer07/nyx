@@ -1,7 +1,7 @@
 /**
- * Core Architecture Components
+ * Core Architecture Exports
  * 
- * Exports all core architectural components for the MCP SuperAssistant.
+ * Exports all core architectural components for the Nyx extension.
  */
 
 export { circuitBreaker, CircuitBreaker } from './circuit-breaker';

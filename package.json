@@ -1,13 +1,13 @@
 {
-  "name": "mcp-superassistant",
+  "name": "nyx",
   "version": "0.5.5",
-  "description": "MCP SuperAssistant",
+  "description": "Nyx - Advanced AI Assistant powered by Alsania",
   "license": "MIT",
   "private": true,
   "sideEffects": false,
   "repository": {
     "type": "git",
-    "url": "https://github.com/srbhptl39/MCP-SuperAssistant.git"
+    "url": "https://github.com/alsania/nyx.git"
   },
   "type": "module",
   "scripts": {

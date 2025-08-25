@@ -1,4 +1,6 @@
-# Session 10 Implementation - Main Application Initialization Sequence
+# Core Architecture
+
+This directory contains the core architectural components and initialization system for the Nyx extension.
 
 ## Overview
 

@@ -1,6 +1,6 @@
-# UI Package (`@extension/ui`)
+# UI Package
 
-This package provides React components and styling utilities that make up the MCP SuperAssistant user interface, integrated with the modern plugin architecture and state management system.
+This package provides React components and styling utilities that make up the Nyx user interface, integrated with the modern plugin architecture and state management system.
 
 ## Overview
 

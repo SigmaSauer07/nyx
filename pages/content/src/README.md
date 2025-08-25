@@ -1,6 +1,6 @@
-# Content Script Source (`src`)
+# Content Script Source
 
-This directory is the root for all source code of the MCP-SuperAssistant content script, built on a modern plugin architecture with Zustand state management and React hooks integration.
+This directory contains React components that make up the user interface of the Nyx content script, integrated with the modern plugin architecture and state management system.
 
 ## Overview
 

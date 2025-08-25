@@ -1,6 +1,6 @@
-# Shared Package (`@extension/shared`)
+# Shared Package
 
-This package contains shared TypeScript types, utilities, and constants used across the MCP SuperAssistant extension, particularly between the content script and background script components.
+This package contains shared TypeScript types, utilities, and constants used across the Nyx extension, particularly between the content script and background script components.
 
 ## Contents
 
