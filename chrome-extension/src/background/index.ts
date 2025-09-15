@@ -62,18 +62,18 @@ let isInitialized: boolean = false;
 async function initializeServerConfig(): Promise<void> {
   try {
     const result = await chrome.storage.local.get(['mcpServerUrl', 'mcpConnectionType']);
-    
+
     // Load connection type first to determine default URL
     connectionType = (result.mcpConnectionType as ConnectionType) || DEFAULT_CONNECTION_TYPE;
-    const defaultUrl = connectionType === 'websocket' 
-      ? DEFAULT_WEBSOCKET_URL 
+    const defaultUrl = connectionType === 'websocket'
+      ? DEFAULT_WEBSOCKET_URL
       : connectionType === 'streamable-http'
         ? DEFAULT_STREAMABLE_HTTP_URL
         : DEFAULT_SSE_URL;
-    
+
     serverUrl = result.mcpServerUrl || defaultUrl;
     isInitialized = true;
-    
+
     console.log('[Background] Server config loaded from storage:', {
       url: serverUrl,
       type: connectionType
@@ -162,11 +162,11 @@ const MAX_CONNECTION_ATTEMPTS = 3;
 
 /**
  * Enhanced error categorization for better tool vs connection error distinction
- * 
+ *
  * This function analyzes error messages to determine whether an error indicates
  * a connection problem (server unavailable) or a tool-specific issue (tool not found, invalid args, etc.)
  * This helps prevent unnecessary disconnection states when only tool execution fails.
- * 
+ *
  * @param error - The error to categorize
  * @returns Object containing categorization flags and category string
  */
@@ -218,14 +218,14 @@ function categorizeToolError(error: Error): { isConnectionError: boolean; isTool
 
 /**
  * Initialize the extension
- * 
+ *
  * This function is called once when the extension starts and handles:
  * - Theme initialization
  * - Server URL loading from storage
  * - Initial connection status check and broadcast
  * - Asynchronous server connection attempt if needed
  * - Initial tools fetching and broadcast if connected
- * 
+ *
  * The initialization is designed to be non-blocking and resilient to failures.
  */
 async function initializeExtension() {
@@ -261,9 +261,9 @@ async function initializeExtension() {
   // After initialization is complete, attempt connection and broadcast initial status immediately
   const checkInitialConnectionStatus = async () => {
     const serverUrl = getServerUrl();
-    
+
     console.log(`[Background] Attempting initial connection to ${serverUrl} with transport: ${connectionType}`);
-    
+
     // Try to connect to the server immediately
     let isConnected = false;
     try {
@@ -275,40 +275,40 @@ async function initializeExtension() {
       console.log(`[Background] Initial connection attempt failed: ${error instanceof Error ? error.message : String(error)}`);
       isConnected = false;
     }
-    
+
     // Update and broadcast the actual connection status
     updateConnectionStatus(isConnected);
     broadcastConnectionStatusToContentScripts(isConnected);
-    
+
     console.log(`[Background] Initial connection status broadcast: ${isConnected ? 'connected' : 'disconnected'}`);
-    
+
     // If connected, also broadcast tools
     if (isConnected) {
       try {
         console.log('[Background] Server connected, fetching and broadcasting initial tools...');
         const primitives = await getPrimitivesWithBackwardsCompatibility(serverUrl, false, connectionType);
         console.log(`[Background] Retrieved ${primitives.length} primitives for initial broadcast`);
-        
+
         const tools = normalizeTools(primitives);
         console.log(`[Background] Broadcasting ${tools.length} normalized initial tools`);
-        
+
         broadcastToolsUpdateToContentScripts(tools);
       } catch (error) {
         console.warn('[Background] Error broadcasting initial tools:', error);
       }
     }
   };
-  
+
   // Run the initial connection attempt immediately
   checkInitialConnectionStatus();
 }
 
 /**
  * Try to connect to the MCP server with retry logic
- * 
+ *
  * This function is separated from extension initialization to prevent blocking
  * and includes comprehensive error handling and retry logic with exponential backoff.
- * 
+ *
  * @param uri - The MCP server URI to connect to
  * @returns Promise that resolves when connection attempt is complete (success or failure)
  */
@@ -331,21 +331,21 @@ async function tryConnectToServer(uri: string, type: ConnectionType = connection
     console.log('MCP client connected successfully');
     updateConnectionStatus(true);
     broadcastConnectionStatusToContentScripts(true);
-    
+
     // Also broadcast available tools after successful connection
     try {
       console.log('[Background] Connection successful, fetching and broadcasting tools...');
       const primitives = await getPrimitivesWithBackwardsCompatibility(uri, true, type);
       console.log(`[Background] Retrieved ${primitives.length} primitives after connection`);
-      
+
       const tools = normalizeTools(primitives);
       console.log(`[Background] Broadcasting ${tools.length} normalized tools after successful connection`);
-      
+
       broadcastToolsUpdateToContentScripts(tools);
     } catch (toolsError) {
       console.warn('[Background] Error broadcasting tools after connection:', toolsError);
     }
-    
+
     connectionAttemptCount = 0; // Reset counter on success
   } catch (error: any) {
     const errorCategory = categorizeToolError(error instanceof Error ? error : new Error(String(error)));
@@ -398,17 +398,17 @@ setInterval(async () => {
   if (wasConnected !== isConnected) {
     console.log(`[Background] Connection status changed: ${wasConnected} -> ${isConnected}`);
     broadcastConnectionStatusToContentScripts(isConnected);
-    
+
     // If connected, also broadcast available tools
     if (isConnected) {
       try {
         console.log('[Background] Periodic check: Connection established, fetching and broadcasting tools...');
         const primitives = await getPrimitivesWithBackwardsCompatibility(getServerUrl(), true, connectionType);
         console.log(`[Background] Periodic check: Retrieved ${primitives.length} primitives`);
-        
+
         const tools = normalizeTools(primitives);
         console.log(`[Background] Periodic check: Broadcasting ${tools.length} normalized tools`);
-        
+
         broadcastToolsUpdateToContentScripts(tools);
       } catch (error) {
         console.warn('[Background] Error broadcasting tools after status change:', error);
@@ -425,7 +425,7 @@ setInterval(async () => {
     connectionAttemptCount = 0; // Reset counter for periodic checks
     console.log('Periodic check: MCP server not connected, attempting to connect');
     const serverUrl = getServerUrl();
-    
+
     // Reset the client's failure state periodically to prevent permanent disconnection
     // This is critical to fix the issue where only browser restart would work
     try {
@@ -434,7 +434,7 @@ setInterval(async () => {
     } catch (error) {
       console.warn('[Background] Error resetting MCP connection state:', error);
     }
-    
+
     tryConnectToServer(serverUrl, connectionType).catch(() => {});
   }
 }, PERIODIC_CHECK_INTERVAL);
@@ -480,40 +480,40 @@ self.addEventListener('error', event => {
 chrome.runtime.onInstalled.addListener(async details => {
   console.log('Extension installed or updated:', details.reason);
   sendAnalyticsEvent('extension_installed', { reason: details.reason });
-  
+
   const currentVersion = chrome.runtime.getManifest().version;
 
   // Perform initial setup on first install
   if (details.reason === 'install') {
     console.log('Performing first-time installation setup.');
-    
+
     // Set install date for Remote Config targeting
-    await chrome.storage.local.set({ 
+    await chrome.storage.local.set({
       installDate: new Date().toISOString(),
       version: currentVersion
     });
-    
+
     // Initialize Remote Config after installation
     if (remoteConfigManager && remoteConfigManager.initialized) {
       await remoteConfigManager.fetchConfig(true);
     }
-    
+
   } else if (details.reason === 'update') {
     const previousVersion = details.previousVersion || 'unknown';
     console.log(`Extension updated from ${previousVersion} to ${currentVersion}`);
-    
+
     // Store version information
-    await chrome.storage.local.set({ 
+    await chrome.storage.local.set({
       version: currentVersion,
       previousVersion: previousVersion,
       lastUpdateDate: new Date().toISOString()
     });
-    
+
     // Notify Remote Config about version update
     if (remoteConfigManager && remoteConfigManager.initialized) {
       await remoteConfigManager.fetchConfig(true);
     }
-    
+
     // Broadcast version update to content scripts
     setTimeout(() => {
       chrome.tabs.query({}, (tabs) => {
@@ -574,14 +574,14 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   // Handle MCP client connection status changes
   if (message.type === 'mcp:connection-status-changed' && message.origin === 'mcpclient') {
     console.log('[Background] Received connection status change from MCP client:', message.payload);
-    
+
     // Update internal connection status
     const { isConnected, error } = message.payload;
     updateConnectionStatus(isConnected);
-    
+
     // Broadcast the status change to all content scripts
     broadcastConnectionStatusToContentScripts(isConnected, error);
-    
+
     // No response needed
     return false;
   }
@@ -629,19 +629,19 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 
 /**
  * Enhanced MCP message handler with proper error handling, type safety, and response formatting
- * 
+ *
  * @param message - The message received from the content script
  * @param sender - Chrome runtime message sender information
  * @param sendResponse - Callback function to send response back to sender
  */
 async function handleMcpMessage(
-  message: RequestMessage, 
-  sender: chrome.runtime.MessageSender, 
+  message: RequestMessage,
+  sender: chrome.runtime.MessageSender,
   sendResponse: (response: ResponseMessage) => void
 ) {
   const startTime = Date.now();
   const messageType = message.type as McpMessageType;
-  
+
   try {
     let result: any = null;
     const payload = message.payload || {};
@@ -654,7 +654,7 @@ async function handleMcpMessage(
         if (!toolName) {
           throw new Error('Tool name is required');
         }
-        
+
         console.log(`[Background] Calling tool: ${toolName}`);
         result = await callToolWithBackwardsCompatibility(getServerUrl(), toolName, args || {});
         console.log(`[Background] Tool call completed: ${toolName}`);
@@ -663,21 +663,21 @@ async function handleMcpMessage(
 
       case 'mcp:get-connection-status': {
         console.log('[Background] Getting current connection status');
-        
+
         // Double-check the connection status to ensure accuracy
         const storedStatus = getConnectionStatus();
         const actualStatus = await checkMcpServerConnection();
-        
+
         console.log(`[Background] Stored status: ${storedStatus}, Actual status: ${actualStatus}`);
-        
+
         // Update stored status if they don't match
         if (storedStatus !== actualStatus) {
           console.log('[Background] Status mismatch detected, updating and broadcasting...');
           updateConnectionStatus(actualStatus);
           broadcastConnectionStatusToContentScripts(actualStatus);
         }
-        
-        result = { 
+
+        result = {
           status: actualStatus ? 'connected' : 'disconnected',
           isConnected: actualStatus,
           timestamp: Date.now()
@@ -688,15 +688,15 @@ async function handleMcpMessage(
       case 'mcp:get-tools': {
         const { forceRefresh = false } = payload as GetToolsRequest;
         console.log(`[Background] Getting tools (forceRefresh: ${forceRefresh})`);
-        
+
         try {
           const primitives = await getPrimitivesWithBackwardsCompatibility(getServerUrl(), forceRefresh, connectionType);
           console.log(`[Background] Retrieved ${primitives.length} primitives from server`);
-          
+
           // Use the helper function to normalize tools with proper schema handling
           const tools = normalizeTools(primitives);
           console.log(`[Background] Returning ${tools.length} normalized tools to content script`);
-          
+
           result = tools;
         } catch (error) {
           console.error('[Background] Error getting tools:', error);
@@ -708,61 +708,61 @@ async function handleMcpMessage(
 
       case 'mcp:force-reconnect': {
         console.log('[Background] Force reconnect requested via context bridge');
-        
+
         try {
           // Broadcast reconnection started status
           broadcastConnectionStatusToContentScripts(false, 'Reconnecting...');
-          
+
           console.log('[Background] Starting force reconnection process...');
-          
+
           // ENHANCED: Reset connection state before attempting reconnection
           // This ensures we don't get blocked by consecutive failure limits
           resetMcpConnectionState();
-          
+
           // Set a reasonable timeout for the reconnection process
           const reconnectionPromise = forceReconnectToMcpServer(getServerUrl(), connectionType);
-          const timeoutPromise = new Promise<void>((_, reject) => 
+          const timeoutPromise = new Promise<void>((_, reject) =>
             setTimeout(() => reject(new Error('Reconnection timeout after 20 seconds')), 20000)
           );
-          
+
           await Promise.race([reconnectionPromise, timeoutPromise]);
           console.log('[Background] Force reconnect completed successfully');
-          
+
           // Update connection status
           const isConnected = await checkMcpServerConnection();
           updateConnectionStatus(isConnected);
-          
+
           // Broadcast the new status to all content scripts
           broadcastConnectionStatusToContentScripts(isConnected);
-          
+
           // If connected, also refresh and broadcast tools
           if (isConnected) {
             try {
               console.log('[Background] Fetching tools after successful reconnection...');
               const primitives = await getPrimitivesWithBackwardsCompatibility(getServerUrl(), true, connectionType);
               console.log(`[Background] Retrieved ${primitives.length} primitives after reconnection`);
-              
+
               const tools = normalizeTools(primitives);
               console.log(`[Background] Broadcasting ${tools.length} normalized tools after reconnection`);
-              
+
               broadcastToolsUpdateToContentScripts(tools);
             } catch (toolsError) {
               console.error('[Background] Error fetching tools after reconnect:', toolsError);
             }
           }
-          
+
           result = { isConnected, message: 'Reconnection completed' };
         } catch (error) {
           console.error('[Background] Force reconnect failed:', error);
-          
+
           // Update connection status
           const isConnected = await checkMcpServerConnection();
           updateConnectionStatus(isConnected);
-          
+
           // Broadcast the failure status
           const errorMessage = error instanceof Error ? error.message : String(error);
           broadcastConnectionStatusToContentScripts(isConnected, errorMessage);
-          
+
           result = { isConnected, error: errorMessage };
         }
         break;
@@ -771,7 +771,7 @@ async function handleMcpMessage(
       case 'mcp:get-server-config': {
         const stored = await chrome.storage.local.get(['mcpServerUrl', 'mcpConnectionType']);
         const defaultUrl = connectionType === 'websocket' ? DEFAULT_WEBSOCKET_URL : DEFAULT_SSE_URL;
-        result = { 
+        result = {
           uri: stored.mcpServerUrl || defaultUrl,
           connectionType: stored.mcpConnectionType || connectionType
         };
@@ -796,17 +796,17 @@ async function handleMcpMessage(
           }
         }
         console.log(`[Background] Updating server config to: ${config.uri} (${newType})`);
-        
+
         // Update storage and background script state
-        await chrome.storage.local.set({ 
+        await chrome.storage.local.set({
           mcpServerUrl: config.uri,
           mcpConnectionType: newType
         });
         updateServerConfig(config.uri, newType);
-        
+
         // Broadcast config update immediately
         broadcastConfigUpdateToContentScripts({ uri: config.uri, connectionType: newType });
-        
+
         // Start async reconnection but don't block the response
         const reconnectPromise = (async () => {
           try {
@@ -816,7 +816,7 @@ async function handleMcpMessage(
             updateConnectionStatus(isConnected);
             broadcastConnectionStatusToContentScripts(isConnected);
             console.log(`[Background] Async reconnection completed, connected: ${isConnected}`);
-            
+
             // If connected, fetch and broadcast tools
             if (isConnected) {
               try {
@@ -836,12 +836,12 @@ async function handleMcpMessage(
             broadcastConnectionStatusToContentScripts(isConnected, errorMessage);
           }
         })();
-        
+
         // Don't await the reconnection, just start it
         reconnectPromise.catch(error => {
           console.error('[Background] Unhandled error in async reconnection:', error);
         });
-        
+
         result = { success: true };
         break;
       }
@@ -850,7 +850,7 @@ async function handleMcpMessage(
         // Handle heartbeat from content script
         const { timestamp } = payload;
         const isConnected = isMcpServerConnected();
-        
+
         result = {
           timestamp: Date.now(),
           isConnected,
@@ -889,7 +889,7 @@ async function handleMcpMessage(
     console.log(`[Background] MCP message ${messageType} processed in ${processingTime}ms`);
 
     // Send successful response with proper structure
-    sendResponse({ 
+    sendResponse({
       type: `${messageType}:response`,
       payload: result,
       success: true,
@@ -898,15 +898,15 @@ async function handleMcpMessage(
       origin: 'background',
       id: message.id
     });
-    
+
   } catch (error) {
     const processingTime = Date.now() - startTime;
     const errorMessage = error instanceof Error ? error.message : String(error);
-    
+
     console.error(`[Background] MCP message handling error (${processingTime}ms):`, error);
-    
+
     // Send error response with proper structure
-    sendResponse({ 
+    sendResponse({
       type: `${messageType}:response`,
       error: errorMessage,
       success: false,
@@ -920,15 +920,15 @@ async function handleMcpMessage(
 
 /**
  * Broadcast connection status to all content scripts via context bridge
- * 
+ *
  * @param isConnected - Whether the MCP server is connected
  * @param error - Optional error message if connection failed
  */
 function broadcastConnectionStatusToContentScripts(isConnected: boolean, error?: string) {
   const status = error ? 'error' : (isConnected ? 'connected' : 'disconnected');
-  
+
   console.log(`[Background] Broadcasting connection status: ${status} (connected: ${isConnected})`);
-  
+
   const broadcastMessage: BaseMessage & { payload: ConnectionStatusChangedBroadcast } = {
     type: 'connection:status-changed',
     payload: {
@@ -940,7 +940,7 @@ function broadcastConnectionStatusToContentScripts(isConnected: boolean, error?:
     origin: 'background',
     timestamp: Date.now()
   };
-  
+
   chrome.tabs.query({}, (tabs) => {
     tabs.forEach(tab => {
       if (tab.id) {
@@ -954,12 +954,12 @@ function broadcastConnectionStatusToContentScripts(isConnected: boolean, error?:
 
 /**
  * Broadcast tools update to all content scripts via context bridge
- * 
+ *
  * @param tools - Array of available MCP tools
  */
 function broadcastToolsUpdateToContentScripts(tools: any[]) {
   console.log(`[Background] Broadcasting tools update to content scripts: ${tools.length} tools`);
-  
+
   const broadcastMessage: BaseMessage & { payload: ToolUpdateBroadcast } = {
     type: 'mcp:tool-update',
     payload: {
@@ -968,7 +968,7 @@ function broadcastToolsUpdateToContentScripts(tools: any[]) {
     origin: 'background',
     timestamp: Date.now()
   };
-  
+
   chrome.tabs.query({}, (tabs) => {
     tabs.forEach(tab => {
       if (tab.id) {
@@ -982,12 +982,12 @@ function broadcastToolsUpdateToContentScripts(tools: any[]) {
 
 /**
  * Broadcast server config update to all content scripts via context bridge
- * 
+ *
  * @param config - The updated server configuration
  */
 function broadcastConfigUpdateToContentScripts(config: { uri: string; connectionType?: string }) {
   console.log(`[Background] Broadcasting config update to content scripts: ${config.uri}`);
-  
+
   const broadcastMessage: BaseMessage & { payload: ServerConfigUpdatedBroadcast } = {
     type: 'mcp:server-config-updated',
     payload: {
@@ -996,7 +996,7 @@ function broadcastConfigUpdateToContentScripts(config: { uri: string; connection
     origin: 'background',
     timestamp: Date.now()
   };
-  
+
   chrome.tabs.query({}, (tabs) => {
     tabs.forEach(tab => {
       if (tab.id) {
@@ -1010,25 +1010,25 @@ function broadcastConfigUpdateToContentScripts(config: { uri: string; connection
 
 /**
  * Enhanced Remote Config message handler
- * 
+ *
  * @param message - The message received from the content script
  * @param sender - Chrome runtime message sender information
  * @param sendResponse - Callback function to send response back to sender
  */
 async function handleRemoteConfigMessage(
-  message: any, 
-  sender: chrome.runtime.MessageSender, 
+  message: any,
+  sender: chrome.runtime.MessageSender,
   sendResponse: (response: any) => void
 ) {
   const startTime = Date.now();
-  
+
   try {
     console.log(`[Background] Processing Remote Config message: ${message.type}`);
-    
+
     if (!remoteConfigManager || !remoteConfigManager.initialized) {
       throw new Error('Remote Config Manager not initialized');
     }
-    
+
     let result: any = null;
 
     switch (message.type) {
@@ -1045,7 +1045,7 @@ async function handleRemoteConfigMessage(
         if (!flagName) {
           throw new Error('Feature flag name is required');
         }
-        
+
         console.log(`[Background] Getting feature flag: ${flagName}`);
         result = await remoteConfigManager.getFeatureFlag(flagName);
         break;
@@ -1096,14 +1096,14 @@ async function handleRemoteConfigMessage(
       processingTime: Date.now() - startTime,
       timestamp: Date.now()
     };
-    
+
     console.log(`[Background] Remote Config message processed successfully: ${message.type} (${response.processingTime}ms)`);
     sendResponse(response);
-    
+
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : String(error);
     console.error(`[Background] Error processing Remote Config message ${message.type}:`, error);
-    
+
     // Send error response
     const response = {
       success: false,
@@ -1111,7 +1111,7 @@ async function handleRemoteConfigMessage(
       processingTime: Date.now() - startTime,
       timestamp: Date.now()
     };
-    
+
     sendResponse(response);
   }
 }
@@ -1124,7 +1124,7 @@ async function initializeRemoteConfig(): Promise<void> {
     remoteConfigManager = new RemoteConfigManager();
     await remoteConfigManager.initialize();
     console.log('[Background] Remote Config Manager initialized successfully');
-    
+
     // Make RemoteConfigManager globally accessible for testing
     if (typeof globalThis !== 'undefined') {
       (globalThis as any).remoteConfigManager = remoteConfigManager;
@@ -1135,4 +1135,3 @@ async function initializeRemoteConfig(): Promise<void> {
     // Don't throw - let the extension continue without remote config
   }
 }
-

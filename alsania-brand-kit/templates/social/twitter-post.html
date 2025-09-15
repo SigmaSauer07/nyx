@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alsania Twitter Post Template</title>
+    <link rel="stylesheet" href="../../alsania-global-styles.css">
+    <style>
+        .twitter-container {
+            width: 1200px;
+            height: 675px;
+            background: var(--alsania-secondary);
+            position: relative;
+            overflow: hidden;
+            font-family: var(--font-heading);
+        }
+        
+        .twitter-header {
+            position: absolute;
+            top: 40px;
+            left: 40px;
+            right: 40px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .twitter-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            border: 2px solid var(--alsania-primary);
+        }
+        
+        .twitter-info h3 {
+            color: white;
+            font-size: 24px;
+            margin: 0;
+        }
+        
+        .twitter-info p {
+            color: #B3B3B3;
+            font-size: 16px;
+            margin: 0;
+            font-family: var(--font-primary);
+        }
+        
+        .twitter-content {
+            position: absolute;
+            top: 140px;
+            left: 40px;
+            right: 40px;
+            bottom: 120px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+        
+        .twitter-title {
+            font-size: 48px;
+            font-weight: 700;
+            color: var(--alsania-primary);
+            margin-bottom: 30px;
+            text-shadow: 0 0 20px var(--alsania-primary);
+        }
+        
+        .twitter-text {
+            font-size: 24px;
+            color: white;
+            margin-bottom: 40px;
+            font-family: var(--font-primary);
+            line-height: 1.4;
+        }
+        
+        .twitter-hashtags {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        
+        .twitter-hashtag {
+            color: var(--alsania-primary);
+            font-size: 18px;
+            font-weight: 600;
+        }
+        
+        .twitter-footer {
+            position: absolute;
+            bottom: 40px;
+            left: 40px;
+            right: 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .twitter-logo {
+            width: 40px;
+            height: 40px;
+        }
+        
+        .twitter-actions {
+            display: flex;
+            gap: 30px;
+            color: #B3B3B3;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+    <div class="twitter-container">
+        <div class="twitter-header">
+            <img src="../../logo-symbol/logo_symbol_128x128.png" alt="Alsania" class="twitter-avatar">
+            <div class="twitter-info">
+                <h3>Alsania</h3>
+                <p>@alsania • 2h</p>
+            </div>
+        </div>
+        
+        <div class="twitter-content">
+            <h1 class="twitter-title">BUILDING THE FUTURE</h1>
+            <p class="twitter-text">Empowering digital sovereignty through fair, decentralized tools and networks. Join us in building ecosystems rooted in trust, equity, and innovation.</p>
+            <div class="twitter-hashtags">
+                <span class="twitter-hashtag">#Web3</span>
+                <span class="twitter-hashtag">#DeFi</span>
+                <span class="twitter-hashtag">#Alsania</span>
+                <span class="twitter-hashtag">#DigitalSovereignty</span>
+            </div>
+        </div>
+        
+        <div class="twitter-footer">
+            <img src="../../logo-symbol/logo_symbol_64x64.png" alt="Alsania" class="twitter-logo">
+            <div class="twitter-actions">
+                <span>💬 42</span>
+                <span>🔄 128</span>
+                <span>❤️ 256</span>
+                <span>��</span>
+            </div>
+        </div>
+    </div>
+</body>
+</html> 

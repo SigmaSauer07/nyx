@@ -1,5 +1,4 @@
 {
-  "$schema": "https://turbo.build/schema.json",
   "ui": "tui",
   "globalEnv": ["CEB_*", "CLI_CEB_*"],
   "globalDependencies": [".env"],

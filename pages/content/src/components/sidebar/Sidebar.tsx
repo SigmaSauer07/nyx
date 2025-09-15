@@ -658,7 +658,7 @@ const Sidebar: React.FC<SidebarProps> = ({ initialPreferences }) => {
             <div className="flex items-center space-x-2">
               {/* Always show the header content immediately */}
               <a
-                href="https://mcpsuperassistant.ai/"
+                href="https://nyx.alsania-io.com/"
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="Visit MCP Super Assistant Website"
@@ -674,18 +674,18 @@ const Sidebar: React.FC<SidebarProps> = ({ initialPreferences }) => {
               <>
                 {/* Wrap title in link */}
                 <a
-                  href="https://mcpsuperassistant.ai/"
+                  href="https://nyx.alsania-io.com/"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-slate-800 dark:text-slate-100 hover:text-slate-600 dark:hover:text-slate-300 transition-colors duration-150 no-underline"
                   aria-label="Visit MCP Super Assistant Website">
                   <Typography variant="h4" className="font-semibold">
-                    MCP SuperAssistant
+                    Nyx
                   </Typography>
                 </a>
                 {/* Existing icon link */}
                 <a
-                  href="https://mcpsuperassistant.ai/"
+                  href="https://nyx.alsania-io.com/"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="ml-1 text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-300 transition-colors duration-150"

@@ -1,0 +1,102 @@
+
+ALSANIA BRAND BOOK CONTENT (TEXT VERSION)
+
+-------------------------------------------------
+1. MISSION STATEMENT
+-------------------------------------------------
+Alsania empowers the world to reclaim digital sovereignty. We build a blockchain-powered ecosystem where domains, identities, and applications are fully user-owned, censorship-resistant, and open.
+
+-------------------------------------------------
+2. CORE VALUES
+-------------------------------------------------
+- Decentralization: No single point of control, user-first infrastructure.
+- Privacy-First: User data and actions are private by design.
+- Community-Driven: Open-source ethos, empowering developers and contributors.
+- Sustainability: Lightweight architecture, energy-efficient systems.
+
+-------------------------------------------------
+3. VISION
+-------------------------------------------------
+To become the world's leading self-sovereign ecosystem where identities, digital assets, and applications exist beyond the control of centralized entities. From MCP (multi-agent control plane) to AED (Enhanced Domains) and the Alsania chain, we envision a network that adapts, scales, and empowers global communities.
+
+-------------------------------------------------
+4. ROADMAP HIGHLIGHTS
+-------------------------------------------------
+- AED live with modular, upgradeable domains.
+- AlsaniaMCP (agent and memory orchestration) in active development.
+- Alsania Chain in testnet (Aelion).
+- AlsaniaFX Marketplace launching soon (NFTs, tokens, and auctions).
+- Long-term: governance, multi-agent AI integrations, fully autonomous chains.
+
+-------------------------------------------------
+5. COMMUNITY & ECOSYSTEM
+-------------------------------------------------
+Alsania is home to "Alsanians"—builders, creators, and dreamers. We are committed to open-source collaboration and support partners who share our vision of a decentralized future.
+
+-------------------------------------------------
+6. LOGO SYSTEM
+-------------------------------------------------
+- Horizontal and vertical wordmarks.
+- Icon-only hex "A" emblem.
+- Usage rules: maintain minimum clear space equal to the height of the "A".
+- Never distort, recolor, or place logo on low-contrast backgrounds.
+
+-------------------------------------------------
+7. COLOR PALETTE
+-------------------------------------------------
+Primary Colors:
+- Neon Green #39FF14 (core brand)
+- Midnight Navy #0A2472 (background)
+
+Complementary Colors:
+- Electric Cyan #00F6FF
+- Deep Violet #2A004F
+- Magenta Burst #FF2E92
+- Sunset Orange #FF5A36
+
+Tints and shades included for all UI states (hover, active, disabled).
+
+-------------------------------------------------
+8. TYPOGRAPHY
+-------------------------------------------------
+Headlines: Orbitron (400, 600, 700)
+Body: Open Sans (300, 400, 600)
+Code/Tech: JetBrains Mono
+
+H1: 48px Orbitron Bold
+H2: 36px Orbitron Semi-bold
+H3: 28px Orbitron Semi-bold
+Body: 16-18px Open Sans Regular
+
+-------------------------------------------------
+9. ICONOGRAPHY
+-------------------------------------------------
+- UI icons: wallet, domain, node, etc.
+- Social icons in brand style: Twitter, Discord, Telegram.
+- Badges: verified domain, NFT badges, agent/MCP badges.
+
+-------------------------------------------------
+10. UI MOCKUPS (DARK & LIGHT THEMES)
+-------------------------------------------------
+- AED frontend (minting, management)
+- MCP dashboard
+- AlsaniaScan explorer
+- AlsaniaFX marketplace
+
+-------------------------------------------------
+11. VOICE & TONE
+-------------------------------------------------
+BOLD + VISIONARY VERSION:
+- Aspirational, confident, and future-focused.
+- Language that inspires action, belief, and community building.
+
+NEUTRAL + INSTRUCTIONAL VERSION:
+- Practical, professional, and detailed.
+- Language focuses on brand consistency and clarity of design.
+
+-------------------------------------------------
+12. DO'S AND DON'TS
+-------------------------------------------------
+DO: Use correct logo versions, maintain accessibility standards, adhere to brand colors.
+DON'T: Modify logos, create unofficial gradients, or use low-contrast color combos.
+

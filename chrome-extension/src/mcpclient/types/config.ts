@@ -67,9 +67,9 @@ export const DEFAULT_CLIENT_CONFIG: ClientConfig = {
     },
     'streamable-http': {
       keepAlive: true,
-      connectionTimeout: 5000,
+      connectionTimeout: 30000,
       readTimeout: 30000,
-      fallbackToSSE: false,
+      fallbackToSSE: true,
       maxRetries: 2,
     },
   },

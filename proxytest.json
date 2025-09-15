@@ -1,0 +1,27 @@
+{
+  "nyx-prox": {
+    "type": "stdio",
+    "command": "npx",
+    "args": [
+      "-y",
+      "@srbhptl39/mcp-superassistant-proxy@latest",
+      "--config",
+      "home/sigma/Desktop/echo-lab/proxy_config.json",
+      "--outputTransport",
+      "streamableHttp",
+      "--stateful"
+    ]
+  },
+  "alsaniamcp": {
+    "type": "stdio",
+    "command": "docker compose up",
+    "args": [
+        "-d",
+        "home/sigma/Desktop/echo-lab/echo-sys/docker-compose.yml"
+    ],
+  "echo-registry": {
+    "url": "http://echosys-registry:8091",
+    "type": "stdio"
+    }
+  }
+}

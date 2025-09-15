@@ -9,7 +9,7 @@ export class StreamableHttpPlugin implements ITransportPlugin {
     version: '1.0.0',
     transportType: 'streamable-http',
     description: 'Streamable HTTP transport for MCP protocol',
-    author: 'MCP SuperAssistant'
+    author: 'Nyx Dev Team',
   };
 
   private transport: Transport | null = null;
@@ -99,7 +99,7 @@ export class StreamableHttpPlugin implements ITransportPlugin {
   getDefaultConfig(): PluginConfig {
     return {
       keepAlive: true,
-      connectionTimeout: 5000,
+      connectionTimeout: 30000,
       readTimeout: 30000,
       fallbackToSSE: false,
       maxRetries: 2,

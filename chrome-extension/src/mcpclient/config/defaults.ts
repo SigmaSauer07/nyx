@@ -14,15 +14,15 @@ export const CONNECTION_DEFAULTS = {
   sse: {
     uri: DEFAULT_SSE_URI,
     keepAlive: true,
-    connectionTimeout: 5000,
+    connectionTimeout: 30000,
     readTimeout: 30000
   },
   'streamable-http': {
     uri: DEFAULT_STREAMABLE_HTTP_URI,
     keepAlive: true,
-    connectionTimeout: 5000,
+    connectionTimeout: 3-000,
     readTimeout: 30000,
-    fallbackToSSE: false,
+    fallbackToSSE: true,
     maxRetries: 2
   }
 };

@@ -1,8 +1,8 @@
 #!/bin/bash
 
 # Default values
-CLI_CEB_DEV=false
-CLI_CEB_FIREFOX=false
+CLI_CEB_DEV=true
+CLI_CEB_FIREFOX=true
 
 validate_is_boolean() {
   if [[ "$1" != "true" && "$1" != "false" ]]; then

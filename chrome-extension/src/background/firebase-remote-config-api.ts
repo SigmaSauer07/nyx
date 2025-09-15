@@ -1,12 +1,12 @@
 /**
  * Firebase Remote Config REST API Client for Service Workers
- * 
+ *
  * This implementation uses the Firebase Remote Config REST API directly
  * since the Firebase Web SDK doesn't work in service workers.
  */
 
 // REMOTE CONFIG FEATURE TOGGLE - Set to false to disable all remote config functionality
-const REMOTE_CONFIG_ENABLED = false;
+const REMOTE_CONFIG_ENABLED = true;
 
 interface RemoteConfigValue {
   value: string;
@@ -36,7 +36,7 @@ export class FirebaseRemoteConfigAPI {
   private lastFetchTime: number = 0;
   private minimumFetchInterval: number = 3600000; // 1 hour in production
   private fetchTimeout: number = 60000; // 60 seconds
-  
+
   // Default configuration values
   private defaultConfig: Record<string, string> = {
     'notifications_enabled': 'true',
@@ -72,22 +72,22 @@ constructor() {
 
     // Get configuration from environment/build time
     const isDevelopment = !chrome.runtime.getManifest().update_url;
-    
+
     this.projectConfig = {
-        projectId: isDevelopment 
+        projectId: isDevelopment
             ? (process.env.FIREBASE_PROJECT_ID_DEV || '')
             : (process.env.FIREBASE_PROJECT_ID_PROD || ''),
-        apiKey: isDevelopment 
+        apiKey: isDevelopment
             ? (process.env.FIREBASE_API_KEY_DEV || '')
             : (process.env.FIREBASE_API_KEY_PROD || ''),
-        appId: isDevelopment 
+        appId: isDevelopment
             ? (process.env.FIREBASE_APP_ID_DEV || '')
             : (process.env.FIREBASE_APP_ID_PROD || '')
     };
 
     // Set fetch interval based on environment
     this.minimumFetchInterval = isDevelopment ? 300000 : 3600000; // 5 min dev, 1 hour prod
-    
+
     // Debug log: Show configuration (without sensitive data)
     console.debug('[FirebaseRemoteConfigAPI] Configuration:', {
         environment: isDevelopment ? 'development' : 'production',
@@ -100,18 +100,18 @@ constructor() {
 
   async initialize(): Promise<void> {
     console.log('[FirebaseRemoteConfigAPI] Initializing Remote Config API...');
-    
+
     if (!REMOTE_CONFIG_ENABLED) {
       console.log('[FirebaseRemoteConfigAPI] Remote Config DISABLED - initializing with defaults only');
       this.initializeWithDefaults();
       console.log('[FirebaseRemoteConfigAPI] Remote Config API initialized with defaults only');
       return;
     }
-    
+
     // Load cached config and default values
     await this.loadCachedConfig();
     this.initializeWithDefaults();
-    
+
     console.log('[FirebaseRemoteConfigAPI] Remote Config API initialized');
   }
 
@@ -123,7 +123,7 @@ constructor() {
 
     try {
       const now = Date.now();
-      
+
       // Check minimum fetch interval unless forced
       if (!force && (now - this.lastFetchTime) < this.minimumFetchInterval) {
         console.debug('[FirebaseRemoteConfigAPI] Skipping fetch due to minimum interval');
@@ -144,7 +144,7 @@ constructor() {
         this.lastFetchTime = now;
         await this.saveCachedConfig();
       }
-      
+
       return success;
     } catch (error) {
       console.error('[FirebaseRemoteConfigAPI] Failed to fetch and activate:', error);
@@ -156,7 +156,7 @@ constructor() {
     try {
       const installationId = await this.getInstallationId();
       const url = `https://firebaseremoteconfig.googleapis.com/v1/projects/${this.projectConfig.projectId}/namespaces/firebase:fetch`;
-      
+
       const requestBody = {
         appId: this.projectConfig.appId,
         appInstanceId: installationId,
@@ -194,10 +194,10 @@ constructor() {
       }
 
       const data: FirebaseRemoteConfigResponse = await response.json();
-      
+
       // Debug log: Show the raw response structure
       console.debug('[FirebaseRemoteConfigAPI] Raw Firebase response:', JSON.stringify(data, null, 2));
-      
+
       // Update cached config with remote values
       if (data.entries) {
         // Convert Firebase response format to our internal format
@@ -208,11 +208,11 @@ constructor() {
             source: 'remote'
           };
         });
-        
+
         // Remove old remote values that are no longer in Firebase
         // Keep only defaults and the new remote values
         const updatedConfig: Record<string, RemoteConfigValue> = {};
-        
+
         // First, add default values
         for (const [key, value] of Object.entries(this.defaultConfig)) {
           updatedConfig[key] = {
@@ -220,19 +220,19 @@ constructor() {
             source: 'default'
           };
         }
-        
+
         // Then override with remote values (this replaces old remote values completely)
         Object.assign(updatedConfig, convertedEntries);
-        
+
         this.cachedConfig = updatedConfig;
         console.log(`[FirebaseRemoteConfigAPI] Updated config with ${Object.keys(data.entries).length} remote values, removed deleted keys`);
-        
+
         // Debug log: Show all fetched configuration keys and values
         console.debug('[FirebaseRemoteConfigAPI] Fetched configuration details:');
         Object.entries(convertedEntries).forEach(([key, configValue]) => {
           const value = configValue.value;
           const source = configValue.source;
-          
+
           // Try to parse JSON values for better display
           let displayValue = value;
           try {
@@ -243,7 +243,7 @@ constructor() {
           } catch {
             // Keep as string if not JSON
           }
-          
+
           console.debug(`  ${key} (${source}):`, displayValue);
         });
       } else {
@@ -285,7 +285,7 @@ constructor() {
   getAll(): Record<string, RemoteConfigValue> {
     // Combine defaults with cached remote values
     const combined: Record<string, RemoteConfigValue> = {};
-    
+
     // Add defaults first
     for (const [key, value] of Object.entries(this.defaultConfig)) {
       combined[key] = {
@@ -293,12 +293,12 @@ constructor() {
         source: 'default'
       };
     }
-    
+
     // Override with cached remote values
     for (const [key, remoteValue] of Object.entries(this.cachedConfig)) {
       combined[key] = remoteValue;
     }
-    
+
     return combined;
   }
 
@@ -317,11 +317,11 @@ constructor() {
   private async loadCachedConfig(): Promise<void> {
     try {
       const result = await chrome.storage.local.get(['firebaseRemoteConfig', 'firebaseRemoteConfigLastFetch']);
-      
+
       if (result.firebaseRemoteConfig) {
         this.cachedConfig = result.firebaseRemoteConfig;
       }
-      
+
       if (result.firebaseRemoteConfigLastFetch) {
         this.lastFetchTime = result.firebaseRemoteConfigLastFetch;
       }
@@ -344,7 +344,7 @@ constructor() {
   private async getInstallationId(): Promise<string> {
     try {
       const result = await chrome.storage.local.get(['firebaseInstallationId']);
-      
+
       if (result.firebaseInstallationId) {
         return result.firebaseInstallationId;
       }
@@ -352,7 +352,7 @@ constructor() {
       // Generate a new installation ID
       const installationId = this.generateInstallationId();
       await chrome.storage.local.set({ firebaseInstallationId: installationId });
-      
+
       return installationId;
     } catch (error) {
       console.error('[FirebaseRemoteConfigAPI] Failed to get installation ID:', error);
@@ -380,10 +380,10 @@ constructor() {
     }
 
     console.log('[FirebaseRemoteConfigAPI] Clearing cache and forcing refresh...');
-    
+
     // Clear in-memory cache
     this.cachedConfig = {};
-    
+
     // Clear stored cache
     try {
       await chrome.storage.local.remove(['firebaseRemoteConfig', 'firebaseRemoteConfigLastFetch']);
@@ -391,10 +391,10 @@ constructor() {
     } catch (error) {
       console.error('[FirebaseRemoteConfigAPI] Failed to clear stored cache:', error);
     }
-    
+
     // Reinitialize with defaults
     this.initializeWithDefaults();
-    
+
     // Force fetch fresh data
     return await this.fetchAndActivate(true);
   }
@@ -411,11 +411,11 @@ export const validateConfigContent = (content: any): boolean => {
     if (content.features && typeof content.features !== 'object') {
       return false;
     }
-    
+
     if (content.notifications && !Array.isArray(content.notifications)) {
       return false;
     }
-    
+
     return true;
   } catch (error) {
     console.error('[FirebaseRemoteConfigAPI] Validation error:', error);

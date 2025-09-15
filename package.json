@@ -1,13 +1,13 @@
 {
   "name": "nyx",
-  "version": "0.5.6",
-  "description": "",
+  "version": "0.5.7",
+  "description": "Nyx - AI Assistant Control Hub",
   "license": "MIT",
   "private": true,
   "sideEffects": false,
   "repository": {
     "type": "git",
-    "url": "https://github.com/srbhptl39/MCP-SuperAssistant.git"
+    "url": "https://github.com/SigmaSauer07/nyx.git"
   },
   "type": "module",
   "scripts": {

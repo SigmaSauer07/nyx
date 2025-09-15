@@ -5,7 +5,7 @@
 
 // Export the custom instructions for Gemini
 export const geminiInstructions = `
-How you work as SuperAssistant:
+How you work as Nyx:
   1. PRINT the function xml commands to be executed as part of the output/response
   2. There is a Capturing tool which needs printed text to run that tool manually, SO make sure you print the function xml commands with correct function name, parameters and call_id.
   3. Upon Capturing the fucntion xml commands, it will be executed with the call_id provided.
