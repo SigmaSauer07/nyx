@@ -2,6 +2,9 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 23d9a07 (refactor: update various files and improve extension functionality)
   "name": "chrome-extension",
   "version": "0.5.6",
   "description": "chrome extension - core settings",
@@ -10,6 +13,7 @@
   "version": "0.5.5",
   "description": "Nyx Extension - core settings",
 >>>>>>> 9180358 (Rebrand project from MCP SuperAssistant to Nyx (#2))
+<<<<<<< HEAD
 =======
 =======
 >>>>>>> 4507288 (chore: update dependencies in package.json files)
@@ -35,6 +39,8 @@
 >>>>>>> 9180358 (Rebrand project from MCP SuperAssistant to Nyx (#2))
 >>>>>>> 5d94035 (Rebrand project from MCP SuperAssistant to Nyx (#2))
 >>>>>>> 4507288 (chore: update dependencies in package.json files)
+=======
+>>>>>>> 23d9a07 (refactor: update various files and improve extension functionality)
   "type": "module",
   "private": true,
   "sideEffects": false,

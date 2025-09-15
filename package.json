@@ -3,6 +3,9 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 23d9a07 (refactor: update various files and improve extension functionality)
   "name": "mcp-superassistant",
   "version": "0.5.6",
   "description": "MCP SuperAssistant",
@@ -12,6 +15,7 @@
   "description": "Nyx - AI Assistant Extension",
 >>>>>>> 9180358 (Rebrand project from MCP SuperAssistant to Nyx (#2))
 =======
+<<<<<<< HEAD
 =======
 >>>>>>> d5ef17a (chore: update dependencies in package.json files)
 =======
@@ -39,6 +43,8 @@
   "description": "Nyx - AI Assistant Extension",
 >>>>>>> 9180358 (Rebrand project from MCP SuperAssistant to Nyx (#2))
 =======
+=======
+>>>>>>> 23d9a07 (refactor: update various files and improve extension functionality)
   "name": "nyx",
   "version": "0.5.5",
   "description": "Nyx - AI Assistant Extension",
@@ -48,8 +54,11 @@
   "description": "MCP SuperAssistant",
 >>>>>>> main
 >>>>>>> 3d920e2 (Squashed commit of the following:)
+<<<<<<< HEAD
 >>>>>>> 5d94035 (Rebrand project from MCP SuperAssistant to Nyx (#2))
 >>>>>>> 4507288 (chore: update dependencies in package.json files)
+=======
+>>>>>>> 23d9a07 (refactor: update various files and improve extension functionality)
   "license": "MIT",
   "private": true,
   "sideEffects": false,
