@@ -1,13 +1,61 @@
 {
+<<<<<<< HEAD
+<<<<<<< HEAD
+<<<<<<< HEAD
+<<<<<<< HEAD
   "name": "mcp-superassistant",
   "version": "0.5.6",
   "description": "MCP SuperAssistant",
+=======
+  "name": "nyx",
+  "version": "0.5.5",
+  "description": "Nyx - AI Assistant Extension",
+>>>>>>> 9180358 (Rebrand project from MCP SuperAssistant to Nyx (#2))
+=======
+=======
+>>>>>>> d5ef17a (chore: update dependencies in package.json files)
+=======
+>>>>>>> 4507288 (chore: update dependencies in package.json files)
+  "name": "nyx",
+  "version": "0.5.5",
+  "description": "Nyx - AI Assistant Extension",
+=======
+=======
+>>>>>>> 17d4477 (oikjhb)
+  "name": "mcp-superassistant",
+  "version": "0.5.6",
+  "description": "MCP SuperAssistant",
+>>>>>>> main
+<<<<<<< HEAD
+>>>>>>> 3d920e2 (Squashed commit of the following:)
+=======
+=======
+  "name": "mcp-superassistant",
+  "version": "0.5.6",
+  "description": "MCP SuperAssistant",
+=======
+  "name": "nyx",
+  "version": "0.5.5",
+  "description": "Nyx - AI Assistant Extension",
+>>>>>>> 9180358 (Rebrand project from MCP SuperAssistant to Nyx (#2))
+=======
+  "name": "nyx",
+  "version": "0.5.5",
+  "description": "Nyx - AI Assistant Extension",
+=======
+  "name": "mcp-superassistant",
+  "version": "0.5.6",
+  "description": "MCP SuperAssistant",
+>>>>>>> main
+>>>>>>> 3d920e2 (Squashed commit of the following:)
+>>>>>>> 5d94035 (Rebrand project from MCP SuperAssistant to Nyx (#2))
+>>>>>>> 4507288 (chore: update dependencies in package.json files)
   "license": "MIT",
   "private": true,
   "sideEffects": false,
   "repository": {
     "type": "git",
-    "url": "https://github.com/srbhptl39/MCP-SuperAssistant.git"
+    "url": "https://github.com/alsania/nyx.git"
   },
   "type": "module",
   "scripts": {

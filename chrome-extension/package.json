@@ -1,7 +1,40 @@
 {
+<<<<<<< HEAD
+<<<<<<< HEAD
+<<<<<<< HEAD
   "name": "chrome-extension",
   "version": "0.5.6",
   "description": "chrome extension - core settings",
+=======
+  "name": "nyx-extension",
+  "version": "0.5.5",
+  "description": "Nyx Extension - core settings",
+>>>>>>> 9180358 (Rebrand project from MCP SuperAssistant to Nyx (#2))
+=======
+=======
+>>>>>>> 4507288 (chore: update dependencies in package.json files)
+  "name": "nyx-extension",
+  "version": "0.5.5",
+  "description": "Nyx Extension - core settings",
+=======
+  "name": "chrome-extension",
+  "version": "0.5.6",
+  "description": "chrome extension - core settings",
+>>>>>>> 17d4477 (oikjhb)
+<<<<<<< HEAD
+>>>>>>> d5ef17a (chore: update dependencies in package.json files)
+=======
+=======
+  "name": "chrome-extension",
+  "version": "0.5.6",
+  "description": "chrome extension - core settings",
+=======
+  "name": "nyx-extension",
+  "version": "0.5.5",
+  "description": "Nyx Extension - core settings",
+>>>>>>> 9180358 (Rebrand project from MCP SuperAssistant to Nyx (#2))
+>>>>>>> 5d94035 (Rebrand project from MCP SuperAssistant to Nyx (#2))
+>>>>>>> 4507288 (chore: update dependencies in package.json files)
   "type": "module",
   "private": true,
   "sideEffects": false,

@@ -812,10 +812,10 @@ const ServerStatus: React.FC<ServerStatusProps> = ({ status: initialStatus }) =>
                 />
                 <div className="mt-2 text-xs text-slate-500 dark:text-slate-400">
                   <div className="mb-2">
-                    <strong>To start MCP SuperAssistant Proxy:</strong>
+                    <strong>To start Nyx Proxy:</strong>
                   </div>
                   <div className="bg-slate-100 dark:bg-slate-800 p-2 rounded font-mono text-xs border">
-                    npx @srbhptl39/mcp-superassistant-proxy@latest --config ./config.json --outputTransport {connectionType === 'sse' ? 'sse' : connectionType === 'websocket' ? 'ws' : 'streamableHttp'}
+                    npx @alsania/nyx-proxy@latest --config ./config.json --outputTransport {connectionType === 'sse' ? 'sse' : connectionType === 'websocket' ? 'ws' : 'streamableHttp'}
                   </div>
                   <div className="mt-2 text-xs">
                     <div className="mb-1">
@@ -870,7 +870,7 @@ const ServerStatus: React.FC<ServerStatusProps> = ({ status: initialStatus }) =>
                   onClick={handleSaveServerConfig}
                   variant="default"
                   size="sm"
-                  className="h-8 px-3 text-xs font-medium transition-all duration-200 hover:scale-105 active:scale-95 bg-blue-600 hover:bg-blue-700 dark:bg-blue-600 dark:hover:bg-blue-700 text-white dark:text-white save-button-stable"
+                  className="h-8 px-3 text-xs font-medium transition-all duration-200 hover:scale-105 active:scale-95 bg-emerald-600 hover:bg-emerald-700 dark:bg-emerald-600 dark:hover:bg-emerald-700 text-white dark:text-white save-button-stable"
                   disabled={hasBackgroundError || isReconnecting}>
                   {isReconnecting ? (
                     <div className="flex items-center gap-2">
