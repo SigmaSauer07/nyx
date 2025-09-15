@@ -1,7 +1,7 @@
 {
-  "name": "mcp-superassistant",
+  "name": "nyx",
   "version": "0.5.6",
-  "description": "MCP SuperAssistant",
+  "description": "",
   "license": "MIT",
   "private": true,
   "sideEffects": false,
