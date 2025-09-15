@@ -1,0 +1,140 @@
+/* Nyx Section Background Patterns */
+
+/* Content section backgrounds */
+.Nyx-section-bg {
+  position: relative;
+  background: var(--bg-secondary);
+}
+
+/* Alternating section pattern */
+.Nyx-section-bg--alternate:nth-child(even) {
+  background: var(--bg-primary);
+}
+
+.Nyx-section-bg--alternate:nth-child(odd) {
+  background: var(--bg-secondary);
+}
+
+/* Gradient section backgrounds */
+.Nyx-section-bg--gradient-top {
+  background: linear-gradient(180deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+}
+
+.Nyx-section-bg--gradient-bottom {
+  background: linear-gradient(180deg, var(--bg-secondary) 0%, var(--bg-primary) 100%);
+}
+
+.Nyx-section-bg--gradient-diagonal {
+  background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 50%, var(--bg-violet) 100%);
+}
+
+/* Pattern section backgrounds */
+.Nyx-section-bg--pattern-dots {
+  background-image: radial-gradient(circle, rgba(57, 255, 20, 0.1) 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+
+.Nyx-section-bg--pattern-lines {
+  background-image: 
+    linear-gradient(45deg, rgba(57, 255, 20, 0.05) 25%, transparent 25%),
+    linear-gradient(-45deg, rgba(57, 255, 20, 0.05) 25%, transparent 25%);
+  background-size: 40px 40px;
+}
+
+.Nyx-section-bg--pattern-triangles {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 60 60'%3E%3Cdefs%3E%3Cpattern id='triangles' width='60' height='60' patternUnits='userSpaceOnUse'%3E%3Cpolygon points='30,0 60,30 30,60 0,30' fill='none' stroke='%2339FF14' stroke-width='0.5' opacity='0.2'/%3E%3C/pattern%3E%3C/defs%3E%3Crect width='100' height='100' fill='url(%23triangles)'/%3E%3C/svg%3E");
+}
+
+/* Animated section backgrounds */
+.Nyx-section-bg--animated-dots {
+  background-image: radial-gradient(circle, rgba(57, 255, 20, 0.1) 1px, transparent 1px);
+  background-size: 20px 20px;
+  animation: Nyx-dots-move 30s linear infinite;
+}
+
+@keyframes Nyx-dots-move {
+  0% {
+    background-position: 0 0;
+  }
+  100% {
+    background-position: 20px 20px;
+  }
+}
+
+.Nyx-section-bg--animated-lines {
+  background-image: 
+    linear-gradient(90deg, rgba(57, 255, 20, 0.1) 1px, transparent 1px);
+  background-size: 30px 30px;
+  animation: Nyx-lines-move 20s linear infinite;
+}
+
+@keyframes Nyx-lines-move {
+  0% {
+    background-position: 0 0;
+  }
+  100% {
+    background-position: 30px 0;
+  }
+}
+
+/* Overlay section backgrounds */
+.Nyx-section-bg--overlay-light::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(45deg, rgba(57, 255, 20, 0.05) 0%, transparent 50%);
+  pointer-events: none;
+}
+
+.Nyx-section-bg--overlay-medium::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(45deg, rgba(57, 255, 20, 0.1) 0%, transparent 50%);
+  pointer-events: none;
+}
+
+.Nyx-section-bg--overlay-strong::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(45deg, rgba(57, 255, 20, 0.15) 0%, transparent 50%);
+  pointer-events: none;
+}
+
+/* Border section backgrounds */
+.Nyx-section-bg--bordered {
+  border: 1px solid rgba(57, 255, 20, 0.2);
+  box-shadow: 
+    inset 0 0 20px rgba(57, 255, 20, 0.05),
+    0 0 20px rgba(57, 255, 20, 0.1);
+}
+
+.Nyx-section-bg--bordered-strong {
+  border: 2px solid rgba(57, 255, 20, 0.3);
+  box-shadow: 
+    inset 0 0 30px rgba(57, 255, 20, 0.1),
+    0 0 30px rgba(57, 255, 20, 0.2);
+}
+
+/* Glow section backgrounds */
+.Nyx-section-bg--glow {
+  box-shadow: 
+    inset 0 0 50px rgba(57, 255, 20, 0.1),
+    0 0 100px rgba(57, 255, 20, 0.1);
+}
+
+.Nyx-section-bg--glow-strong {
+  box-shadow: 
+    inset 0 0 100px rgba(57, 255, 20, 0.15),
+    0 0 200px rgba(57, 255, 20, 0.2);
+} 

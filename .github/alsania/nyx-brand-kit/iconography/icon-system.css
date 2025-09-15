@@ -1,0 +1,234 @@
+/* Nyx Icon System */
+
+/* Base icon styles */
+.Nyx-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  fill: currentColor;
+  stroke: currentColor;
+  stroke-width: 1.5;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+/* Icon sizes */
+.Nyx-icon--xs {
+  width: 16px;
+  height: 16px;
+}
+
+.Nyx-icon--sm {
+  width: 20px;
+  height: 20px;
+}
+
+.Nyx-icon--md {
+  width: 24px;
+  height: 24px;
+}
+
+.Nyx-icon--lg {
+  width: 32px;
+  height: 32px;
+}
+
+.Nyx-icon--xl {
+  width: 48px;
+  height: 48px;
+}
+
+.Nyx-icon--2xl {
+  width: 64px;
+  height: 64px;
+}
+
+/* Icon colors */
+.Nyx-icon--primary {
+  color: var(--Nyx-primary);
+}
+
+.Nyx-icon--secondary {
+  color: var(--Nyx-secondary);
+}
+
+.Nyx-icon--white {
+  color: white;
+}
+
+.Nyx-icon--muted {
+  color: #B3B3B3;
+}
+
+.Nyx-icon--success {
+  color: var(--Nyx-primary);
+}
+
+.Nyx-icon--error {
+  color: #ff4444;
+}
+
+.Nyx-icon--warning {
+  color: #ffc107;
+}
+
+.Nyx-icon--info {
+  color: #3498db;
+}
+
+/* Icon states */
+.Nyx-icon--hover:hover {
+  transform: scale(1.1);
+  filter: drop-shadow(0 0 5px currentColor);
+}
+
+.Nyx-icon--glow {
+  filter: drop-shadow(0 0 8px currentColor);
+}
+
+.Nyx-icon--pulse {
+  animation: Nyx-icon-pulse 2s ease-in-out infinite;
+}
+
+@keyframes Nyx-icon-pulse {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.7;
+    transform: scale(1.1);
+  }
+}
+
+/* Icon animations */
+.Nyx-icon--spin {
+  animation: Nyx-icon-spin 1s linear infinite;
+}
+
+@keyframes Nyx-icon-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.Nyx-icon--bounce {
+  animation: Nyx-icon-bounce 1s ease-in-out infinite;
+}
+
+@keyframes Nyx-icon-bounce {
+  0%, 20%, 53%, 80%, 100% {
+    transform: translateY(0);
+  }
+  40%, 43% {
+    transform: translateY(-8px);
+  }
+  70% {
+    transform: translateY(-4px);
+  }
+  90% {
+    transform: translateY(-2px);
+  }
+}
+
+/* Icon with background */
+.Nyx-icon--bg {
+  background: rgba(57, 255, 20, 0.1);
+  border-radius: 6px;
+  padding: 8px;
+}
+
+.Nyx-icon--bg-primary {
+  background: var(--Nyx-primary);
+  color: var(--Nyx-secondary);
+}
+
+.Nyx-icon--bg-secondary {
+  background: var(--Nyx-secondary);
+  color: var(--Nyx-primary);
+}
+
+/* Icon groups */
+.Nyx-icon-group {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.Nyx-icon-group--stacked {
+  position: relative;
+}
+
+.Nyx-icon-group--stacked .Nyx-icon:not(:first-child) {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+/* Responsive icons */
+@media (max-width: 768px) {
+  .Nyx-icon--xl {
+    width: 40px;
+    height: 40px;
+  }
+  
+  .Nyx-icon--2xl {
+    width: 56px;
+    height: 56px;
+  }
+}
+
+/* Icon with text */
+.Nyx-icon-text {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.Nyx-icon-text--reverse {
+  flex-direction: row-reverse;
+}
+
+.Nyx-icon-text--vertical {
+  flex-direction: column;
+  gap: 4px;
+}
+
+/* Icon loading state */
+.Nyx-icon--loading {
+  opacity: 0.6;
+  animation: Nyx-icon-pulse 1.5s ease-in-out infinite;
+}
+
+/* Icon disabled state */
+.Nyx-icon--disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* Icon with border */
+.Nyx-icon--bordered {
+  border: 2px solid currentColor;
+  border-radius: 6px;
+  padding: 4px;
+}
+
+.Nyx-icon--bordered-primary {
+  border-color: var(--Nyx-primary);
+  color: var(--Nyx-primary);
+}
+
+/* Icon with shadow */
+.Nyx-icon--shadow {
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+}
+
+.Nyx-icon--shadow-glow {
+  filter: drop-shadow(0 0 10px var(--Nyx-primary));
+} 

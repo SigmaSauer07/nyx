@@ -1,0 +1,230 @@
+/* Nyx UI Icon System */
+
+/* Base icon styles */
+.Nyx-ui-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    fill: currentColor;
+    stroke: currentColor;
+    stroke-width: 1.5;
+    transition: all 0.2s ease;
+}
+
+/* Icon sizes */
+.Nyx-ui-icon--xs {
+    width: 16px;
+    height: 16px;
+}
+
+.Nyx-ui-icon--sm {
+    width: 20px;
+    height: 20px;
+}
+
+.Nyx-ui-icon--md {
+    width: 24px;
+    height: 24px;
+}
+
+.Nyx-ui-icon--lg {
+    width: 32px;
+    height: 32px;
+}
+
+.Nyx-ui-icon--xl {
+    width: 48px;
+    height: 48px;
+}
+
+/* Icon colors */
+.Nyx-ui-icon--primary {
+    color: var(--Nyx-primary);
+}
+
+.Nyx-ui-icon--secondary {
+    color: var(--Nyx-secondary);
+}
+
+.Nyx-ui-icon--white {
+    color: white;
+}
+
+.Nyx-ui-icon--muted {
+    color: #B3B3B3;
+}
+
+/* Icon states */
+.Nyx-ui-icon--hover:hover {
+    transform: scale(1.1);
+    filter: drop-shadow(0 0 5px currentColor);
+}
+
+.Nyx-ui-icon--glow {
+    filter: drop-shadow(0 0 8px currentColor);
+}
+
+/* Icon animations */
+.Nyx-ui-icon--spin {
+    animation: Nyx-icon-spin 1s linear infinite;
+}
+
+@keyframes Nyx-icon-spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.Nyx-ui-icon--pulse {
+    animation: Nyx-icon-pulse 2s ease-in-out infinite;
+}
+
+@keyframes Nyx-icon-pulse {
+    0%, 100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+    50% {
+        opacity: 0.7;
+        transform: scale(1.1);
+    }
+}
+
+/* Common UI icons */
+.Nyx-ui-icon--home::before {
+    content: "🏠";
+}
+
+.Nyx-ui-icon--settings::before {
+    content: "⚙️";
+}
+
+.Nyx-ui-icon--user::before {
+    content: "👤";
+}
+
+.Nyx-ui-icon--search::before {
+    content: "🔍";
+}
+
+.Nyx-ui-icon--close::before {
+    content: "✕";
+    font-weight: bold;
+}
+
+.Nyx-ui-icon--menu::before {
+    content: "☰";
+}
+
+.Nyx-ui-icon--arrow-right::before {
+    content: "→";
+}
+
+.Nyx-ui-icon--arrow-left::before {
+    content: "←";
+}
+
+.Nyx-ui-icon--arrow-up::before {
+    content: "↑";
+}
+
+.Nyx-ui-icon--arrow-down::before {
+    content: "↓";
+}
+
+.Nyx-ui-icon--check::before {
+    content: "✓";
+    font-weight: bold;
+}
+
+.Nyx-ui-icon--warning::before {
+    content: "⚠️";
+}
+
+.Nyx-ui-icon--error::before {
+    content: "❌";
+}
+
+.Nyx-ui-icon--info::before {
+    content: "ℹ️";
+}
+
+.Nyx-ui-icon--success::before {
+    content: "✅";
+}
+
+/* Web3 specific icons */
+.Nyx-ui-icon--wallet::before {
+    content: "💳";
+}
+
+.Nyx-ui-icon--blockchain::before {
+    content: "🔗";
+}
+
+.Nyx-ui-icon--token::before {
+    content: "🪙";
+}
+
+.Nyx-ui-icon--nft::before {
+    content: "🖼️";
+}
+
+.Nyx-ui-icon--defi::before {
+    content: "📈";
+}
+
+.Nyx-ui-icon--swap::before {
+    content: "🔄";
+}
+
+.Nyx-ui-icon--stake::before {
+    content: "🔒";
+}
+
+.Nyx-ui-icon--yield::before {
+    content: "🌱";
+}
+
+/* Social media icons */
+.Nyx-ui-icon--twitter::before {
+    content: "🐦";
+}
+
+.Nyx-ui-icon--discord::before {
+    content: "🎮";
+}
+
+.Nyx-ui-icon--github::before {
+    content: "📚";
+}
+
+.Nyx-ui-icon--telegram::before {
+    content: "📱";
+}
+
+.Nyx-ui-icon--reddit::before {
+    content: "🤖";
+}
+
+.Nyx-ui-icon--medium::before {
+    content: "��";
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .Nyx-ui-icon--xl {
+        width: 40px;
+        height: 40px;
+    }
+    
+    .Nyx-ui-icon--lg {
+        width: 28px;
+        height: 28px;
+    }
+} 

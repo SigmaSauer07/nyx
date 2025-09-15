@@ -1,0 +1,222 @@
+/* Nyx Splash Screen Styles */
+
+.Nyx-splash {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, var(--Nyx-secondary) 0%, #001F3F 100%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    overflow: hidden;
+}
+
+/* Animated background */
+.Nyx-splash::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="%2339FF14" stroke-width="0.1" opacity="0.3"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+    animation: Nyx-grid-move 20s linear infinite;
+    opacity: 0.1;
+}
+
+@keyframes Nyx-grid-move {
+    0% {
+        transform: translate(0, 0);
+    }
+    100% {
+        transform: translate(10px, 10px);
+    }
+}
+
+/* Logo container */
+.Nyx-splash__logo {
+    position: relative;
+    z-index: 2;
+    width: 200px;
+    height: 200px;
+    margin-bottom: 40px;
+    animation: Nyx-logo-appear 1.5s ease-out;
+}
+
+.Nyx-splash__logo img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    filter: drop-shadow(0 0 30px var(--Nyx-primary));
+}
+
+@keyframes Nyx-logo-appear {
+    0% {
+        opacity: 0;
+        transform: scale(0.5) rotate(-180deg);
+    }
+    50% {
+        opacity: 0.7;
+        transform: scale(1.1) rotate(-90deg);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1) rotate(0deg);
+    }
+}
+
+/* Title */
+.Nyx-splash__title {
+    position: relative;
+    z-index: 2;
+    color: var(--Nyx-primary);
+    font-family: var(--font-heading);
+    font-size: 48px;
+    font-weight: 700;
+    margin-bottom: 20px;
+    text-shadow: 0 0 20px var(--Nyx-primary);
+    letter-spacing: 2px;
+    animation: Nyx-title-appear 1s ease-out 0.5s both;
+}
+
+@keyframes Nyx-title-appear {
+    0% {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Subtitle */
+.Nyx-splash__subtitle {
+    position: relative;
+    z-index: 2;
+    color: white;
+    font-family: var(--font-accent);
+    font-size: 24px;
+    font-weight: 400;
+    margin-bottom: 60px;
+    animation: Nyx-subtitle-appear 1s ease-out 1s both;
+}
+
+@keyframes Nyx-subtitle-appear {
+    0% {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Loading indicator */
+.Nyx-splash__loading {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    animation: Nyx-loading-appear 1s ease-out 1.5s both;
+}
+
+.Nyx-splash__spinner {
+    width: 40px;
+    height: 40px;
+    border: 3px solid rgba(57, 255, 20, 0.3);
+    border-top: 3px solid var(--Nyx-primary);
+    border-radius: 50%;
+    animation: Nyx-spin 1s linear infinite;
+}
+
+@keyframes Nyx-spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.Nyx-splash__loading-text {
+    color: #B3B3B3;
+    font-family: var(--font-primary);
+    font-size: 16px;
+}
+
+@keyframes Nyx-loading-appear {
+    0% {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Progress bar */
+.Nyx-splash__progress {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: rgba(57, 255, 20, 0.2);
+    overflow: hidden;
+}
+
+.Nyx-splash__progress-bar {
+    height: 100%;
+    background: var(--Nyx-primary);
+    box-shadow: 0 0 10px var(--Nyx-primary);
+    animation: Nyx-progress 3s ease-out;
+}
+
+@keyframes Nyx-progress {
+    0% {
+        width: 0%;
+    }
+    100% {
+        width: 100%;
+    }
+}
+
+/* Fade out animation */
+.Nyx-splash--fade-out {
+    animation: Nyx-fade-out 0.5s ease-out forwards;
+}
+
+@keyframes Nyx-fade-out {
+    0% {
+        opacity: 1;
+        transform: scale(1);
+    }
+    100% {
+        opacity: 0;
+        transform: scale(1.1);
+    }
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+    .Nyx-splash__logo {
+        width: 150px;
+        height: 150px;
+    }
+    
+    .Nyx-splash__title {
+        font-size: 36px;
+    }
+    
+    .Nyx-splash__subtitle {
+        font-size: 20px;
+    }
+} 

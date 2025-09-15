@@ -1,0 +1,163 @@
+/* Nyx Toast Styles */
+
+.Nyx-toast {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background: var(--Nyx-secondary);
+  border: 1px solid var(--Nyx-primary);
+  border-radius: 8px;
+  padding: 16px;
+  min-width: 300px;
+  max-width: 400px;
+  box-shadow: 0 8px 32px rgba(57, 255, 20, 0.3);
+  z-index: 1001;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  transform: translateX(100%);
+  opacity: 0;
+  transition: all 0.3s ease-out;
+}
+
+.Nyx-toast--visible {
+  transform: translateX(0);
+  opacity: 1;
+}
+
+/* Toast Types */
+.Nyx-toast--success {
+  border-color: var(--Nyx-primary);
+}
+
+.Nyx-toast--error {
+  border-color: #ff4444;
+}
+
+.Nyx-toast--warning {
+  border-color: #ffc107;
+}
+
+.Nyx-toast--info {
+  border-color: #3498db;
+}
+
+/* Toast Icon */
+.Nyx-toast__icon {
+  flex-shrink: 0;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: rgba(57, 255, 20, 0.1);
+}
+
+.Nyx-toast--success .Nyx-toast__icon {
+  background: rgba(57, 255, 20, 0.1);
+  color: var(--Nyx-primary);
+}
+
+.Nyx-toast--error .Nyx-toast__icon {
+  background: rgba(255, 68, 68, 0.1);
+  color: #ff4444;
+}
+
+.Nyx-toast--warning .Nyx-toast__icon {
+  background: rgba(255, 193, 7, 0.1);
+  color: #ffc107;
+}
+
+.Nyx-toast--info .Nyx-toast__icon {
+  background: rgba(52, 152, 219, 0.1);
+  color: #3498db;
+}
+
+/* Toast Content */
+.Nyx-toast__content {
+  flex: 1;
+  min-width: 0;
+}
+
+.Nyx-toast__title {
+  color: white;
+  font-family: var(--font-accent);
+  font-size: var(--text-base);
+  font-weight: var(--font-semibold);
+  margin: 0 0 4px 0;
+  line-height: 1.4;
+}
+
+.Nyx-toast__message {
+  color: #B3B3B3;
+  font-family: var(--font-primary);
+  font-size: var(--text-sm);
+  margin: 0 0 8px 0;
+  line-height: 1.4;
+}
+
+.Nyx-toast__action {
+  background: transparent;
+  border: none;
+  color: var(--Nyx-primary);
+  font-family: var(--font-accent);
+  font-size: var(--text-sm);
+  font-weight: var(--font-semibold);
+  cursor: pointer;
+  padding: 0;
+  text-decoration: underline;
+  transition: color 0.2s ease;
+}
+
+.Nyx-toast__action:hover {
+  color: #2EBF0F;
+}
+
+/* Toast Close */
+.Nyx-toast__close {
+  background: transparent;
+  border: none;
+  color: #B3B3B3;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.Nyx-toast__close:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+}
+
+/* Toast Stack */
+.Nyx-toast-stack {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 1001;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .Nyx-toast {
+    left: 20px;
+    right: 20px;
+    min-width: auto;
+    max-width: none;
+    transform: translateY(-100%);
+  }
+  
+  .Nyx-toast--visible {
+    transform: translateY(0);
+  }
+  
+  .Nyx-toast-stack {
+    left: 20px;
+    right: 20px;
+  }
+} 

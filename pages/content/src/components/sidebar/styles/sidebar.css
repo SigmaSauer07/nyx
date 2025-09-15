@@ -1,8 +1,35 @@
-/* 
- * Sidebar Core Styles
- * These styles provide the basic structure and positioning for the sidebar.
+/*
+ * Sidebar Core Styles - Nyx Glass Theme Integration
+ * These styles provide the basic structure and positioning for the sidebar with glassmorphism effects.
  * Component-specific styling is now handled by Tailwind CSS classes.
  */
+
+/* Glass Theme Variables */
+:root {
+  --bg: #0b1220;
+  --bg-soft: rgba(13,20,34,.65);
+  --fg: #e8eefc;
+  --muted: #a9b4cc;
+  --accent: #39ff14;
+  --accent-2: #46bdf0;
+  --card: rgba(255,255,255,.06);
+  --glass: rgba(255,255,255,.08);
+  --shadow: 0 8px 30px rgba(0,0,0,.4);
+  --border: 1px solid rgba(255,255,255,.12);
+}
+
+[data-theme="light"] {
+  --bg: #f7fbff;
+  --bg-soft: rgba(255,255,255,.65);
+  --fg: #111827;
+  --muted: #4b5563;
+  --accent: #0f9d58;
+  --accent-2: #2563eb;
+  --card: rgba(0,0,0,.04);
+  --glass: rgba(0,0,0,.06);
+  --shadow: 0 8px 24px rgba(0,0,0,.15);
+  --border: 1px solid rgba(0,0,0,.08);
+}
 
 /* Enhanced sidebar appearance/disappearance animations */
 .sidebar.initial-render {
@@ -98,7 +125,7 @@
   }
 }
 
-/* Base sidebar container */
+/* Base sidebar container - Glass Theme */
 .sidebar {
   position: fixed;
   top: 0;
@@ -107,18 +134,20 @@
   z-index: 9999;
   display: flex;
   flex-direction: column;
+  background: var(--glass);
   /* Smooth, natural width transitions with subtle elastic feel */
-  transition: width 0.4s cubic-bezier(0.4, 0.0, 0.2, 1), 
+  transition: width 0.4s cubic-bezier(0.4, 0.0, 0.2, 1),
               box-shadow 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
   overflow-y: auto;
-  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08), 
-              0 1px 6px rgba(0, 0, 0, 0.04);
+  box-shadow: var(--shadow);
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-  will-change: width, transform; 
+  color: var(--fg);
+  will-change: width, transform;
   transform: translateZ(0); /* Force GPU acceleration */
   contain: layout style;
-  backdrop-filter: blur(20px);
-  border-left: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(12px);
+  border-left: var(--border);
+  border-radius: 18px 0 0 18px;
 }
 
 /* Sidebar in transitioning state */
@@ -139,10 +168,9 @@
   transition: width 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
 
-/* Push mode */
+/* Push mode - Glass Theme */
 .sidebar.push-mode {
-  box-shadow: -5px 0 20px rgba(0, 0, 0, 0.08), 
-              0 0 40px rgba(0, 0, 0, 0.04);
+  box-shadow: var(--shadow), -5px 0 20px rgba(0, 0, 0, 0.08);
 }
 
 /* Resizing state - disable transitions during active resize */
@@ -212,6 +240,7 @@
 .sidebar-header h4 {
   line-height: 1.2;
   letter-spacing: -0.01em;
+  color: var(--fg);
 }
 
 /* Ensure header buttons have proper spacing */
@@ -379,6 +408,8 @@
 .sidebar .input-submit:hover {
   transform: translateY(-1px) scale(1.02);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.02));
+  border-color: rgba(255,255,255,.25);
 }
 
 .sidebar .input-submit:active {
@@ -392,13 +423,19 @@
   opacity: 0.6;
 }
 
-/* Enhanced button animations - simplified */
+/* Enhanced button animations - Glass Theme */
 .sidebar button {
-  transition: all 0.2s ease-out;
+  background: var(--glass);
+  border: var(--border);
+  border-radius: 12px;
+  color: var(--fg);
+  transition: all 0.2s ease-out, transform 0.08s ease, box-shadow 0.2s ease, border-color 0.2s ease;
 }
 
 .sidebar button:hover {
   transform: translateY(-1px);
+  box-shadow: var(--shadow);
+  border-color: rgba(255,255,255,.25);
 }
 
 .sidebar button:active {
@@ -570,13 +607,17 @@
   background-color: rgba(99, 102, 241, 0.5);
 }
 
-/* Card styles */
+/* Card styles - Glass Theme */
 .sidebar-card {
+  background: var(--card);
+  border: var(--border);
+  border-radius: 18px;
+  padding: 14px;
   overflow: hidden;
-  transition: box-shadow 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), 
+  transition: box-shadow 0.3s cubic-bezier(0.34, 1.56, 0.64, 1),
               transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-  border-radius: 0.5rem;
   margin-bottom: 0.75rem;
+  backdrop-filter: blur(12px);
 }
 /* 
 .sidebar-card:hover {
@@ -585,12 +626,12 @@
 } */
 
 .dark .sidebar-card {
-  /* background-color: #1f2937; */
-  /* border-color: rgba(255, 255, 255, 0.1); */
+  background: var(--card);
+  border: var(--border);
 }
 
 .dark .sidebar-card:hover {
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  box-shadow: var(--shadow);
 }
 
 /* Spring animation for expanding content - reduced springiness */

@@ -1,0 +1,103 @@
+/* Nyx App Icon Styles */
+
+/* Base icon container */
+.Nyx-icon {
+    display: inline-block;
+    position: relative;
+    border-radius: 12px;
+    overflow: hidden;
+    background: linear-gradient(135deg, var(--Nyx-secondary) 0%, #001F3F 100%);
+    box-shadow: 0 4px 20px rgba(57, 255, 20, 0.3);
+    transition: all 0.3s ease;
+}
+
+.Nyx-icon:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 30px rgba(57, 255, 20, 0.5);
+}
+
+/* Icon sizes */
+.Nyx-icon--sm {
+    width: 32px;
+    height: 32px;
+}
+
+.Nyx-icon--md {
+    width: 48px;
+    height: 48px;
+}
+
+.Nyx-icon--lg {
+    width: 64px;
+    height: 64px;
+}
+
+.Nyx-icon--xl {
+    width: 128px;
+    height: 128px;
+}
+
+/* Icon variants */
+.Nyx-icon--primary {
+    background: linear-gradient(135deg, var(--Nyx-primary) 0%, #2EBF0F 100%);
+}
+
+.Nyx-icon--glow {
+    box-shadow: 0 0 20px var(--Nyx-primary);
+}
+
+.Nyx-icon--pulse {
+    animation: Nyx-pulse 2s infinite;
+}
+
+@keyframes Nyx-pulse {
+    0% {
+        box-shadow: 0 0 20px var(--Nyx-primary);
+    }
+    50% {
+        box-shadow: 0 0 30px var(--Nyx-primary);
+    }
+    100% {
+        box-shadow: 0 0 20px var(--Nyx-primary);
+    }
+}
+
+/* Icon content */
+.Nyx-icon__content {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-family: var(--font-heading);
+    font-weight: 700;
+}
+
+/* Icon with image */
+.Nyx-icon__image {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    padding: 8px;
+}
+
+/* Icon with text */
+.Nyx-icon__text {
+    font-size: 0.6em;
+    letter-spacing: 0.5px;
+    text-shadow: 0 0 10px var(--Nyx-primary);
+}
+
+/* Responsive icons */
+@media (max-width: 768px) {
+    .Nyx-icon--xl {
+        width: 96px;
+        height: 96px;
+    }
+    
+    .Nyx-icon--lg {
+        width: 48px;
+        height: 48px;
+    }
+} 

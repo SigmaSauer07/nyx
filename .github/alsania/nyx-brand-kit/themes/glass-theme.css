@@ -1,0 +1,77 @@
+/* === Nyx Glass / Neon Theme (Dark + Light) === */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+
+:root{
+  --bg:#0b1220; --bg-soft:rgba(13,20,34,.65); --fg:#e8eefc; --muted:#a9b4cc;
+  --accent:#39ff14; --accent-2:#46bdf0; --card:rgba(255,255,255,.06); --glass:rgba(255,255,255,.08);
+  --shadow:0 8px 30px rgba(0,0,0,.4); --border:1px solid rgba(255,255,255,.12);
+}
+[data-theme="light"]{
+  --bg:#f7fbff; --bg-soft:rgba(255,255,255,.65); --fg:#111827; --muted:#4b5563;
+  --accent:#0f9d58; --accent-2:#2563eb; --card:rgba(0,0,0,.04); --glass:rgba(0,0,0,.06);
+  --shadow:0 8px 24px rgba(0,0,0,.15); --border:1px solid rgba(0,0,0,.08);
+}
+
+*{box-sizing:border-box} html,body{height:100%}
+body{
+  margin:0; font-family:'Inter',system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,"Noto Sans","Liberation Sans",sans-serif;
+  background:
+    radial-gradient(1200px 1200px at 10% 10%, rgba(70,189,240,.08), transparent 40%),
+    radial-gradient(1200px 1200px at 90% 10%, rgba(57,255,20,.08), transparent 40%),
+    var(--bg);
+  color:var(--fg);
+}
+
+/* Glass containers */
+.glass, .card, .panel, .box {
+  background:var(--card); border:var(--border); border-radius:18px; padding:14px; box-shadow:var(--shadow);
+  backdrop-filter:blur(12px);
+}
+header.glass, nav.glass, footer.glass { background:var(--bg-soft); }
+
+/* Buttons / inputs */
+.btn, button, .button {
+  border:1px solid rgba(255,255,255,.15);
+  background:linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.02));
+  color:var(--fg); padding:10px 14px; border-radius:12px; cursor:pointer;
+  transition:transform .08s ease, box-shadow .2s ease, border-color .2s ease;
+}
+.btn:hover, button:hover, .button:hover{ transform:translateY(-1px); box-shadow:0 10px 22px rgba(0,0,0,.25); border-color:rgba(255,255,255,.25); }
+.btn.accent, .button.accent{ border-color:var(--accent); box-shadow:0 0 0 2px rgba(57,255,20,.2) inset; }
+
+.input, input[type="text"], input[type="search"], input[type="url"], input[type="email"], input[type="number"], select, textarea {
+  width:100%; background:rgba(255,255,255,.02); border:var(--border); color:var(--fg); padding:10px 12px; border-radius:12px;
+}
+::placeholder{ color:var(--muted); }
+
+/* Utility */
+.badge{ padding:4px 8px; border-radius:999px; border:var(--border); font-size:12px; color:var(--muted); }
+.kbd{ font-family:ui-monospace,Menlo,Consolas,monospace; font-size:12px; padding:2px 6px; border-radius:6px; border:var(--border); background:rgba(255,255,255,.06); }
+.link{ color:var(--accent-2); text-decoration:none } .link:hover{text-decoration:underline}
+.switch{ display:inline-flex; align-items:center; gap:8px; cursor:pointer }
+.switch input{ appearance:none; width:40px; height:22px; background:rgba(255,255,255,.2); border-radius:999px; position:relative; border:var(--border) }
+.switch input:checked{ background:rgba(57,255,20,.5) }
+.switch input::after{ content:""; width:18px; height:18px; background:white; border-radius:50%; position:absolute; top:2px; left:2px; transition:left .18s ease }
+.switch input:checked::after{ left:20px }
+
+/* Grid helpers */
+.container{ max-width:1200px; margin:0 auto; padding:16px }
+.grid{ display:grid; gap:14px } .grid-2{ grid-template-columns:repeat(2,1fr) } .grid-3{ grid-template-columns:repeat(3,1fr) }
+@media (max-width:900px){ .grid-2,.grid-3{ grid-template-columns:1fr } }
+
+/* Tables */
+table{ width:100%; border-collapse:separate; border-spacing:0; overflow:hidden; border-radius:12px; border:var(--border); background:var(--card) }
+th,td{ padding:10px 12px; border-bottom:1px solid rgba(255,255,255,.08) } th{ text-align:left; color:var(--muted) }
+tr:hover td{ background:rgba(255,255,255,.03) }
+
+/* Drag & drop */
+.dropzone{ border:2px dashed rgba(255,255,255,.25); border-radius:14px; padding:18px; text-align:center; background:rgba(255,255,255,.04) }
+.dropzone.dragover{ border-color:var(--accent); background:rgba(57,255,20,.08) }
+
+/* Progress */
+.progress{ height:10px; width:100%; background:rgba(255,255,255,.08); border-radius:999px; overflow:hidden; border:var(--border) }
+.progress .bar{ height:100%; width:0; background:linear-gradient(90deg, var(--accent), var(--accent-2)); box-shadow:0 0 16px var(--accent), 0 0 26px var(--accent-2); transition:width .2s ease }
+
+/* Focus & responsive touch targets */
+:focus-visible{ outline:2px solid var(--accent-2); outline-offset:2px; border-radius:8px }
+.btn, .input, select, textarea{ min-height:40px }

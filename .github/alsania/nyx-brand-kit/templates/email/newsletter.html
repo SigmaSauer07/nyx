@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nyx Newsletter</title>
+    <style>
+        /* Reset styles for email clients */
+        body, table, td, p, a, li, blockquote {
+            -webkit-text-size-adjust: 100%;
+            -ms-text-size-adjust: 100%;
+        }
+        
+        table, td {
+            mso-table-lspace: 0pt;
+            mso-table-rspace: 0pt;
+        }
+        
+        img {
+            -ms-interpolation-mode: bicubic;
+        }
+        
+        /* Base styles */
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            font-family: 'Open Sans', Arial, sans-serif;
+            font-size: 16px;
+            line-height: 1.6;
+            color: #333;
+        }
+        
+        .email-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #ffffff;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #0A2472 0%, #001F3F 100%);
+            padding: 40px 30px;
+            text-align: center;
+        }
+        
+        .logo {
+            width: 120px;
+            height: auto;
+            margin-bottom: 20px;
+        }
+        
+        .header-title {
+            color: #39FF14;
+            font-family: 'Orbitron', Arial, sans-serif;
+            font-size: 32px;
+            font-weight: 700;
+            margin: 0;
+            text-shadow: 0 0 10px #39FF14;
+        }
+        
+        .content {
+            padding: 40px 30px;
+        }
+        
+        .section {
+            margin-bottom: 40px;
+        }
+        
+        .section-title {
+            color: #0A2472;
+            font-family: 'Orbitron', Arial, sans-serif;
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+        
+        .section-text {
+            color: #333;
+            font-size: 16px;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+        
+        .cta-button {
+            display: inline-block;
+            background-color: #39FF14;
+            color: #0A2472;
+            padding: 15px 30px;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 16px;
+            margin: 20px 0;
+            transition: all 0.3s ease;
+        }
+        
+        .cta-button:hover {
+            background-color: #2EBF0F;
+            transform: translateY(-2px);
+        }
+        
+        .footer {
+            background-color: #0A0A0A;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .footer-text {
+            color: #B3B3B3;
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+        
+        .social-links {
+            margin-bottom: 20px;
+        }
+        
+        .social-link {
+            display: inline-block;
+            margin: 0 10px;
+            color: #39FF14;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        
+        .unsubscribe {
+            color: #666;
+            font-size: 12px;
+            text-decoration: none;
+        }
+        
+        /* Responsive design */
+        @media only screen and (max-width: 600px) {
+            .email-container {
+                width: 100% !important;
+            }
+            
+            .header, .content, .footer {
+                padding: 20px 15px !important;
+            }
+            
+            .header-title {
+                font-size: 24px !important;
+            }
+            
+            .section-title {
+                font-size: 20px !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+        <tr>
+            <td align="center" style="background-color: #f4f4f4; padding: 20px 0;">
+                <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="600" class="email-container">
+                    <!-- Header -->
+                    <tr>
+                        <td class="header">
+                            <img src="https://Nyx.com/logo-symbol/logo_symbol_256x256.png" alt="Nyx" class="logo">
+                            <h1 class="header-title">DIGITAL SOVEREIGNTY</h1>
+                        </td>
+                    </tr>
+                    
+                    <!-- Content -->
+                    <tr>
+                        <td class="content">
+                            <div class="section">
+                                <h2 class="section-title">🚀 Welcome to the Future</h2>
+                                <p class="section-text">
+                                    Thank you for joining the Nyx community! We're excited to have you on board as we revolutionize the digital landscape through fair, decentralized tools and networks.
+                                </p>
+                                <a href="#" class="cta-button">Explore Our Ecosystem</a>
+                            </div>
+                            
+                            <div class="section">
+                                <h2 class="section-title">💡 What's New</h2>
+                                <p class="section-text">
+                                    Discover our latest innovations in Web3 technology, from advanced DeFi protocols to cutting-edge blockchain solutions that prioritize user sovereignty and environmental sustainability.
+                                </p>
+                                <a href="#" class="cta-button">Read Latest Updates</a>
+                            </div>
+                            
+                            <div class="section">
+                                <h2 class="section-title">🤝 Join Our Community</h2>
+                                <p class="section-text">
+                                    Connect with like-minded innovators, developers, and visionaries who share our passion for building a more equitable digital future.
+                                </p>
+                                <a href="#" class="cta-button">Join Discord</a>
+                            </div>
+                        </td>
+                    </tr>
+                    
+                    <!-- Footer -->
+                    <tr>
+                        <td class="footer">
+                            <div class="social-links">
+                                <a href="#" class="social-link">Twitter</a>
+                                <a href="#" class="social-link">Discord</a>
+                                <a href="#" class="social-link">GitHub</a>
+                                <a href="#" class="social-link">LinkedIn</a>
+                            </div>
+                            <p class="footer-text">
+                                © 2024 Nyx. All rights reserved.<br>
+                                Empowering digital sovereignty through innovation.
+                            </p>
+                            <a href="#" class="unsubscribe">Unsubscribe</a>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</body>
+</html> 

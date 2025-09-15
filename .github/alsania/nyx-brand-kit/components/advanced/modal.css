@@ -1,0 +1,140 @@
+/* Nyx Modal Styles */
+
+.Nyx-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(10, 36, 114, 0.8);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+  animation: Nyx-modal-fade-in 0.3s ease-out;
+}
+
+@keyframes Nyx-modal-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.Nyx-modal {
+  background: var(--Nyx-secondary);
+  border: 1px solid var(--Nyx-primary);
+  border-radius: 12px;
+  box-shadow: 0 20px 60px rgba(57, 255, 20, 0.3);
+  max-width: 90vw;
+  max-height: 90vh;
+  overflow: hidden;
+  animation: Nyx-modal-slide-in 0.3s ease-out;
+}
+
+@keyframes Nyx-modal-slide-in {
+  from {
+    opacity: 0;
+    transform: scale(0.9) translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+/* Modal Sizes */
+.Nyx-modal--sm {
+  width: 400px;
+}
+
+.Nyx-modal--md {
+  width: 600px;
+}
+
+.Nyx-modal--lg {
+  width: 800px;
+}
+
+.Nyx-modal--xl {
+  width: 1000px;
+}
+
+.Nyx-modal--full {
+  width: 95vw;
+  height: 95vh;
+}
+
+/* Modal Header */
+.Nyx-modal__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 24px 32px;
+  border-bottom: 1px solid rgba(57, 255, 20, 0.2);
+}
+
+.Nyx-modal__title {
+  color: var(--Nyx-primary);
+  font-family: var(--font-heading);
+  font-size: var(--text-xl);
+  font-weight: var(--font-bold);
+  margin: 0;
+}
+
+.Nyx-modal__close {
+  background: transparent;
+  border: none;
+  color: #B3B3B3;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.Nyx-modal__close:hover {
+  background: rgba(57, 255, 20, 0.1);
+  color: var(--Nyx-primary);
+}
+
+/* Modal Body */
+.Nyx-modal__body {
+  padding: 32px;
+  overflow-y: auto;
+  max-height: calc(90vh - 120px);
+}
+
+/* Modal Footer */
+.Nyx-modal__footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+  padding: 24px 32px;
+  border-top: 1px solid rgba(57, 255, 20, 0.2);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .Nyx-modal-overlay {
+    padding: 10px;
+  }
+  
+  .Nyx-modal {
+    width: 100% !important;
+    max-width: 100%;
+  }
+  
+  .Nyx-modal__header,
+  .Nyx-modal__body,
+  .Nyx-modal__footer {
+    padding: 20px;
+  }
+} 

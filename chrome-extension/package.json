@@ -19,19 +19,19 @@
     "type-check": "tsc --noEmit"
   },
   "dependencies": {
-    "@extension/env": "workspace:*",
-    "@extension/shared": "workspace:*",
-    "@extension/storage": "workspace:*",
+    "@extension/env": "*",
+    "@extension/shared": "*",
+    "@extension/storage": "*",
     "@modelcontextprotocol/sdk": "^1.17.5",
     "vite-plugin-node-polyfills": "^0.23.0",
     "webextension-polyfill": "^0.12.0",
     "zustand": "^5.0.5"
   },
   "devDependencies": {
-    "@extension/dev-utils": "workspace:*",
-    "@extension/hmr": "workspace:*",
-    "@extension/tsconfig": "workspace:*",
-    "@extension/vite-config": "workspace:*",
+    "@extension/dev-utils": "*",
+    "@extension/hmr": "*",
+    "@extension/tsconfig": "*",
+    "@extension/vite-config": "*",
     "@laynezh/vite-plugin-lib-assets": "^2.1.0",
     "@types/chrome": "0.0.304",
     "@types/node": "^22.5.5",

@@ -1,0 +1,177 @@
+/* Nyx Data Table Styles */
+
+.Nyx-data-table {
+  background: var(--Nyx-secondary);
+  border: 1px solid rgba(57, 255, 20, 0.2);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+/* Search */
+.Nyx-data-table__search {
+  padding: 20px;
+  border-bottom: 1px solid rgba(57, 255, 20, 0.2);
+}
+
+.Nyx-data-table__search .Nyx-input {
+  width: 100%;
+  max-width: 300px;
+}
+
+/* Table Container */
+.Nyx-data-table__container {
+  overflow-x: auto;
+}
+
+.Nyx-data-table__table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+/* Table Header */
+.Nyx-data-table__header {
+  background: rgba(57, 255, 20, 0.05);
+}
+
+.Nyx-data-table__header .Nyx-data-table__cell {
+  border-bottom: 2px solid rgba(57, 255, 20, 0.2);
+}
+
+/* Table Cells */
+.Nyx-data-table__cell {
+  padding: 16px 20px;
+  text-align: left;
+  border-bottom: 1px solid rgba(57, 255, 20, 0.1);
+  vertical-align: middle;
+}
+
+.Nyx-data-table__header .Nyx-data-table__cell {
+  color: var(--Nyx-primary);
+  font-family: var(--font-accent);
+  font-weight: var(--font-semibold);
+  font-size: var(--text-sm);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-wide);
+}
+
+.Nyx-data-table__body .Nyx-data-table__cell {
+  color: white;
+  font-family: var(--font-primary);
+  font-size: var(--text-base);
+}
+
+/* Sortable Cells */
+.Nyx-data-table__cell--sortable {
+  cursor: pointer;
+  user-select: none;
+  transition: background-color 0.2s ease;
+}
+
+.Nyx-data-table__cell--sortable:hover {
+  background: rgba(57, 255, 20, 0.1);
+}
+
+.Nyx-data-table__cell-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.Nyx-data-table__sort-icon {
+  color: var(--Nyx-primary);
+  font-size: 12px;
+  transition: transform 0.2s ease;
+}
+
+.Nyx-data-table__sort-icon--desc {
+  transform: rotate(180deg);
+}
+
+/* Table Rows */
+.Nyx-data-table__row {
+  transition: background-color 0.2s ease;
+}
+
+.Nyx-data-table__row:hover {
+  background: rgba(57, 255, 20, 0.05);
+}
+
+.Nyx-data-table__row--clickable {
+  cursor: pointer;
+}
+
+.Nyx-data-table__row--clickable:hover {
+  background: rgba(57, 255, 20, 0.1);
+}
+
+/* Loading State */
+.Nyx-data-table--loading {
+  min-height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.Nyx-data-table__loading {
+  text-align: center;
+  color: #B3B3B3;
+}
+
+.Nyx-data-table__loading .Nyx-spinner {
+  margin-bottom: 16px;
+}
+
+/* Pagination */
+.Nyx-data-table__pagination {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px;
+  border-top: 1px solid rgba(57, 255, 20, 0.2);
+  background: rgba(57, 255, 20, 0.02);
+}
+
+.Nyx-data-table__page-info {
+  color: #B3B3B3;
+  font-family: var(--font-primary);
+  font-size: var(--text-sm);
+}
+
+/* Empty State */
+.Nyx-data-table__empty {
+  text-align: center;
+  padding: 60px 20px;
+  color: #B3B3B3;
+}
+
+.Nyx-data-table__empty-icon {
+  font-size: 48px;
+  margin-bottom: 16px;
+  opacity: 0.5;
+}
+
+.Nyx-data-table__empty-title {
+  color: white;
+  font-family: var(--font-accent);
+  font-size: var(--text-lg);
+  font-weight: var(--font-semibold);
+  margin-bottom: 8px;
+}
+
+.Nyx-data-table__empty-message {
+  font-family: var(--font-primary);
+  font-size: var(--text-base);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .Nyx-data-table__cell {
+    padding: 12px 16px;
+  }
+  
+  .Nyx-data-table__pagination {
+    flex-direction: column;
+    gap: 16px;
+  }
+} 

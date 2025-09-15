@@ -1,0 +1,170 @@
+/* Nyx Hero Background Patterns */
+
+/* Hero background with animated elements */
+.Nyx-hero-bg {
+  position: relative;
+  background: var(--gradient-primary);
+  overflow: hidden;
+}
+
+.Nyx-hero-bg::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: 
+    radial-gradient(circle at 20% 80%, rgba(57, 255, 20, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(0, 246, 255, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 40% 40%, rgba(255, 46, 146, 0.05) 0%, transparent 50%);
+  animation: Nyx-hero-shift 10s ease-in-out infinite;
+}
+
+@keyframes Nyx-hero-shift {
+  0%, 100% {
+    transform: scale(1) rotate(0deg);
+  }
+  50% {
+    transform: scale(1.1) rotate(1deg);
+  }
+}
+
+/* Floating geometric shapes */
+.Nyx-hero-bg--floating {
+  position: relative;
+  background: var(--gradient-primary);
+}
+
+.Nyx-hero-bg--floating::before {
+  content: '';
+  position: absolute;
+  top: 10%;
+  left: 10%;
+  width: 100px;
+  height: 100px;
+  background: rgba(57, 255, 20, 0.1);
+  clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+  animation: Nyx-float-1 8s ease-in-out infinite;
+}
+
+.Nyx-hero-bg--floating::after {
+  content: '';
+  position: absolute;
+  top: 60%;
+  right: 15%;
+  width: 80px;
+  height: 80px;
+  background: rgba(0, 246, 255, 0.1);
+  clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+  animation: Nyx-float-2 6s ease-in-out infinite reverse;
+}
+
+@keyframes Nyx-float-1 {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-20px) rotate(180deg);
+  }
+}
+
+@keyframes Nyx-float-2 {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-15px) rotate(-180deg);
+  }
+}
+
+/* Matrix-style background */
+.Nyx-hero-bg--matrix {
+  background: var(--bg-dark);
+  position: relative;
+}
+
+.Nyx-hero-bg--matrix::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: 
+    linear-gradient(90deg, transparent 98%, rgba(57, 255, 20, 0.3) 100%),
+    linear-gradient(0deg, transparent 98%, rgba(57, 255, 20, 0.3) 100%);
+  background-size: 50px 50px;
+  animation: Nyx-matrix-fall 20s linear infinite;
+}
+
+@keyframes Nyx-matrix-fall {
+  0% {
+    background-position: 0 0;
+  }
+  100% {
+    background-position: 0 1000px;
+  }
+}
+
+/* Cyberpunk grid background */
+.Nyx-hero-bg--cyberpunk {
+  background: var(--gradient-dark);
+  position: relative;
+}
+
+.Nyx-hero-bg--cyberpunk::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: 
+    linear-gradient(rgba(57, 255, 20, 0.1) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(57, 255, 20, 0.1) 1px, transparent 1px),
+    radial-gradient(circle at 50% 50%, rgba(57, 255, 20, 0.2) 0%, transparent 70%);
+  background-size: 30px 30px, 30px 30px, 100% 100%;
+  animation: Nyx-cyberpunk-pulse 4s ease-in-out infinite;
+}
+
+@keyframes Nyx-cyberpunk-pulse {
+  0%, 100% {
+    opacity: 0.3;
+  }
+  50% {
+    opacity: 0.6;
+  }
+}
+
+/* Futuristic wave background */
+.Nyx-hero-bg--wave {
+  background: var(--gradient-primary);
+  position: relative;
+}
+
+.Nyx-hero-bg--wave::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: 
+    radial-gradient(ellipse at 50% 0%, rgba(57, 255, 20, 0.2) 0%, transparent 50%),
+    radial-gradient(ellipse at 0% 50%, rgba(0, 246, 255, 0.1) 0%, transparent 50%),
+    radial-gradient(ellipse at 100% 50%, rgba(255, 46, 146, 0.1) 0%, transparent 50%);
+  animation: Nyx-wave-move 15s ease-in-out infinite;
+}
+
+@keyframes Nyx-wave-move {
+  0%, 100% {
+    transform: translateX(0) scale(1);
+  }
+  33% {
+    transform: translateX(-10px) scale(1.05);
+  }
+  66% {
+    transform: translateX(10px) scale(0.95);
+  }
+} 

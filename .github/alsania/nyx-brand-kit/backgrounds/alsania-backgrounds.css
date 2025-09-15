@@ -1,0 +1,210 @@
+/* Nyx Background System */
+
+/* Base background variables */
+:root {
+  --bg-primary: #0A2472;
+  --bg-secondary: #001F3F;
+  --bg-dark: #0A0A0A;
+  --bg-accent: #39FF14;
+  --bg-cyan: #00F6FF;
+  --bg-violet: #2A004F;
+  --bg-magenta: #FF2E92;
+  --bg-orange: #FF5A36;
+  
+  /* Gradient definitions */
+  --gradient-primary: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+  --gradient-accent: linear-gradient(135deg, var(--bg-accent) 0%, var(--bg-cyan) 100%);
+  --gradient-dark: linear-gradient(135deg, var(--bg-dark) 0%, var(--bg-secondary) 100%);
+  --gradient-multi: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-violet) 50%, var(--bg-secondary) 100%);
+}
+
+/* Base background classes */
+.Nyx-bg {
+  position: relative;
+  overflow: hidden;
+}
+
+.Nyx-bg::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: -1;
+}
+
+/* Solid backgrounds */
+.Nyx-bg--primary {
+  background: var(--bg-primary);
+}
+
+.Nyx-bg--secondary {
+  background: var(--bg-secondary);
+}
+
+.Nyx-bg--dark {
+  background: var(--bg-dark);
+}
+
+/* Gradient backgrounds */
+.Nyx-bg--gradient-primary {
+  background: var(--gradient-primary);
+}
+
+.Nyx-bg--gradient-accent {
+  background: var(--gradient-accent);
+}
+
+.Nyx-bg--gradient-dark {
+  background: var(--gradient-dark);
+}
+
+.Nyx-bg--gradient-multi {
+  background: var(--gradient-multi);
+}
+
+/* Animated gradient backgrounds */
+.Nyx-bg--animated-primary {
+  background: var(--gradient-primary);
+  background-size: 400% 400%;
+  animation: Nyx-gradient-shift 8s ease infinite;
+}
+
+.Nyx-bg--animated-accent {
+  background: var(--gradient-accent);
+  background-size: 400% 400%;
+  animation: Nyx-gradient-shift 6s ease infinite;
+}
+
+@keyframes Nyx-gradient-shift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* Grid pattern backgrounds */
+.Nyx-bg--grid {
+  background-image: 
+    linear-gradient(rgba(57, 255, 20, 0.1) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(57, 255, 20, 0.1) 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+
+.Nyx-bg--grid-large {
+  background-image: 
+    linear-gradient(rgba(57, 255, 20, 0.15) 2px, transparent 2px),
+    linear-gradient(90deg, rgba(57, 255, 20, 0.15) 2px, transparent 2px);
+  background-size: 40px 40px;
+}
+
+.Nyx-bg--grid-small {
+  background-image: 
+    linear-gradient(rgba(57, 255, 20, 0.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(57, 255, 20, 0.08) 1px, transparent 1px);
+  background-size: 10px 10px;
+}
+
+/* Hexagonal pattern backgrounds */
+.Nyx-bg--hex {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cdefs%3E%3Cpattern id='hex' width='50' height='43.4' patternUnits='userSpaceOnUse'%3E%3Cpolygon points='25,0 50,14.4 50,28.9 25,43.4 0,28.9 0,14.4' fill='none' stroke='%2339FF14' stroke-width='0.5' opacity='0.3'/%3E%3C/pattern%3E%3C/defs%3E%3Crect width='100' height='100' fill='url(%23hex)'/%3E%3C/svg%3E");
+}
+
+.Nyx-bg--hex-large {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cdefs%3E%3Cpattern id='hexLarge' width='80' height='69.3' patternUnits='userSpaceOnUse'%3E%3Cpolygon points='40,0 80,23.1 80,46.2 40,69.3 0,46.2 0,23.1' fill='none' stroke='%2339FF14' stroke-width='1' opacity='0.2'/%3E%3C/pattern%3E%3C/defs%3E%3Crect width='100' height='100' fill='url(%23hexLarge)'/%3E%3C/svg%3E");
+}
+
+/* Circuit pattern backgrounds */
+.Nyx-bg--circuit {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cdefs%3E%3Cpattern id='circuit' width='50' height='50' patternUnits='userSpaceOnUse'%3E%3Cpath d='M10,10 L40,10 M25,10 L25,40 M10,25 L40,25' stroke='%2339FF14' stroke-width='0.5' opacity='0.4' fill='none'/%3E%3Ccircle cx='25' cy='25' r='2' fill='%2339FF14' opacity='0.6'/%3E%3C/pattern%3E%3C/defs%3E%3Crect width='100' height='100' fill='url(%23circuit)'/%3E%3C/svg%3E");
+}
+
+/* Glitch pattern backgrounds */
+.Nyx-bg--glitch {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cdefs%3E%3Cpattern id='glitch' width='20' height='20' patternUnits='userSpaceOnUse'%3E%3Crect width='20' height='20' fill='none'/%3E%3Cpath d='M0,10 L20,10 M5,5 L15,15 M15,5 L5,15' stroke='%2339FF14' stroke-width='0.3' opacity='0.2'/%3E%3C/pattern%3E%3C/defs%3E%3Crect width='100' height='100' fill='url(%23glitch)'/%3E%3C/svg%3E");
+}
+
+/* Noise texture backgrounds */
+.Nyx-bg--noise {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cdefs%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3C/defs%3E%3Crect width='100' height='100' filter='url(%23noise)' opacity='0.1'/%3E%3C/svg%3E");
+}
+
+/* Animated pattern backgrounds */
+.Nyx-bg--animated-grid {
+  background-image: 
+    linear-gradient(rgba(57, 255, 20, 0.1) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(57, 255, 20, 0.1) 1px, transparent 1px);
+  background-size: 20px 20px;
+  animation: Nyx-grid-move 20s linear infinite;
+}
+
+@keyframes Nyx-grid-move {
+  0% {
+    background-position: 0 0;
+  }
+  100% {
+    background-position: 20px 20px;
+  }
+}
+
+/* Overlay backgrounds */
+.Nyx-bg--overlay {
+  position: relative;
+}
+
+.Nyx-bg--overlay::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(45deg, rgba(57, 255, 20, 0.1) 0%, transparent 50%, rgba(0, 246, 255, 0.1) 100%);
+  pointer-events: none;
+}
+
+/* Glow backgrounds */
+.Nyx-bg--glow {
+  box-shadow: 
+    inset 0 0 50px rgba(57, 255, 20, 0.1),
+    0 0 100px rgba(57, 255, 20, 0.2);
+}
+
+.Nyx-bg--glow-strong {
+  box-shadow: 
+    inset 0 0 100px rgba(57, 255, 20, 0.2),
+    0 0 200px rgba(57, 255, 20, 0.3);
+}
+
+/* Responsive backgrounds */
+@media (max-width: 768px) {
+  .Nyx-bg--grid {
+    background-size: 15px 15px;
+  }
+  
+  .Nyx-bg--grid-large {
+    background-size: 30px 30px;
+  }
+  
+  .Nyx-bg--hex {
+    background-size: 40px 40px;
+  }
+}
+
+/* Print styles */
+@media print {
+  .Nyx-bg {
+    background: white !important;
+  }
+  
+  .Nyx-bg::before,
+  .Nyx-bg::after {
+    display: none !important;
+  }
+} 
