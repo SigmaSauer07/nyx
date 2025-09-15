@@ -5,6 +5,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 23d9a07 (refactor: update various files and improve extension functionality)
 =======
@@ -38,6 +39,8 @@
 >>>>>>> 3d920e2 (Squashed commit of the following:)
 =======
 =======
+=======
+>>>>>>> 1867f2d (chore: update dependencies in package.json files)
   "name": "mcp-superassistant",
   "version": "0.5.6",
   "description": "MCP SuperAssistant",
@@ -52,7 +55,12 @@
 =======
 =======
 >>>>>>> d5ef17a (chore: update dependencies in package.json files)
+<<<<<<< HEAD
 >>>>>>> 4a59a86 (chore: update package.json dependencies)
+=======
+=======
+>>>>>>> 4507288 (chore: update dependencies in package.json files)
+>>>>>>> 1867f2d (chore: update dependencies in package.json files)
   "name": "nyx",
   "version": "0.5.5",
   "description": "Nyx - AI Assistant Extension",
@@ -63,12 +71,38 @@
   "version": "0.5.6",
   "description": "MCP SuperAssistant",
 >>>>>>> main
+<<<<<<< HEAD
 >>>>>>> 3d920e2 (Squashed commit of the following:)
+<<<<<<< HEAD
 <<<<<<< HEAD
 >>>>>>> 5d94035 (Rebrand project from MCP SuperAssistant to Nyx (#2))
 >>>>>>> 4507288 (chore: update dependencies in package.json files)
 =======
 >>>>>>> 23d9a07 (refactor: update various files and improve extension functionality)
+=======
+=======
+=======
+  "name": "mcp-superassistant",
+  "version": "0.5.6",
+  "description": "MCP SuperAssistant",
+=======
+  "name": "nyx",
+  "version": "0.5.5",
+  "description": "Nyx - AI Assistant Extension",
+>>>>>>> 9180358 (Rebrand project from MCP SuperAssistant to Nyx (#2))
+=======
+  "name": "nyx",
+  "version": "0.5.5",
+  "description": "Nyx - AI Assistant Extension",
+=======
+  "name": "mcp-superassistant",
+  "version": "0.5.6",
+  "description": "MCP SuperAssistant",
+>>>>>>> main
+>>>>>>> 3d920e2 (Squashed commit of the following:)
+>>>>>>> 5d94035 (Rebrand project from MCP SuperAssistant to Nyx (#2))
+>>>>>>> 4507288 (chore: update dependencies in package.json files)
+>>>>>>> 1867f2d (chore: update dependencies in package.json files)
   "license": "MIT",
   "private": true,
   "sideEffects": false,
