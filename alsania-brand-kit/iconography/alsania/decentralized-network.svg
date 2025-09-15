@@ -1,0 +1,24 @@
+<svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="networkGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#39FF14;stop-opacity:0.8" />
+      <stop offset="100%" style="stop-color:#00F6FF;stop-opacity:0.8" />
+    </linearGradient>
+  </defs>
+  <!-- Network nodes -->
+  <circle cx="32" cy="16" r="4" fill="#39FF14" stroke="#0A2472" stroke-width="2"/>
+  <circle cx="16" cy="32" r="4" fill="#39FF14" stroke="#0A2472" stroke-width="2"/>
+  <circle cx="48" cy="32" r="4" fill="#39FF14" stroke="#0A2472" stroke-width="2"/>
+  <circle cx="32" cy="48" r="4" fill="#39FF14" stroke="#0A2472" stroke-width="2"/>
+  <circle cx="24" cy="24" r="3" fill="#00F6FF" stroke="#0A2472" stroke-width="1"/>
+  <circle cx="40" cy="24" r="3" fill="#00F6FF" stroke="#0A2472" stroke-width="1"/>
+  <circle cx="24" cy="40" r="3" fill="#00F6FF" stroke="#0A2472" stroke-width="1"/>
+  <circle cx="40" cy="40" r="3" fill="#00F6FF" stroke="#0A2472" stroke-width="1"/>
+  <!-- Connection lines -->
+  <path d="M32 20L20 28M32 20L44 28M20 28L28 36M44 28L36 36M28 36L32 44M36 36L32 44" 
+        stroke="url(#networkGradient)" stroke-width="2" stroke-linecap="round"/>
+  <!-- Data flow animation -->
+  <circle cx="32" cy="20" r="1" fill="#39FF14">
+    <animate attributeName="opacity" values="1;0;1" dur="2s" repeatCount="indefinite"/>
+  </circle>
+</svg> 

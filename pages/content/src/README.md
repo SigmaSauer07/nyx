@@ -129,4 +129,4 @@ eventBus.on('tool:executed', (data) => { /* handle */ });
 5. **React Integration**: Modern hooks patterns for component development
 6. **State Management**: Predictable state updates via Zustand stores
 
-This architecture ensures maintainability, scalability, and extensibility while providing a robust foundation for the MCP SuperAssistant functionality.
+This architecture ensures maintainability, scalability, and extensibility while providing a robust foundation for the Nyx functionality.

@@ -1,0 +1,210 @@
+/* Alsania Background System */
+
+/* Base background variables */
+:root {
+  --bg-primary: #0A2472;
+  --bg-secondary: #001F3F;
+  --bg-dark: #0A0A0A;
+  --bg-accent: #39FF14;
+  --bg-cyan: #00F6FF;
+  --bg-violet: #2A004F;
+  --bg-magenta: #FF2E92;
+  --bg-orange: #FF5A36;
+  
+  /* Gradient definitions */
+  --gradient-primary: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+  --gradient-accent: linear-gradient(135deg, var(--bg-accent) 0%, var(--bg-cyan) 100%);
+  --gradient-dark: linear-gradient(135deg, var(--bg-dark) 0%, var(--bg-secondary) 100%);
+  --gradient-multi: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-violet) 50%, var(--bg-secondary) 100%);
+}
+
+/* Base background classes */
+.alsania-bg {
+  position: relative;
+  overflow: hidden;
+}
+
+.alsania-bg::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: -1;
+}
+
+/* Solid backgrounds */
+.alsania-bg--primary {
+  background: var(--bg-primary);
+}
+
+.alsania-bg--secondary {
+  background: var(--bg-secondary);
+}
+
+.alsania-bg--dark {
+  background: var(--bg-dark);
+}
+
+/* Gradient backgrounds */
+.alsania-bg--gradient-primary {
+  background: var(--gradient-primary);
+}
+
+.alsania-bg--gradient-accent {
+  background: var(--gradient-accent);
+}
+
+.alsania-bg--gradient-dark {
+  background: var(--gradient-dark);
+}
+
+.alsania-bg--gradient-multi {
+  background: var(--gradient-multi);
+}
+
+/* Animated gradient backgrounds */
+.alsania-bg--animated-primary {
+  background: var(--gradient-primary);
+  background-size: 400% 400%;
+  animation: alsania-gradient-shift 8s ease infinite;
+}
+
+.alsania-bg--animated-accent {
+  background: var(--gradient-accent);
+  background-size: 400% 400%;
+  animation: alsania-gradient-shift 6s ease infinite;
+}
+
+@keyframes alsania-gradient-shift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* Grid pattern backgrounds */
+.alsania-bg--grid {
+  background-image: 
+    linear-gradient(rgba(57, 255, 20, 0.1) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(57, 255, 20, 0.1) 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+
+.alsania-bg--grid-large {
+  background-image: 
+    linear-gradient(rgba(57, 255, 20, 0.15) 2px, transparent 2px),
+    linear-gradient(90deg, rgba(57, 255, 20, 0.15) 2px, transparent 2px);
+  background-size: 40px 40px;
+}
+
+.alsania-bg--grid-small {
+  background-image: 
+    linear-gradient(rgba(57, 255, 20, 0.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(57, 255, 20, 0.08) 1px, transparent 1px);
+  background-size: 10px 10px;
+}
+
+/* Hexagonal pattern backgrounds */
+.alsania-bg--hex {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cdefs%3E%3Cpattern id='hex' width='50' height='43.4' patternUnits='userSpaceOnUse'%3E%3Cpolygon points='25,0 50,14.4 50,28.9 25,43.4 0,28.9 0,14.4' fill='none' stroke='%2339FF14' stroke-width='0.5' opacity='0.3'/%3E%3C/pattern%3E%3C/defs%3E%3Crect width='100' height='100' fill='url(%23hex)'/%3E%3C/svg%3E");
+}
+
+.alsania-bg--hex-large {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cdefs%3E%3Cpattern id='hexLarge' width='80' height='69.3' patternUnits='userSpaceOnUse'%3E%3Cpolygon points='40,0 80,23.1 80,46.2 40,69.3 0,46.2 0,23.1' fill='none' stroke='%2339FF14' stroke-width='1' opacity='0.2'/%3E%3C/pattern%3E%3C/defs%3E%3Crect width='100' height='100' fill='url(%23hexLarge)'/%3E%3C/svg%3E");
+}
+
+/* Circuit pattern backgrounds */
+.alsania-bg--circuit {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cdefs%3E%3Cpattern id='circuit' width='50' height='50' patternUnits='userSpaceOnUse'%3E%3Cpath d='M10,10 L40,10 M25,10 L25,40 M10,25 L40,25' stroke='%2339FF14' stroke-width='0.5' opacity='0.4' fill='none'/%3E%3Ccircle cx='25' cy='25' r='2' fill='%2339FF14' opacity='0.6'/%3E%3C/pattern%3E%3C/defs%3E%3Crect width='100' height='100' fill='url(%23circuit)'/%3E%3C/svg%3E");
+}
+
+/* Glitch pattern backgrounds */
+.alsania-bg--glitch {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cdefs%3E%3Cpattern id='glitch' width='20' height='20' patternUnits='userSpaceOnUse'%3E%3Crect width='20' height='20' fill='none'/%3E%3Cpath d='M0,10 L20,10 M5,5 L15,15 M15,5 L5,15' stroke='%2339FF14' stroke-width='0.3' opacity='0.2'/%3E%3C/pattern%3E%3C/defs%3E%3Crect width='100' height='100' fill='url(%23glitch)'/%3E%3C/svg%3E");
+}
+
+/* Noise texture backgrounds */
+.alsania-bg--noise {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cdefs%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3C/defs%3E%3Crect width='100' height='100' filter='url(%23noise)' opacity='0.1'/%3E%3C/svg%3E");
+}
+
+/* Animated pattern backgrounds */
+.alsania-bg--animated-grid {
+  background-image: 
+    linear-gradient(rgba(57, 255, 20, 0.1) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(57, 255, 20, 0.1) 1px, transparent 1px);
+  background-size: 20px 20px;
+  animation: alsania-grid-move 20s linear infinite;
+}
+
+@keyframes alsania-grid-move {
+  0% {
+    background-position: 0 0;
+  }
+  100% {
+    background-position: 20px 20px;
+  }
+}
+
+/* Overlay backgrounds */
+.alsania-bg--overlay {
+  position: relative;
+}
+
+.alsania-bg--overlay::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(45deg, rgba(57, 255, 20, 0.1) 0%, transparent 50%, rgba(0, 246, 255, 0.1) 100%);
+  pointer-events: none;
+}
+
+/* Glow backgrounds */
+.alsania-bg--glow {
+  box-shadow: 
+    inset 0 0 50px rgba(57, 255, 20, 0.1),
+    0 0 100px rgba(57, 255, 20, 0.2);
+}
+
+.alsania-bg--glow-strong {
+  box-shadow: 
+    inset 0 0 100px rgba(57, 255, 20, 0.2),
+    0 0 200px rgba(57, 255, 20, 0.3);
+}
+
+/* Responsive backgrounds */
+@media (max-width: 768px) {
+  .alsania-bg--grid {
+    background-size: 15px 15px;
+  }
+  
+  .alsania-bg--grid-large {
+    background-size: 30px 30px;
+  }
+  
+  .alsania-bg--hex {
+    background-size: 40px 40px;
+  }
+}
+
+/* Print styles */
+@media print {
+  .alsania-bg {
+    background: white !important;
+  }
+  
+  .alsania-bg::before,
+  .alsania-bg::after {
+    display: none !important;
+  }
+} 

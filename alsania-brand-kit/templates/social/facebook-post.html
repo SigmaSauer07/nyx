@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alsania Facebook Post Template</title>
+    <link rel="stylesheet" href="../../alsania-global-styles.css">
+    <style>
+        .facebook-container {
+            width: 1200px;
+            height: 630px;
+            background: white;
+            position: relative;
+            overflow: hidden;
+            font-family: var(--font-heading);
+        }
+        
+        .facebook-header {
+            position: absolute;
+            top: 30px;
+            left: 30px;
+            right: 30px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .facebook-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: 2px solid var(--alsania-primary);
+        }
+        
+        .facebook-info h3 {
+            color: #1877F2;
+            font-size: 18px;
+            margin: 0;
+            font-weight: 600;
+        }
+        
+        .facebook-info p {
+            color: #65676B;
+            font-size: 14px;
+            margin: 0;
+            font-family: var(--font-primary);
+        }
+        
+        .facebook-content {
+            position: absolute;
+            top: 100px;
+            left: 30px;
+            right: 30px;
+            bottom: 100px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+        
+        .facebook-title {
+            font-size: 48px;
+            font-weight: 700;
+            color: var(--alsania-secondary);
+            margin-bottom: 25px;
+            line-height: 1.2;
+        }
+        
+        .facebook-subtitle {
+            font-size: 28px;
+            color: var(--alsania-primary);
+            margin-bottom: 30px;
+            font-weight: 600;
+        }
+        
+        .facebook-text {
+            font-size: 20px;
+            color: #1C1E21;
+            margin-bottom: 30px;
+            font-family: var(--font-primary);
+            line-height: 1.5;
+            max-width: 700px;
+        }
+        
+        .facebook-cta {
+            background: var(--alsania-primary);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        
+        .facebook-cta:hover {
+            background: #2EBF0F;
+        }
+        
+        .facebook-footer {
+            position: absolute;
+            bottom: 30px;
+            left: 30px;
+            right: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .facebook-logo {
+            width: 40px;
+            height: 40px;
+        }
+        
+        .facebook-actions {
+            display: flex;
+            gap: 25px;
+            color: #65676B;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="facebook-container">
+        <div class="facebook-header">
+            <img src="../../logo-symbol/logo_symbol_128x128.png" alt="Alsania" class="facebook-avatar">
+            <div class="facebook-info">
+                <h3>Alsania</h3>
+                <p>2 hours ago • ��</p>
+            </div>
+        </div>
+        
+        <div class="facebook-content">
+            <h1 class="facebook-title">EMPOWERING DIGITAL SOVEREIGNTY</h1>
+            <h2 class="facebook-subtitle">The Future of Web3 is Here</h2>
+            <p class="facebook-text">Join us in building a more equitable digital future. Our decentralized tools put power back in your hands, ensuring trust, fairness, and innovation for everyone.</p>
+            <a href="#" class="facebook-cta">Discover More</a>
+        </div>
+        
+        <div class="facebook-footer">
+            <img src="../../logo-symbol/logo_symbol_64x64.png" alt="Alsania" class="facebook-logo">
+            <div class="facebook-actions">
+                <span>👍 Like</span>
+                <span>💬 Comment</span>
+                <span>🔄 Share</span>
+            </div>
+        </div>
+    </div>
+</body>
+</html> 

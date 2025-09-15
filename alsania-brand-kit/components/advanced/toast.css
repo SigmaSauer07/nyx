@@ -1,0 +1,163 @@
+/* Alsania Toast Styles */
+
+.alsania-toast {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background: var(--alsania-secondary);
+  border: 1px solid var(--alsania-primary);
+  border-radius: 8px;
+  padding: 16px;
+  min-width: 300px;
+  max-width: 400px;
+  box-shadow: 0 8px 32px rgba(57, 255, 20, 0.3);
+  z-index: 1001;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  transform: translateX(100%);
+  opacity: 0;
+  transition: all 0.3s ease-out;
+}
+
+.alsania-toast--visible {
+  transform: translateX(0);
+  opacity: 1;
+}
+
+/* Toast Types */
+.alsania-toast--success {
+  border-color: var(--alsania-primary);
+}
+
+.alsania-toast--error {
+  border-color: #ff4444;
+}
+
+.alsania-toast--warning {
+  border-color: #ffc107;
+}
+
+.alsania-toast--info {
+  border-color: #3498db;
+}
+
+/* Toast Icon */
+.alsania-toast__icon {
+  flex-shrink: 0;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: rgba(57, 255, 20, 0.1);
+}
+
+.alsania-toast--success .alsania-toast__icon {
+  background: rgba(57, 255, 20, 0.1);
+  color: var(--alsania-primary);
+}
+
+.alsania-toast--error .alsania-toast__icon {
+  background: rgba(255, 68, 68, 0.1);
+  color: #ff4444;
+}
+
+.alsania-toast--warning .alsania-toast__icon {
+  background: rgba(255, 193, 7, 0.1);
+  color: #ffc107;
+}
+
+.alsania-toast--info .alsania-toast__icon {
+  background: rgba(52, 152, 219, 0.1);
+  color: #3498db;
+}
+
+/* Toast Content */
+.alsania-toast__content {
+  flex: 1;
+  min-width: 0;
+}
+
+.alsania-toast__title {
+  color: white;
+  font-family: var(--font-accent);
+  font-size: var(--text-base);
+  font-weight: var(--font-semibold);
+  margin: 0 0 4px 0;
+  line-height: 1.4;
+}
+
+.alsania-toast__message {
+  color: #B3B3B3;
+  font-family: var(--font-primary);
+  font-size: var(--text-sm);
+  margin: 0 0 8px 0;
+  line-height: 1.4;
+}
+
+.alsania-toast__action {
+  background: transparent;
+  border: none;
+  color: var(--alsania-primary);
+  font-family: var(--font-accent);
+  font-size: var(--text-sm);
+  font-weight: var(--font-semibold);
+  cursor: pointer;
+  padding: 0;
+  text-decoration: underline;
+  transition: color 0.2s ease;
+}
+
+.alsania-toast__action:hover {
+  color: #2EBF0F;
+}
+
+/* Toast Close */
+.alsania-toast__close {
+  background: transparent;
+  border: none;
+  color: #B3B3B3;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.alsania-toast__close:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+}
+
+/* Toast Stack */
+.alsania-toast-stack {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 1001;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .alsania-toast {
+    left: 20px;
+    right: 20px;
+    min-width: auto;
+    max-width: none;
+    transform: translateY(-100%);
+  }
+  
+  .alsania-toast--visible {
+    transform: translateY(0);
+  }
+  
+  .alsania-toast-stack {
+    left: 20px;
+    right: 20px;
+  }
+} 

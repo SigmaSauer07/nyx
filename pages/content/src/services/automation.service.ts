@@ -1,5 +1,5 @@
 /**
- * Automation Service for MCP SuperAssistant
+ * Automation Service for Nyx
  * 
  * This service handles the automation features (auto insert, auto submit, auto execute)
  * that were previously part of the legacy adapter system. It integrates with the new

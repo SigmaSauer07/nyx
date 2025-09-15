@@ -1,0 +1,285 @@
+/* Alsania Typography System */
+
+/* Import Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Rajdhani:wght@300;400;500;600;700&family=Open+Sans:wght@300;400;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+/* CSS Custom Properties for Typography */
+:root {
+    /* Font Families */
+    --font-heading: 'Orbitron', 'Courier New', monospace;
+    --font-accent: 'Rajdhani', 'Arial', sans-serif;
+    --font-body: 'Open Sans', 'Arial', sans-serif;
+    --font-mono: 'JetBrains Mono', 'Courier New', monospace;
+    
+    /* Font Sizes */
+    --text-xs: 0.75rem;    /* 12px */
+    --text-sm: 0.875rem;   /* 14px */
+    --text-base: 1rem;     /* 16px */
+    --text-lg: 1.125rem;   /* 18px */
+    --text-xl: 1.25rem;    /* 20px */
+    --text-2xl: 1.5rem;    /* 24px */
+    --text-3xl: 1.875rem;  /* 30px */
+    --text-4xl: 2.25rem;   /* 36px */
+    --text-5xl: 3rem;      /* 48px */
+    --text-6xl: 3.75rem;   /* 60px */
+    --text-7xl: 4.5rem;    /* 72px */
+    --text-8xl: 6rem;      /* 96px */
+    
+    /* Line Heights */
+    --leading-none: 1;
+    --leading-tight: 1.25;
+    --leading-snug: 1.375;
+    --leading-normal: 1.5;
+    --leading-relaxed: 1.625;
+    --leading-loose: 2;
+    
+    /* Letter Spacing */
+    --tracking-tighter: -0.05em;
+    --tracking-tight: -0.025em;
+    --tracking-normal: 0em;
+    --tracking-wide: 0.025em;
+    --tracking-wider: 0.05em;
+    --tracking-widest: 0.1em;
+    
+    /* Font Weights */
+    --font-light: 300;
+    --font-normal: 400;
+    --font-medium: 500;
+    --font-semibold: 600;
+    --font-bold: 700;
+    --font-black: 900;
+}
+
+/* Base Typography Classes */
+.alsania-text {
+    font-family: var(--font-body);
+    font-size: var(--text-base);
+    line-height: var(--leading-normal);
+    color: inherit;
+}
+
+/* Heading Classes */
+.alsania-heading {
+    font-family: var(--font-heading);
+    font-weight: var(--font-bold);
+    letter-spacing: var(--tracking-wide);
+    color: var(--alsania-primary);
+    text-shadow: 0 0 10px var(--alsania-primary);
+}
+
+.alsania-heading--h1 {
+    font-size: var(--text-6xl);
+    line-height: var(--leading-tight);
+    letter-spacing: var(--tracking-wider);
+}
+
+.alsania-heading--h2 {
+    font-size: var(--text-5xl);
+    line-height: var(--leading-tight);
+}
+
+.alsania-heading--h3 {
+    font-size: var(--text-4xl);
+    line-height: var(--leading-snug);
+}
+
+.alsania-heading--h4 {
+    font-size: var(--text-3xl);
+    line-height: var(--leading-snug);
+}
+
+.alsania-heading--h5 {
+    font-size: var(--text-2xl);
+    line-height: var(--leading-normal);
+}
+
+.alsania-heading--h6 {
+    font-size: var(--text-xl);
+    line-height: var(--leading-normal);
+}
+
+/* Accent Text Classes */
+.alsania-accent {
+    font-family: var(--font-accent);
+    font-weight: var(--font-medium);
+    letter-spacing: var(--tracking-wide);
+}
+
+.alsania-accent--large {
+    font-size: var(--text-2xl);
+    line-height: var(--leading-snug);
+}
+
+.alsania-accent--medium {
+    font-size: var(--text-lg);
+    line-height: var(--leading-normal);
+}
+
+.alsania-accent--small {
+    font-size: var(--text-base);
+    line-height: var(--leading-normal);
+}
+
+/* Body Text Classes */
+.alsania-body {
+    font-family: var(--font-body);
+    font-weight: var(--font-normal);
+    line-height: var(--leading-relaxed);
+}
+
+.alsania-body--large {
+    font-size: var(--text-lg);
+    line-height: var(--leading-relaxed);
+}
+
+.alsania-body--medium {
+    font-size: var(--text-base);
+    line-height: var(--leading-normal);
+}
+
+.alsania-body--small {
+    font-size: var(--text-sm);
+    line-height: var(--leading-normal);
+}
+
+/* Monospace Text Classes */
+.alsania-mono {
+    font-family: var(--font-mono);
+    font-weight: var(--font-normal);
+    line-height: var(--leading-normal);
+}
+
+.alsania-mono--large {
+    font-size: var(--text-lg);
+}
+
+.alsania-mono--medium {
+    font-size: var(--text-base);
+}
+
+.alsania-mono--small {
+    font-size: var(--text-sm);
+}
+
+/* Utility Classes */
+.alsania-text--center {
+    text-align: center;
+}
+
+.alsania-text--left {
+    text-align: left;
+}
+
+.alsania-text--right {
+    text-align: right;
+}
+
+.alsania-text--justify {
+    text-align: justify;
+}
+
+.alsania-text--uppercase {
+    text-transform: uppercase;
+}
+
+.alsania-text--lowercase {
+    text-transform: lowercase;
+}
+
+.alsania-text--capitalize {
+    text-transform: capitalize;
+}
+
+.alsania-text--underline {
+    text-decoration: underline;
+}
+
+.alsania-text--line-through {
+    text-decoration: line-through;
+}
+
+.alsania-text--no-decoration {
+    text-decoration: none;
+}
+
+/* Color Classes */
+.alsania-text--primary {
+    color: var(--alsania-primary);
+}
+
+.alsania-text--secondary {
+    color: var(--alsania-secondary);
+}
+
+.alsania-text--white {
+    color: white;
+}
+
+.alsania-text--muted {
+    color: #B3B3B3;
+}
+
+.alsania-text--success {
+    color: var(--alsania-primary);
+}
+
+.alsania-text--warning {
+    color: #ffc107;
+}
+
+.alsania-text--error {
+    color: #ff4444;
+}
+
+/* Responsive Typography */
+@media (max-width: 768px) {
+    .alsania-heading--h1 {
+        font-size: var(--text-4xl);
+    }
+    
+    .alsania-heading--h2 {
+        font-size: var(--text-3xl);
+    }
+    
+    .alsania-heading--h3 {
+        font-size: var(--text-2xl);
+    }
+    
+    .alsania-heading--h4 {
+        font-size: var(--text-xl);
+    }
+    
+    .alsania-heading--h5 {
+        font-size: var(--text-lg);
+    }
+    
+    .alsania-heading--h6 {
+        font-size: var(--text-base);
+    }
+}
+
+@media (max-width: 480px) {
+    .alsania-heading--h1 {
+        font-size: var(--text-3xl);
+    }
+    
+    .alsania-heading--h2 {
+        font-size: var(--text-2xl);
+    }
+    
+    .alsania-heading--h3 {
+        font-size: var(--text-xl);
+    }
+}
+
+/* Print Styles */
+@media print {
+    .alsania-heading {
+        color: black !important;
+        text-shadow: none !important;
+    }
+    
+    .alsania-text--primary {
+        color: black !important;
+    }
+} 

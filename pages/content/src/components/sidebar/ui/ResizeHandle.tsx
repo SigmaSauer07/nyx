@@ -106,12 +106,12 @@ const ResizeHandle: React.FC<ResizeHandleProps> = ({
       ref={handleRef}
       className={cn(
         'absolute left-0 top-0 bottom-0 w-1 cursor-ew-resize group',
-        isDragging ? 'bg-blue-500' : 'bg-transparent hover:bg-blue-400/30',
+        isDragging ? 'bg-emerald-500' : 'bg-transparent hover:bg-emerald-400/30',
         className,
       )}
       onMouseDown={handleMouseDown}>
       <div className="absolute left-0 top-1/2 transform -translate-y-1/2 -translate-x-1/2 h-16 w-4 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-        <div className="h-10 w-1 rounded-full bg-blue-500/70 shadow-md"></div>
+        <div className="h-10 w-1 rounded-full bg-emerald-500/70 shadow-md"></div>
       </div>
     </div>
   );

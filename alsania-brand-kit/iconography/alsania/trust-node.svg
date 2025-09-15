@@ -1,0 +1,18 @@
+<svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="trustGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#39FF14;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#2A004F;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  <!-- Hexagonal node -->
+  <path d="M32 8L48 16V32L48 48L32 56L16 48V32L16 16L32 8Z" 
+        fill="url(#trustGradient)" stroke="#39FF14" stroke-width="2"/>
+  <!-- Trust verification pattern -->
+  <path d="M24 24L32 32L40 24M24 32L32 40L40 32" 
+        stroke="#0A2472" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- Verification dots -->
+  <circle cx="28" cy="28" r="2" fill="#39FF14"/>
+  <circle cx="36" cy="28" r="2" fill="#39FF14"/>
+  <circle cx="32" cy="36" r="2" fill="#39FF14"/>
+</svg> 

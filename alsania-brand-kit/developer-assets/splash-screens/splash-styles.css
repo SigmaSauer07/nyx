@@ -1,0 +1,222 @@
+/* Alsania Splash Screen Styles */
+
+.alsania-splash {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, var(--alsania-secondary) 0%, #001F3F 100%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    overflow: hidden;
+}
+
+/* Animated background */
+.alsania-splash::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="%2339FF14" stroke-width="0.1" opacity="0.3"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+    animation: alsania-grid-move 20s linear infinite;
+    opacity: 0.1;
+}
+
+@keyframes alsania-grid-move {
+    0% {
+        transform: translate(0, 0);
+    }
+    100% {
+        transform: translate(10px, 10px);
+    }
+}
+
+/* Logo container */
+.alsania-splash__logo {
+    position: relative;
+    z-index: 2;
+    width: 200px;
+    height: 200px;
+    margin-bottom: 40px;
+    animation: alsania-logo-appear 1.5s ease-out;
+}
+
+.alsania-splash__logo img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    filter: drop-shadow(0 0 30px var(--alsania-primary));
+}
+
+@keyframes alsania-logo-appear {
+    0% {
+        opacity: 0;
+        transform: scale(0.5) rotate(-180deg);
+    }
+    50% {
+        opacity: 0.7;
+        transform: scale(1.1) rotate(-90deg);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1) rotate(0deg);
+    }
+}
+
+/* Title */
+.alsania-splash__title {
+    position: relative;
+    z-index: 2;
+    color: var(--alsania-primary);
+    font-family: var(--font-heading);
+    font-size: 48px;
+    font-weight: 700;
+    margin-bottom: 20px;
+    text-shadow: 0 0 20px var(--alsania-primary);
+    letter-spacing: 2px;
+    animation: alsania-title-appear 1s ease-out 0.5s both;
+}
+
+@keyframes alsania-title-appear {
+    0% {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Subtitle */
+.alsania-splash__subtitle {
+    position: relative;
+    z-index: 2;
+    color: white;
+    font-family: var(--font-accent);
+    font-size: 24px;
+    font-weight: 400;
+    margin-bottom: 60px;
+    animation: alsania-subtitle-appear 1s ease-out 1s both;
+}
+
+@keyframes alsania-subtitle-appear {
+    0% {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Loading indicator */
+.alsania-splash__loading {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    animation: alsania-loading-appear 1s ease-out 1.5s both;
+}
+
+.alsania-splash__spinner {
+    width: 40px;
+    height: 40px;
+    border: 3px solid rgba(57, 255, 20, 0.3);
+    border-top: 3px solid var(--alsania-primary);
+    border-radius: 50%;
+    animation: alsania-spin 1s linear infinite;
+}
+
+@keyframes alsania-spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.alsania-splash__loading-text {
+    color: #B3B3B3;
+    font-family: var(--font-primary);
+    font-size: 16px;
+}
+
+@keyframes alsania-loading-appear {
+    0% {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Progress bar */
+.alsania-splash__progress {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: rgba(57, 255, 20, 0.2);
+    overflow: hidden;
+}
+
+.alsania-splash__progress-bar {
+    height: 100%;
+    background: var(--alsania-primary);
+    box-shadow: 0 0 10px var(--alsania-primary);
+    animation: alsania-progress 3s ease-out;
+}
+
+@keyframes alsania-progress {
+    0% {
+        width: 0%;
+    }
+    100% {
+        width: 100%;
+    }
+}
+
+/* Fade out animation */
+.alsania-splash--fade-out {
+    animation: alsania-fade-out 0.5s ease-out forwards;
+}
+
+@keyframes alsania-fade-out {
+    0% {
+        opacity: 1;
+        transform: scale(1);
+    }
+    100% {
+        opacity: 0;
+        transform: scale(1.1);
+    }
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+    .alsania-splash__logo {
+        width: 150px;
+        height: 150px;
+    }
+    
+    .alsania-splash__title {
+        font-size: 36px;
+    }
+    
+    .alsania-splash__subtitle {
+        font-size: 20px;
+    }
+} 

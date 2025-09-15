@@ -1,6 +1,6 @@
 # Types Directory
 
-This directory contains comprehensive TypeScript type definitions and interfaces used throughout the MCP SuperAssistant extension, organized by functional domain to ensure type safety and consistency.
+This directory contains comprehensive TypeScript type definitions and interfaces used throughout the Nyx extension, organized by functional domain to ensure type safety and consistency.
 
 ## Architecture Integration
 

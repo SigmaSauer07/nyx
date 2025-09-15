@@ -409,7 +409,7 @@ export class RemoteConfigPlugin implements AdapterPlugin {
             id: `version-update-${data.newVersion}`,
             type: 'info',
             title: `Updated to v${data.newVersion}`,
-            message: `MCP SuperAssistant has been updated. Check out what's new!`,
+            message: `Nyx has been updated. Check out what's new!`,
             actions: [
               { text: 'View Changelog', action: 'view-changelog', style: 'primary' },
               { text: 'Dismiss', action: 'dismiss', style: 'secondary' }

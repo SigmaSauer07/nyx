@@ -45,7 +45,7 @@ const ToggleWithoutLabel: React.FC<ToggleWithoutLabelProps> = ({
           'border-2 border-transparent focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 focus:ring-offset-background',
           toggleSize[size].container,
           checked
-            ? 'bg-blue-600 dark:bg-blue-500 border-transparent'
+            ? 'bg-emerald-600 dark:bg-emerald-500 border-transparent'
             : 'bg-slate-300 dark:bg-slate-700 border-transparent',
         )}>
         <span className="sr-only">{label}</span>

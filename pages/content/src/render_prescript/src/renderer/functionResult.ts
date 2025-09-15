@@ -220,7 +220,7 @@ const renderSystemMessageBox = (block: HTMLElement, content: string): void => {
     const config: ExpandableConfig = {
       blockId,
       className: 'system-message-container',
-      headerText: 'MCP SuperAssistant',
+      headerText: 'Nyx',
       expandTitle: 'Expand system message',
       collapseTitle: 'Collapse system message',
     };
@@ -376,7 +376,7 @@ export const renderFunctionResult = (block: HTMLElement, isProcessingRef: { curr
     // let content = block.textContent || '';
     let content = block.textContent || '';
 
-    // Check if it contains MCP SuperAssistant system message tags
+    // Check if it contains Nyx system message tags
     if (content.includes('<SYSTEM>') || content.includes('</SYSTEM>')) {
       // Extract content between SYSTEM tags
       const systemMatch = content;
