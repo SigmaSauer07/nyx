@@ -4,35 +4,12 @@ This document provides guidelines for creating, managing, and extending agents i
 
 ---
 
-## ✳️ 0. What Are Agents?
+## ✳️ 1. What Are Agents?
 
 Agents are autonomous modules that:
 - Respond to specific inputs and tasks.
 - Operate within the boundaries of the Alsania AI Alignment Protocol.
 - Communicate with other agents and the core system via defined APIs.
-
-Agents are located in the `/backend/agents/` directory, and each agent must include:
-- A `respond` function to handle tasks.
-- A `config.json` file for configuration.
-
----
-
-## ⚙️ 1. Creating a New Agent
-
-To create a new agent:
-1. **Create a directory**: Add a new folder under `/backend/agents/` with the agent's name.
-2. **Implement the `respond` function**: This function defines the agent's behavior.
-3. **Add a `config.json` file**: Include metadata such as the agent's name, description, and capabilities.
-4. **Write tests**: Add unit and integration tests for the agent.
-
-### Example Directory Structure:
-```
-/backend/agents/myagent/
-  - __init__.py
-  - myagent.py
-  - config.json
-  - tests/
-```
 
 ---
 
