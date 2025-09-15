@@ -4,8 +4,11 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 23d9a07 (refactor: update various files and improve extension functionality)
+=======
+>>>>>>> 4a59a86 (chore: update package.json dependencies)
   "name": "mcp-superassistant",
   "version": "0.5.6",
   "description": "MCP SuperAssistant",
@@ -15,6 +18,7 @@
   "description": "Nyx - AI Assistant Extension",
 >>>>>>> 9180358 (Rebrand project from MCP SuperAssistant to Nyx (#2))
 =======
+<<<<<<< HEAD
 <<<<<<< HEAD
 =======
 >>>>>>> d5ef17a (chore: update dependencies in package.json files)
@@ -45,10 +49,16 @@
 =======
 =======
 >>>>>>> 23d9a07 (refactor: update various files and improve extension functionality)
+=======
+=======
+>>>>>>> d5ef17a (chore: update dependencies in package.json files)
+>>>>>>> 4a59a86 (chore: update package.json dependencies)
   "name": "nyx",
   "version": "0.5.5",
   "description": "Nyx - AI Assistant Extension",
 =======
+=======
+>>>>>>> 17d4477 (oikjhb)
   "name": "mcp-superassistant",
   "version": "0.5.6",
   "description": "MCP SuperAssistant",
