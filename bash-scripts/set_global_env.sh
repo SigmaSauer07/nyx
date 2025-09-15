@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Default values
-CLI_CEB_DEV=false
+CLI_CEB_DEV=true
 CLI_CEB_FIREFOX=false
 
 validate_is_boolean() {
