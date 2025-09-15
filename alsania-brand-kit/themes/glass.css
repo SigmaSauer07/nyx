@@ -1,0 +1,51 @@
+/* ===== FOOTER ===== */
+.footer {
+    background: rgba(10, 36, 114, 0.3);
+    backdrop-filter: blur(10px);
+    border-top: 1px solid var(--border-gray);
+    margin-top: var(--spacing-xxl);
+    padding: var(--spacing-xl) 0;
+    color: var(--pure-white);
+}
+
+.footer-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 var(--spacing-lg);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--spacing-lg);
+    flex-wrap: wrap;
+}
+
+.footer-brand {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+}
+
+.footer-text {
+    color: var(--light-gray);
+    font-size: 0.9rem;
+}
+
+.footer-links {
+    display: flex;
+    gap: var(--spacing-lg);
+}
+
+.footer-links a {
+    color: var(--pure-white);
+    transition: var(--transition-fast);
+}
+
+.footer-links a:hover {
+    color: var(--neon-green);
+    text-shadow: var(--shadow-neon);
+}
+
+/* Glass cards */
+[class*="card"] {
+    backdrop-filter: blur(10px);
+}
