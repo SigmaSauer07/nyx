@@ -8,6 +8,22 @@ export default {
   },
   theme: {
     extend: {
+      colors: {
+        primary: {
+          DEFAULT: '#39ff14',
+          foreground: '#0b1220',
+        },
+        secondary: {
+          DEFAULT: '#46bdf0',
+          foreground: '#e8eefc',
+        },
+        background: '#0b1220',
+        foreground: '#e8eefc',
+        muted: '#a9b4cc',
+        accent: '#39ff14',
+        card: 'rgba(255,255,255,.06)',
+        border: 'rgba(255,255,255,.12)',
+      },
       // Add any custom theme extensions here
       // This keeps the default Tailwind theme and adds your customizations
     },

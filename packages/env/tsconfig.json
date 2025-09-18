@@ -1,8 +1,11 @@
 {
-  "extends": "@extension/tsconfig/module",
+  "extends": "./tsconfig/module.json",
   "compilerOptions": {
     "baseUrl": ".",
     "outDir": "dist"
   },
-  "include": ["index.mts", "lib"]
+  "include": [
+    "index.mts",
+    "lib"
+  ]
 }

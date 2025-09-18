@@ -30,7 +30,7 @@ tsconfig.tsbuildinfo
 .trash/*
 nyx-prox/bun.lock
 # pnpm-lock.yaml
-
+nyx-brand-kit/
 # Added by Task Master AI
 # Logs
 logs
@@ -54,7 +54,7 @@ node_modules/
 # OS specific
 # Task files
 tasks.json
-tasks/ 
+tasks/
 
 
 

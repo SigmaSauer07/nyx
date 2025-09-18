@@ -1,10 +1,16 @@
 # Nyx Project Makefile
-
-PROJECT_NAME = Nyx
-NPM = npm
+PROJECT_NAME=nyx
+NPM=pnpm
 
 # Default target
 all: install build test
+
+# Init and set global environment
+init:
+    @echo "Initializing..."
+    $(NPM) init
+    cd bash-scripts
+    chmod +x set_global_env.sh && $(NPM) run ./set_global_env.sh
 
 # Install dependencies
 install:
@@ -68,6 +74,7 @@ package:
 help:
 	@echo "Available targets for $(PROJECT_NAME):"
 	@echo "  all       - Install, build, and test everything"
+	@echo "  init      - Initialize"
 	@echo "  install   - Install dependencies"
 	@echo "  build     - Build the project"
 	@echo "  test      - Run tests"
@@ -78,4 +85,4 @@ help:
 	@echo "  package   - Package the extension"
 	@echo "  help      - Show this help"
 
-.PHONY: all install build build-extension build-content test test-extension test-content clean lint format dev package help
+.PHONY: all imit install build build-extension build-content test test-extension test-content clean lint format dev package help
