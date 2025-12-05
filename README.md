@@ -5,7 +5,7 @@
 </div>
 
 <p align="center">
-Brings MCP to ChatGPT, Perplexity, Grok, Gemini, Google AI Studio, OpenRouter, Kimi, Github Copilot, Mistral and more...
+Where automation meets tranquility
 </p>
 
 <p align="center">
@@ -27,8 +27,6 @@ Brings MCP to ChatGPT, Perplexity, Grok, Gemini, Google AI Studio, OpenRouter, K
    ![Build Status](https://img.shields.io/badge/Status-Active-success?style=flat-square)
 
 </div>
-
-## Installation
 
 <br>
 
