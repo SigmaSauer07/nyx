@@ -10,8 +10,7 @@ import { createLogger } from '@extension/shared/lib/logger';
 
 /**
  * AI Studio Adapter for Google AI Studio (aistudio.google.com)
- *
- * This adapter provides specialized functionality for interacting with Google AI Studio's
+ * * This adapter provides specialized functionality for interacting with Google AI Studio's
  * chat interface, including text insertion, form submission, and file attachment capabilities.
  *
  * Migrated from the legacy adapter system to the new plugin architecture.
@@ -20,28 +19,17 @@ import { createLogger } from '@extension/shared/lib/logger';
 
 const logger = createLogger('AIStudioAdapter');
 
-export class AIStudioAdapter extends BaseAdapterPlugin {
-  readonly name = 'AIStudioAdapter';
-  readonly version = '2.0.0'; // Incremented for new architecture
-  readonly hostnames = ['aistudio.google.com'];
-  readonly capabilities: AdapterCapability[] = [
-    'text-insertion',
-    'form-submission',
-    'file-attachment',
-    'dom-manipulation'
+export class AIStudioAdapter extends BaseAdapterPlugin { readonly name = 'AIStudioAdapter'; readonly version = '2.0.0'; // Incremented for new architecture readonly hostnames = ['aistudio.google.com'];
+  readonly capabilities: AdapterCapability[] = [ 'text-insertion', 'form-submission', 'file-attachment', 'dom-manipulation'
   ];
-
-  // CSS selectors for AI Studio's UI elements
+ // CSS selectors for AI Studio's UI elements
   // Simplified since we're using chatInputHandler for most operations
   private readonly selectors = {
-    // Button insertion points (for MCP popover) - looking for prompt input wrapper
-    BUTTON_INSERTION_CONTAINER: '.prompt-input-wrapper, .actions-container, footer .actions-container',
-    // Alternative insertion points
-    FALLBACK_INSERTION: '.input-area, .chat-input-container, .conversation-input'
+    // Button insertion points (for MCP popover) - looking for prompt input wrapper BUTTON_INSERTION_CONTAINER: '.prompt-input-wrapper, .actions-container, footer .actions-container',
+    // Alternative insertion points FALLBACK_INSERTION: '.input-area, .chat-input-container, .conversation-input'
   };
 
-  // URL patterns for navigation tracking
-  private lastUrl: string = '';
+  // URL patterns for navigation tracking private lastUrl: string = '';
   private urlCheckInterval: NodeJS.Timeout | null = null;
 
   // State management integration
@@ -69,8 +57,7 @@ export class AIStudioAdapter extends BaseAdapterPlugin {
   }
 
   async initialize(context: PluginContext): Promise<void> {
-    // Guard against multiple initialization
-    if (this.currentStatus === 'initializing' || this.currentStatus === 'active') {
+    // Guard against multiple initialization if (this.currentStatus === 'initializing' || this.currentStatus === 'active') {
       this.context?.logger.warn(`AI Studio adapter instance #${this.instanceId} already initialized or active, skipping re-initialization`);
       return;
     }
@@ -87,8 +74,7 @@ export class AIStudioAdapter extends BaseAdapterPlugin {
   }
 
   async activate(): Promise<void> {
-    // Guard against multiple activation
-    if (this.currentStatus === 'active') {
+    // Guard against multiple activation if (this.currentStatus === 'active') {
       this.context?.logger.warn(`AI Studio adapter instance #${this.instanceId} already active, skipping re-activation`);
       return;
     }
@@ -103,29 +89,24 @@ export class AIStudioAdapter extends BaseAdapterPlugin {
     this.setupDOMObservers();
     this.setupUIIntegration();
 
-    // Emit activation event for store synchronization
-    this.context.eventBus.emit('adapter:activated', {
+    // Emit activation event for store synchronization this.context.eventBus.emit('adapter:activated', {
       pluginName: this.name,
       timestamp: Date.now()
     });
   }
 
   async deactivate(): Promise<void> {
-    // Guard against double deactivation
-    if (this.currentStatus === 'inactive' || this.currentStatus === 'disabled') {
-      this.context?.logger.warn('AI Studio adapter already inactive, skipping deactivation');
+    // Guard against double deactivation if (this.currentStatus === 'inactive' || this.currentStatus === 'disabled') { this.context?.logger.warn('AI Studio adapter already inactive, skipping deactivation');
       return;
     }
 
-    await super.deactivate();
-    this.context.logger.debug('Deactivating AI Studio adapter...');
+    await super.deactivate(); this.context.logger.debug('Deactivating AI Studio adapter...');
 
     // Clean up UI integration
     this.cleanupUIIntegration();
     this.cleanupDOMObservers();
 
-    // Remove injected adapter styles
-    const styleElement = document.getElementById('mcp-aistudio-button-styles');
+    // Remove injected adapter styles const styleElement = document.getElementById('mcp-aistudio-button-styles');
     if (styleElement) {
       styleElement.remove();
       this.adapterStylesInjected = false;
@@ -136,16 +117,14 @@ export class AIStudioAdapter extends BaseAdapterPlugin {
     this.domObserversSetup = false;
     this.uiIntegrationSetup = false;
 
-    // Emit deactivation event
-    this.context.eventBus.emit('adapter:deactivated', {
+    // Emit deactivation event this.context.eventBus.emit('adapter:deactivated', {
       pluginName: this.name,
       timestamp: Date.now()
     });
   }
 
   async cleanup(): Promise<void> {
-    await super.cleanup();
-    this.context.logger.debug('Cleaning up AI Studio adapter...');
+    await super.cleanup(); this.context.logger.debug('Cleaning up AI Studio adapter...');
 
     // Clear URL tracking interval
     if (this.urlCheckInterval) {
@@ -159,8 +138,7 @@ export class AIStudioAdapter extends BaseAdapterPlugin {
       this.popoverCheckInterval = null;
     }
 
-    // Remove injected adapter styles
-    const styleElement = document.getElementById('mcp-aistudio-button-styles');
+    // Remove injected adapter styles const styleElement = document.getElementById('mcp-aistudio-button-styles');
     if (styleElement) {
       styleElement.remove();
       this.adapterStylesInjected = false;
@@ -200,8 +178,7 @@ export class AIStudioAdapter extends BaseAdapterPlugin {
         color: var(--color-on-surface);
         background-color: transparent;
         
-        /* Typography */
-        font-family: 'Google Sans', Roboto, 'Helvetica Neue', Arial, sans-serif;
+        /* Typography */ font-family: 'Google Sans', Roboto, 'Helvetica Neue', Arial, sans-serif;
         font-size: 14px;
         font-weight: 500;
         letter-spacing: 0.0892857143em;
@@ -281,8 +258,7 @@ export class AIStudioAdapter extends BaseAdapterPlugin {
           /* Colors automatically handled by CSS variables */
         }
       }
-      
-      /* Integration with AI Studio's button wrapper */
+       /* Integration with AI Studio's button wrapper */
       .button-wrapper .mcp-aistudio-button-base {
         margin: 0;
         height: 40px;
@@ -329,20 +305,17 @@ export class AIStudioAdapter extends BaseAdapterPlugin {
   private injectAIStudioButtonStyles(): void {
     if (this.adapterStylesInjected) return;
     
-    try {
-      const styleId = 'mcp-aistudio-button-styles';
+    try { const styleId = 'mcp-aistudio-button-styles';
       const existingStyles = document.getElementById(styleId);
       if (existingStyles) existingStyles.remove();
-      
-      const styleElement = document.createElement('style');
+       const styleElement = document.createElement('style');
       styleElement.id = styleId;
       styleElement.textContent = this.getAIStudioButtonStyles();
       document.head.appendChild(styleElement);
       
-      this.adapterStylesInjected = true;
-      this.context.logger.debug('AI Studio button styles injected successfully');
+      this.adapterStylesInjected = true; this.context.logger.debug('AI Studio button styles injected successfully');
     } catch (error) {
-      this.context.logger.error('Failed to inject AI Studio button styles:', error);
+       this.context.logger.error('Failed to inject AI Studio button styles:', error);
     }
   }
 
@@ -350,32 +323,26 @@ export class AIStudioAdapter extends BaseAdapterPlugin {
    * Insert text into the AI Studio chat input field
    * Enhanced with better selector handling and event integration
    */
-  async insertText(text: string, options?: { targetElement?: HTMLElement }): Promise<boolean> {
-    this.context.logger.debug(`Attempting to insert text into AI Studio chat input: ${text.substring(0, 50)}${text.length > 50 ? '...' : ''}`);
+  async insertText(text: string, options?: { targetElement?: HTMLElement }): Promise<boolean> { this.context.logger.debug(`Attempting to insert text into AI Studio chat input: ${text.substring(0, 50)}${text.length > 50 ? '...' : ''}`);
 
     try {
       // Use the proven chatInputHandler method
       const success = insertTextToChatInput(text);
       
       if (success) {
-        // Emit success event to the new event system
-        this.emitExecutionCompleted('insertText', { text }, {
-          success: true,
-          method: 'chatInputHandler',
+        // Emit success event to the new event system this.emitExecutionCompleted('insertText', { text }, {
+          success: true, method: 'chatInputHandler',
           textLength: text.length
         });
 
         this.context.logger.debug(`Text inserted successfully using chatInputHandler. Length: ${text.length}`);
         return true;
-      } else {
-        this.context.logger.error('Failed to insert text using chatInputHandler');
-        this.emitExecutionFailed('insertText', 'chatInputHandler failed to insert text');
+      } else { this.context.logger.error('Failed to insert text using chatInputHandler'); this.emitExecutionFailed('insertText', 'chatInputHandler failed to insert text');
         return false;
       }
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : String(error);
-      this.context.logger.error(`Error inserting text into AI Studio chat input: ${errorMessage}`);
-      this.emitExecutionFailed('insertText', errorMessage);
+      this.context.logger.error(`Error inserting text into AI Studio chat input: ${errorMessage}`); this.emitExecutionFailed('insertText', errorMessage);
       return false;
     }
   }
@@ -384,33 +351,25 @@ export class AIStudioAdapter extends BaseAdapterPlugin {
    * Submit the current text in the AI Studio chat input
    * Enhanced with multiple selector fallbacks and better error handling
    */
-  async submitForm(options?: { formElement?: HTMLFormElement }): Promise<boolean> {
-    this.context.logger.debug('Attempting to submit AI Studio chat input');
+  async submitForm(options?: { formElement?: HTMLFormElement }): Promise<boolean> { this.context.logger.debug('Attempting to submit AI Studio chat input');
 
     try {
       // Use the proven chatInputHandler method
       const success = await submitChatInput();
       
       if (success) {
-        // Emit success event to the new event system
-        this.emitExecutionCompleted('submitForm', {
-          formElement: options?.formElement?.tagName || 'unknown'
+        // Emit success event to the new event system this.emitExecutionCompleted('submitForm', { formElement: options?.formElement?.tagName || 'unknown'
         }, {
-          success: true,
-          method: 'chatInputHandler'
+          success: true, method: 'chatInputHandler'
         });
-
-        this.context.logger.debug('AI Studio chat input submitted successfully via chatInputHandler');
+ this.context.logger.debug('AI Studio chat input submitted successfully via chatInputHandler');
         return true;
-      } else {
-        this.context.logger.error('Failed to submit using chatInputHandler');
-        this.emitExecutionFailed('submitForm', 'chatInputHandler failed to submit');
+      } else { this.context.logger.error('Failed to submit using chatInputHandler'); this.emitExecutionFailed('submitForm', 'chatInputHandler failed to submit');
         return false;
       }
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : String(error);
-      this.context.logger.error(`Error submitting AI Studio chat input: ${errorMessage}`);
-      this.emitExecutionFailed('submitForm', errorMessage);
+      this.context.logger.error(`Error submitting AI Studio chat input: ${errorMessage}`); this.emitExecutionFailed('submitForm', errorMessage);
       return false;
     }
   }
@@ -421,20 +380,16 @@ export class AIStudioAdapter extends BaseAdapterPlugin {
   private async submitWithEnterKey(): Promise<boolean> {
     try {
       const chatInput = findChatInputElement();
-      if (!chatInput) {
-        this.emitExecutionFailed('submitForm', 'Chat input element not found for Enter key fallback');
+      if (!chatInput) { this.emitExecutionFailed('submitForm', 'Chat input element not found for Enter key fallback');
         return false;
       }
 
       // Focus the textarea
       chatInput.focus();
 
-      // Simulate Enter key press
-      const enterEvents = ['keydown', 'keypress', 'keyup'];
+      // Simulate Enter key press const enterEvents = ['keydown', 'keypress', 'keyup'];
       for (const eventType of enterEvents) {
-        chatInput.dispatchEvent(new KeyboardEvent(eventType, {
-          key: 'Enter',
-          code: 'Enter',
+        chatInput.dispatchEvent(new KeyboardEvent(eventType, { key: 'Enter', code: 'Enter',
           keyCode: 13,
           which: 13,
           bubbles: true,
@@ -442,24 +397,17 @@ export class AIStudioAdapter extends BaseAdapterPlugin {
         }));
       }
 
-      // Try form submission as additional fallback
-      const form = chatInput.closest('form') as HTMLFormElement;
-      if (form) {
-        this.context.logger.debug('Submitting form as additional fallback');
-        form.dispatchEvent(new SubmitEvent('submit', { bubbles: true, cancelable: true }));
+      // Try form submission as additional fallback const form = chatInput.closest('form') as HTMLFormElement;
+      if (form) { this.context.logger.debug('Submitting form as additional fallback'); form.dispatchEvent(new SubmitEvent('submit', { bubbles: true, cancelable: true }));
       }
-
-      this.emitExecutionCompleted('submitForm', {}, {
-        success: true,
-        method: 'enterKey+formSubmit'
+ this.emitExecutionCompleted('submitForm', {}, {
+        success: true, method: 'enterKey+formSubmit'
       });
-
-      this.context.logger.debug('AI Studio chat input submitted successfully via Enter key');
+ this.context.logger.debug('AI Studio chat input submitted successfully via Enter key');
       return true;
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : String(error);
-      this.context.logger.error(`Error submitting with Enter key: ${errorMessage}`);
-      this.emitExecutionFailed('submitForm', errorMessage);
+      this.context.logger.error(`Error submitting with Enter key: ${errorMessage}`); this.emitExecutionFailed('submitForm', errorMessage);
       return false;
     }
   }
@@ -473,40 +421,34 @@ export class AIStudioAdapter extends BaseAdapterPlugin {
 
     try {
       // Validate file before attempting attachment
-      if (!file || file.size === 0) {
-        this.emitExecutionFailed('attachFile', 'Invalid file: file is empty or null');
+      if (!file || file.size === 0) { this.emitExecutionFailed('attachFile', 'Invalid file: file is empty or null');
         return false;
       }
 
       // Check if file upload is supported on current page
-      if (!this.supportsFileUpload()) {
-        this.emitExecutionFailed('attachFile', 'File upload not supported on current page');
+      if (!this.supportsFileUpload()) { this.emitExecutionFailed('attachFile', 'File upload not supported on current page');
         return false;
       }
 
       // Use the proven chatInputHandler method
       const success = await attachFileToChatInput(file);
       
-      if (success) {
-        this.emitExecutionCompleted('attachFile', {
+      if (success) { this.emitExecutionCompleted('attachFile', {
           fileName: file.name,
           fileType: file.type,
           fileSize: file.size
         }, {
-          success: true,
-          method: 'chatInputHandler'
+          success: true, method: 'chatInputHandler'
         });
         this.context.logger.debug(`File attached successfully via chatInputHandler: ${file.name}`);
         return true;
       } else {
-        this.context.logger.warn(`File attachment failed via chatInputHandler for: ${file.name}`);
-        this.emitExecutionFailed('attachFile', 'chatInputHandler failed to attach file');
+        this.context.logger.warn(`File attachment failed via chatInputHandler for: ${file.name}`); this.emitExecutionFailed('attachFile', 'chatInputHandler failed to attach file');
         return false;
       }
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : String(error);
-      this.context.logger.error(`Error attaching file to AI Studio: ${errorMessage}`);
-      this.emitExecutionFailed('attachFile', errorMessage);
+      this.context.logger.error(`Error attaching file to AI Studio: ${errorMessage}`); this.emitExecutionFailed('attachFile', errorMessage);
       return false;
     }
   }
@@ -517,8 +459,7 @@ export class AIStudioAdapter extends BaseAdapterPlugin {
   private async attachFileViaDragDrop(file: File): Promise<boolean> {
     try {
       const chatInput = findChatInputElement();
-      if (!chatInput) {
-        this.context.logger.debug('No chat input found for drag-drop');
+      if (!chatInput) { this.context.logger.debug('No chat input found for drag-drop');
         return false;
       }
 
@@ -526,21 +467,18 @@ export class AIStudioAdapter extends BaseAdapterPlugin {
       const dataTransfer = new DataTransfer();
       dataTransfer.items.add(file);
 
-      // Create custom events
-      const dragOverEvent = new DragEvent('dragover', {
+      // Create custom events const dragOverEvent = new DragEvent('dragover', {
+        bubbles: true,
+        cancelable: true,
+        dataTransfer: dataTransfer,
+      });
+ const dropEvent = new DragEvent('drop', {
         bubbles: true,
         cancelable: true,
         dataTransfer: dataTransfer,
       });
 
-      const dropEvent = new DragEvent('drop', {
-        bubbles: true,
-        cancelable: true,
-        dataTransfer: dataTransfer,
-      });
-
-      // Prevent default on dragover to enable drop
-      chatInput.addEventListener('dragover', e => e.preventDefault(), { once: true });
+      // Prevent default on dragover to enable drop chatInput.addEventListener('dragover', e => e.preventDefault(), { once: true });
       chatInput.dispatchEvent(dragOverEvent);
 
       // Simulate the drop event
@@ -558,10 +496,8 @@ export class AIStudioAdapter extends BaseAdapterPlugin {
    */
   private async attachFileViaInput(file: File): Promise<boolean> {
     try {
-      // Find file input element (AI Studio should have one for manual uploads)
-      const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement;
-      if (!fileInput) {
-        logger.debug('No file input element found');
+      // Find file input element (AI Studio should have one for manual uploads) const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement;
+      if (!fileInput) { logger.debug('No file input element found');
         return false;
       }
 
@@ -572,8 +508,7 @@ export class AIStudioAdapter extends BaseAdapterPlugin {
       // Set the files property on the input element
       fileInput.files = dataTransfer.files;
 
-      // Trigger the change event to notify the application
-      const changeEvent = new Event('change', { bubbles: true });
+      // Trigger the change event to notify the application const changeEvent = new Event('change', { bubbles: true });
       fileInput.dispatchEvent(changeEvent);
 
       logger.debug(`File attached via input element: ${file.name}`);
@@ -619,11 +554,9 @@ export class AIStudioAdapter extends BaseAdapterPlugin {
     this.context.logger.debug(`Checking if AI Studio adapter supports: ${currentUrl}`);
 
     // Check hostname first
-    const isAIStudioHost = this.hostnames.some(hostname => {
-      if (typeof hostname === 'string') {
+    const isAIStudioHost = this.hostnames.some(hostname => { if (typeof hostname === 'string') {
         return currentHost.includes(hostname);
-      }
-      // hostname is RegExp if it's not a string
+      } // hostname is RegExp if it's not a string
       return (hostname as RegExp).test(currentHost);
     });
 
@@ -654,23 +587,20 @@ export class AIStudioAdapter extends BaseAdapterPlugin {
    * Check if file upload is supported on the current page
    * Enhanced with multiple selector checking and better detection
    */
-  supportsFileUpload(): boolean {
-    this.context.logger.debug('Checking file upload support for AI Studio');
+  supportsFileUpload(): boolean { this.context.logger.debug('Checking file upload support for AI Studio');
 
     // Check if we can find the chat input element using the chatInputHandler
     const chatInput = findChatInputElement();
-    if (chatInput) {
-      this.context.logger.debug('Found chat input element, file upload should be supported');
+    if (chatInput) { this.context.logger.debug('Found chat input element, file upload should be supported');
       return true; // AI Studio generally supports file upload via drag and drop
     }
-
-    this.context.logger.debug('Could not find chat input element');
+ this.context.logger.debug('Could not find chat input element');
     return false;
   }
 
   // Private helper methods
-
-  private setupUrlTracking(): void {
+  
+    private setupUrlTracking(): void {
     if (!this.urlCheckInterval) {
       this.urlCheckInterval = setInterval(() => {
         const currentUrl = window.location.href;
@@ -689,8 +619,8 @@ export class AIStudioAdapter extends BaseAdapterPlugin {
   }
 
   // New architecture integration methods
-
-  private setupStoreEventListeners(): void {
+  
+    private setupStoreEventListeners(): void {
     if (this.storeEventListenersSetup) {
       this.context.logger.warn(`Store event listeners already set up for instance #${this.instanceId}, skipping`);
       return;
@@ -698,16 +628,12 @@ export class AIStudioAdapter extends BaseAdapterPlugin {
 
     this.context.logger.debug(`Setting up store event listeners for AI Studio adapter instance #${this.instanceId}`);
 
-    // Listen for tool execution events from the store
-    this.context.eventBus.on('tool:execution-completed', (data) => {
-      this.context.logger.debug('Tool execution completed:', data);
+    // Listen for tool execution events from the store this.context.eventBus.on('tool:execution-completed', (data) => { this.context.logger.debug('Tool execution completed:', data);
       // Handle auto-actions based on store state
       this.handleToolExecutionCompleted(data);
     });
 
-    // Listen for UI state changes
-    this.context.eventBus.on('ui:sidebar-toggle', (data) => {
-      this.context.logger.debug('Sidebar toggled:', data);
+    // Listen for UI state changes this.context.eventBus.on('ui:sidebar-toggle', (data) => { this.context.logger.debug('Sidebar toggled:', data);
     });
 
     this.storeEventListenersSetup = true;
@@ -725,10 +651,8 @@ export class AIStudioAdapter extends BaseAdapterPlugin {
     this.mutationObserver = new MutationObserver((mutations) => {
       let shouldReinject = false;
 
-      mutations.forEach((mutation) => {
-        if (mutation.type === 'childList') {
-          // Check if our MCP popover was removed
-          if (!document.getElementById('mcp-popover-container')) {
+      mutations.forEach((mutation) => { if (mutation.type === 'childList') {
+          // Check if our MCP popover was removed if (!document.getElementById('mcp-popover-container')) {
             shouldReinject = true;
           }
         }
@@ -737,8 +661,7 @@ export class AIStudioAdapter extends BaseAdapterPlugin {
       if (shouldReinject) {
         // Only attempt re-injection if we can find an insertion point
         const insertionPoint = this.findButtonInsertionPoint();
-        if (insertionPoint) {
-          this.context.logger.debug('MCP popover removed, attempting to re-inject');
+        if (insertionPoint) { this.context.logger.debug('MCP popover removed, attempting to re-inject');
           this.setupUIIntegration();
         }
       }
@@ -766,9 +689,7 @@ export class AIStudioAdapter extends BaseAdapterPlugin {
     // Wait for page to be ready, then inject MCP popover
     this.waitForPageReady().then(() => {
       this.injectMCPPopoverWithRetry();
-    }).catch((error) => {
-      this.context.logger.warn('Failed to wait for page ready:', error);
-      // Don't retry if we can't find insertion point
+    }).catch((error) => { this.context.logger.warn('Failed to wait for page ready:', error); // Don't retry if we can't find insertion point
     });
 
     // Set up periodic check to ensure popover stays injected
@@ -779,16 +700,13 @@ export class AIStudioAdapter extends BaseAdapterPlugin {
     return new Promise((resolve, reject) => {
       let attempts = 0;
       const maxAttempts = 5; // Maximum 10 seconds (20 * 500ms)
-      
-      const checkReady = () => {
+        
+        const checkReady = () => {
         attempts++;
         const insertionPoint = this.findButtonInsertionPoint();
-        if (insertionPoint) {
-          this.context.logger.debug('Page ready for MCP popover injection');
+        if (insertionPoint) { this.context.logger.debug('Page ready for MCP popover injection');
           resolve();
-        } else if (attempts >= maxAttempts) {
-          this.context.logger.warn('Page ready check timed out - no insertion point found');
-          reject(new Error('No insertion point found after maximum attempts'));
+        } else if (attempts >= maxAttempts) { this.context.logger.warn('Page ready check timed out - no insertion point found'); reject(new Error('No insertion point found after maximum attempts'));
         } else {
           setTimeout(checkReady, 500);
         }
@@ -801,9 +719,7 @@ export class AIStudioAdapter extends BaseAdapterPlugin {
     const attemptInjection = (attempt: number) => {
       this.context.logger.debug(`Attempting MCP popover injection (attempt ${attempt}/${maxRetries})`);
 
-      // Check if popover already exists
-      if (document.getElementById('mcp-button-wrapper') || document.getElementById('mcp-popover-container')) {
-        this.context.logger.debug('MCP popover already exists');
+      // Check if popover already exists if (document.getElementById('mcp-button-wrapper') || document.getElementById('mcp-popover-container')) { this.context.logger.debug('MCP popover already exists');
         return;
       }
 
@@ -815,8 +731,7 @@ export class AIStudioAdapter extends BaseAdapterPlugin {
         // Retry after delay
         this.context.logger.debug(`Insertion point not found, retrying in 1 second (attempt ${attempt}/${maxRetries})`);
         setTimeout(() => attemptInjection(attempt + 1), 1000);
-      } else {
-        this.context.logger.warn('Failed to inject MCP popover after maximum retries');
+      } else { this.context.logger.warn('Failed to inject MCP popover after maximum retries');
       }
     };
 
@@ -826,12 +741,10 @@ export class AIStudioAdapter extends BaseAdapterPlugin {
   private setupPeriodicPopoverCheck(): void {
     // Check every 5 seconds if the popover is still there
     if (!this.popoverCheckInterval) {
-      this.popoverCheckInterval = setInterval(() => {
-        if (!document.getElementById('mcp-popover-container')) {
+      this.popoverCheckInterval = setInterval(() => { if (!document.getElementById('mcp-popover-container')) {
           // Only attempt re-injection if we can find an insertion point
           const insertionPoint = this.findButtonInsertionPoint();
-          if (insertionPoint) {
-            this.context.logger.debug('MCP popover missing, attempting to re-inject');
+          if (insertionPoint) { this.context.logger.debug('MCP popover missing, attempting to re-inject');
             this.injectMCPPopoverWithRetry(3); // Fewer retries for periodic checks
           }
         }
@@ -839,8 +752,7 @@ export class AIStudioAdapter extends BaseAdapterPlugin {
     }
   }
 
-  private cleanupDOMObservers(): void {
-    this.context.logger.debug('Cleaning up DOM observers for AI Studio adapter');
+  private cleanupDOMObservers(): void { this.context.logger.debug('Cleaning up DOM observers for AI Studio adapter');
 
     if (this.mutationObserver) {
       this.mutationObserver.disconnect();
@@ -848,17 +760,14 @@ export class AIStudioAdapter extends BaseAdapterPlugin {
     }
   }
 
-  private cleanupUIIntegration(): void {
-    this.context.logger.debug('Cleaning up UI integration for AI Studio adapter');
+  private cleanupUIIntegration(): void { this.context.logger.debug('Cleaning up UI integration for AI Studio adapter');
 
-    // Remove MCP button wrapper and popover if they exist
-    const buttonWrapper = document.getElementById('mcp-button-wrapper');
+    // Remove MCP button wrapper and popover if they exist const buttonWrapper = document.getElementById('mcp-button-wrapper');
     if (buttonWrapper) {
       buttonWrapper.remove();
     }
 
-    // Also remove the popover container directly if it somehow exists standalone
-    const popoverContainer = document.getElementById('mcp-popover-container');
+    // Also remove the popover container directly if it somehow exists standalone const popoverContainer = document.getElementById('mcp-popover-container');
     if (popoverContainer) {
       popoverContainer.remove();
     }
@@ -866,51 +775,40 @@ export class AIStudioAdapter extends BaseAdapterPlugin {
     this.mcpPopoverContainer = null;
   }
 
-  private handleToolExecutionCompleted(data: any): void {
-    this.context.logger.debug('Handling tool execution completion in AI Studio adapter:', data);
+  private handleToolExecutionCompleted(data: any): void { this.context.logger.debug('Handling tool execution completion in AI Studio adapter:', data);
 
     // Use the base class method to check if we should handle events
-    if (!this.shouldHandleEvents()) {
-      this.context.logger.debug('AI Studio adapter should not handle events, ignoring tool execution event');
+    if (!this.shouldHandleEvents()) { this.context.logger.debug('AI Studio adapter should not handle events, ignoring tool execution event');
       return;
     }
 
     // Get current UI state from stores to determine auto-actions
     const uiState = this.context.stores.ui;
     if (uiState && data.execution) {
-      // Handle auto-insert, auto-submit based on store state
-      // This integrates with the new architecture's state management
+      // Handle auto-insert, auto-submit based on store state // This integrates with the new architecture's state management
       this.context.logger.debug('Tool execution handled with new architecture integration');
     }
   }
 
-  private findButtonInsertionPoint(): { container: Element; insertAfter: Element | null } | null {
-    this.context.logger.debug('Finding button insertion point for MCP popover');
+  private findButtonInsertionPoint(): { container: Element; insertAfter: Element | null } | null { this.context.logger.debug('Finding button insertion point for MCP popover');
 
-    // Look for the prompt input wrapper container that holds the button wrappers
-    const promptInputWrapperContainer = document.querySelector('.prompt-input-wrapper-container');
-    if (promptInputWrapperContainer) {
-      this.context.logger.debug('Found prompt input wrapper container');
+    // Look for the prompt input wrapper container that holds the button wrappers const promptInputWrapperContainer = document.querySelector('.prompt-input-wrapper-container');
+    if (promptInputWrapperContainer) { this.context.logger.debug('Found prompt input wrapper container');
       
-      // Find all .button-wrapper elements inside the container - these contain the Add and Run buttons
-      const buttonWrappers = promptInputWrapperContainer.querySelectorAll('.button-wrapper');
+      // Find all .button-wrapper elements inside the container - these contain the Add and Run buttons const buttonWrappers = promptInputWrapperContainer.querySelectorAll('.button-wrapper');
       if (buttonWrappers.length > 0) {
         // Find the parent container that holds all button wrappers
         const buttonContainer = buttonWrappers[0].parentElement;
         if (buttonContainer) {
           // Insert after the last button wrapper (Run button) but within the same container
-          const lastButtonWrapper = buttonWrappers[buttonWrappers.length - 1];
-          this.context.logger.debug('Found button container, placing MCP button after the Run button');
+          const lastButtonWrapper = buttonWrappers[buttonWrappers.length - 1]; this.context.logger.debug('Found button container, placing MCP button after the Run button');
           return { container: buttonContainer, insertAfter: lastButtonWrapper };
         }
       }
     }
 
-    // Fallback: Try to find the prompt input wrapper directly
-    const promptInputWrapper = document.querySelector('.prompt-input-wrapper');
-    if (promptInputWrapper) {
-      this.context.logger.debug('Found prompt input wrapper (fallback)');
-      const buttonWrappers = promptInputWrapper.querySelectorAll('.button-wrapper');
+    // Fallback: Try to find the prompt input wrapper directly const promptInputWrapper = document.querySelector('.prompt-input-wrapper');
+    if (promptInputWrapper) { this.context.logger.debug('Found prompt input wrapper (fallback)'); const buttonWrappers = promptInputWrapper.querySelectorAll('.button-wrapper');
       if (buttonWrappers.length > 0) {
         const lastButtonWrapper = buttonWrappers[buttonWrappers.length - 1];
         return { container: promptInputWrapper, insertAfter: lastButtonWrapper };
@@ -918,36 +816,24 @@ export class AIStudioAdapter extends BaseAdapterPlugin {
       return { container: promptInputWrapper, insertAfter: null };
     }
 
-    // Final fallback: Look for actions container
-    const actionsContainer = document.querySelector('footer .actions-container, .actions-container');
-    if (actionsContainer) {
-      this.context.logger.debug('Found actions container (final fallback)');
+    // Final fallback: Look for actions container const actionsContainer = document.querySelector('footer .actions-container, .actions-container');
+    if (actionsContainer) { this.context.logger.debug('Found actions container (final fallback)');
       return { container: actionsContainer, insertAfter: null };
     }
-
-    this.context.logger.debug('Could not find suitable insertion point for MCP popover');
+ this.context.logger.debug('Could not find suitable insertion point for MCP popover');
     return null;
   }
 
-  private injectMCPPopover(insertionPoint: { container: Element; insertAfter: Element | null }): void {
-    this.context.logger.debug('Injecting MCP popover into AI Studio interface');
+  private injectMCPPopover(insertionPoint: { container: Element; insertAfter: Element | null }): void { this.context.logger.debug('Injecting MCP popover into AI Studio interface');
 
     try {
-      // Check if popover already exists
-      if (document.getElementById('mcp-button-wrapper') || document.getElementById('mcp-popover-container')) {
-        this.context.logger.debug('MCP popover already exists, skipping injection');
+      // Check if popover already exists if (document.getElementById('mcp-button-wrapper') || document.getElementById('mcp-popover-container')) { this.context.logger.debug('MCP popover already exists, skipping injection');
         return;
       }
+ // Create a button wrapper div to match AI Studio's structure
+      const buttonWrapper = document.createElement('div'); buttonWrapper.className = 'button-wrapper'; buttonWrapper.id = 'mcp-button-wrapper';
 
-      // Create a button wrapper div to match AI Studio's structure
-      const buttonWrapper = document.createElement('div');
-      buttonWrapper.className = 'button-wrapper';
-      buttonWrapper.id = 'mcp-button-wrapper';
-
-      // Create container for the React component inside the button wrapper
-      const reactContainer = document.createElement('div');
-      reactContainer.id = 'mcp-popover-container';
-      reactContainer.style.display = 'contents'; // Use contents to not interfere with layout
+      // Create container for the React component inside the button wrapper const reactContainer = document.createElement('div'); reactContainer.id = 'mcp-popover-container'; reactContainer.style.display = 'contents'; // Use contents to not interfere with layout
       
       // Add the React container to the button wrapper
       buttonWrapper.appendChild(reactContainer);
@@ -955,11 +841,9 @@ export class AIStudioAdapter extends BaseAdapterPlugin {
       // Insert at appropriate location
       const { container, insertAfter } = insertionPoint;
       if (insertAfter && insertAfter.parentNode === container) {
-        container.insertBefore(buttonWrapper, insertAfter.nextSibling);
-        this.context.logger.debug('Inserted MCP button wrapper after specified element');
+        container.insertBefore(buttonWrapper, insertAfter.nextSibling); this.context.logger.debug('Inserted MCP button wrapper after specified element');
       } else {
-        container.appendChild(buttonWrapper);
-        this.context.logger.debug('Appended MCP button wrapper to container element');
+        container.appendChild(buttonWrapper); this.context.logger.debug('Appended MCP button wrapper to container element');
       }
 
       // Store reference
@@ -967,31 +851,22 @@ export class AIStudioAdapter extends BaseAdapterPlugin {
 
       // Render the React MCP Popover using the new architecture
       this.renderMCPPopover(reactContainer);
-
-      this.context.logger.debug('MCP popover injected and rendered successfully');
+ this.context.logger.debug('MCP popover injected and rendered successfully');
     } catch (error) {
-      this.context.logger.error('Failed to inject MCP popover:', error);
+       this.context.logger.error('Failed to inject MCP popover:', error);
     }
   }
 
-  private renderMCPPopover(container: HTMLElement): void {
-    this.context.logger.debug('Rendering MCP popover with new architecture integration');
+  private renderMCPPopover(container: HTMLElement): void { this.context.logger.debug('Rendering MCP popover with new architecture integration');
 
     try {
-      // Import React and ReactDOM dynamically to avoid bundling issues
-      import('react').then(React => {
-        import('react-dom/client').then(ReactDOM => {
-          // Import MCPPopover component
-          import('../../components/mcpPopover/mcpPopover').then(({ MCPPopover }) => {
+      // Import React and ReactDOM dynamically to avoid bundling issues import('react').then(React => { import('react-dom/client').then(ReactDOM => {
+          // Import MCPPopover component import('../../components/mcpPopover/mcpPopover').then(({ MCPPopover }) => {
             // Create state manager with new architecture integration
             const stateManager = this.createToggleStateManager();
             
             // Create adapter button configuration for AI Studio styling
-            const adapterButtonConfig = {
-              className: 'mcp-aistudio-button-base',
-              contentClassName: 'mcp-aistudio-button-content', 
-              textClassName: 'mcp-aistudio-button-text',
-              activeClassName: 'active'
+            const adapterButtonConfig = { className: 'mcp-aistudio-button-base', contentClassName: 'mcp-aistudio-button-content',  textClassName: 'mcp-aistudio-button-text', activeClassName: 'active'
             };
 
             // Create root and render
@@ -1003,19 +878,15 @@ export class AIStudioAdapter extends BaseAdapterPlugin {
                 adapterName: this.name
               })
             );
-
-            this.context.logger.debug('MCP popover rendered successfully with AI Studio styling');
-          }).catch(error => {
-            this.context.logger.error('Failed to load MCPPopover component:', error);
+ this.context.logger.debug('MCP popover rendered successfully with AI Studio styling');
+          }).catch(error => { this.context.logger.error('Failed to load MCPPopover component:', error);
           });
-        }).catch(error => {
-          this.context.logger.error('Failed to load ReactDOM:', error);
+        }).catch(error => { this.context.logger.error('Failed to load ReactDOM:', error);
         });
-      }).catch(error => {
-        this.context.logger.error('Failed to load React:', error);
+      }).catch(error => { this.context.logger.error('Failed to load React:', error);
       });
     } catch (error) {
-      this.context.logger.error('Failed to render MCP popover:', error);
+       this.context.logger.error('Failed to render MCP popover:', error);
     }
   }
 
@@ -1043,7 +914,7 @@ export class AIStudioAdapter extends BaseAdapterPlugin {
             autoExecute: false // Default for now, can be extended
           };
         } catch (error) {
-          context.logger.error('Error getting toggle state:', error);
+       context.logger.error('Error getting toggle state:', error);
           // Return safe defaults in case of error
           return {
             mcpEnabled: false,
@@ -1054,20 +925,16 @@ export class AIStudioAdapter extends BaseAdapterPlugin {
         }
       },
 
-      setMCPEnabled: (enabled: boolean) => {
-        context.logger.debug(`Setting MCP ${enabled ? 'enabled' : 'disabled'} - controlling sidebar visibility via MCP state`);
+      setMCPEnabled: (enabled: boolean) => { context.logger.debug(`Setting MCP ${enabled ? 'enabled' : 'disabled'} - controlling sidebar visibility via MCP state`);
 
         try {
           // Primary method: Control MCP state through UI store (which will automatically control sidebar)
-          if (context.stores.ui?.setMCPEnabled) {
-            context.stores.ui.setMCPEnabled(enabled, 'mcp-popover-toggle');
+          if (context.stores.ui?.setMCPEnabled) { context.stores.ui.setMCPEnabled(enabled, 'mcp-popover-toggle');
             context.logger.debug(`MCP state set to: ${enabled} via UI store`);
-          } else {
-            context.logger.warn('UI store setMCPEnabled method not available');
+          } else { context.logger.warn('UI store setMCPEnabled method not available');
             
             // Fallback: Control sidebar visibility directly if MCP state setter not available
-            if (context.stores.ui?.setSidebarVisibility) {
-              context.stores.ui.setSidebarVisibility(enabled, 'mcp-popover-toggle-fallback');
+            if (context.stores.ui?.setSidebarVisibility) { context.stores.ui.setSidebarVisibility(enabled, 'mcp-popover-toggle-fallback');
               context.logger.debug(`Sidebar visibility set to: ${enabled} via UI store fallback`);
             }
           }
@@ -1075,31 +942,24 @@ export class AIStudioAdapter extends BaseAdapterPlugin {
           // Secondary method: Control through global sidebar manager as additional safeguard
           const sidebarManager = (window as any).activeSidebarManager;
           if (sidebarManager) {
-            if (enabled) {
-              context.logger.debug('Showing sidebar via activeSidebarManager');
-              sidebarManager.show().catch((error: any) => {
-                context.logger.error('Error showing sidebar:', error);
+            if (enabled) { context.logger.debug('Showing sidebar via activeSidebarManager');
+              sidebarManager.show().catch((error: any) => { context.logger.error('Error showing sidebar:', error);
               });
-            } else {
-              context.logger.debug('Hiding sidebar via activeSidebarManager');
-              sidebarManager.hide().catch((error: any) => {
-                context.logger.error('Error hiding sidebar:', error);
+            } else { context.logger.debug('Hiding sidebar via activeSidebarManager');
+              sidebarManager.hide().catch((error: any) => { context.logger.error('Error hiding sidebar:', error);
               });
             }
-          } else {
-            context.logger.warn('activeSidebarManager not available on window - will rely on UI store only');
+          } else { context.logger.warn('activeSidebarManager not available on window - will rely on UI store only');
           }
-
-          context.logger.debug(`MCP toggle completed: MCP ${enabled ? 'enabled' : 'disabled'}, sidebar ${enabled ? 'shown' : 'hidden'}`);
+ context.logger.debug(`MCP toggle completed: MCP ${enabled ? 'enabled' : 'disabled'}, sidebar ${enabled ? 'shown' : 'hidden'}`);
         } catch (error) {
-          context.logger.error('Error in setMCPEnabled:', error);
+       context.logger.error('Error in setMCPEnabled:', error);
         }
 
         stateManager.updateUI();
       },
 
-      setAutoInsert: (enabled: boolean) => {
-        context.logger.debug(`Setting Auto Insert ${enabled ? 'enabled' : 'disabled'}`);
+      setAutoInsert: (enabled: boolean) => { context.logger.debug(`Setting Auto Insert ${enabled ? 'enabled' : 'disabled'}`);
 
         // Update preferences through store
         if (context.stores.ui?.updatePreferences) {
@@ -1109,8 +969,7 @@ export class AIStudioAdapter extends BaseAdapterPlugin {
         stateManager.updateUI();
       },
 
-      setAutoSubmit: (enabled: boolean) => {
-        context.logger.debug(`Setting Auto Submit ${enabled ? 'enabled' : 'disabled'}`);
+      setAutoSubmit: (enabled: boolean) => { context.logger.debug(`Setting Auto Submit ${enabled ? 'enabled' : 'disabled'}`);
 
         // Update preferences through store
         if (context.stores.ui?.updatePreferences) {
@@ -1120,20 +979,16 @@ export class AIStudioAdapter extends BaseAdapterPlugin {
         stateManager.updateUI();
       },
 
-      setAutoExecute: (enabled: boolean) => {
-        context.logger.debug(`Setting Auto Execute ${enabled ? 'enabled' : 'disabled'}`);
+      setAutoExecute: (enabled: boolean) => { context.logger.debug(`Setting Auto Execute ${enabled ? 'enabled' : 'disabled'}`);
         // Can be extended to handle auto execute functionality
         stateManager.updateUI();
       },
 
-      updateUI: () => {
-        context.logger.debug('Updating MCP popover UI');
+      updateUI: () => { context.logger.debug('Updating MCP popover UI');
 
-        // Dispatch custom event to update the popover
-        const popoverContainer = document.getElementById('mcp-popover-container');
+        // Dispatch custom event to update the popover const popoverContainer = document.getElementById('mcp-popover-container');
         if (popoverContainer) {
-          const currentState = stateManager.getState();
-          const event = new CustomEvent('mcp:update-toggle-state', {
+          const currentState = stateManager.getState(); const event = new CustomEvent('mcp:update-toggle-state', {
             detail: { toggleState: currentState }
           });
           popoverContainer.dispatchEvent(event);
@@ -1147,33 +1002,28 @@ export class AIStudioAdapter extends BaseAdapterPlugin {
   /**
    * Public method to manually inject MCP popover (for debugging or external calls)
    */
-  public injectMCPPopoverManually(): void {
-    this.context.logger.debug('Manual MCP popover injection requested');
+  public injectMCPPopoverManually(): void { this.context.logger.debug('Manual MCP popover injection requested');
     this.injectMCPPopoverWithRetry();
   }
 
   /**
    * Check if MCP popover is currently injected
    */
-  public isMCPPopoverInjected(): boolean {
-    return !!document.getElementById('mcp-button-wrapper') || !!document.getElementById('mcp-popover-container');
+  public isMCPPopoverInjected(): boolean { return !!document.getElementById('mcp-button-wrapper') || !!document.getElementById('mcp-popover-container');
   }
 
-  private emitExecutionCompleted(toolName: string, parameters: any, result: any): void {
-    this.context.eventBus.emit('tool:execution-completed', {
+  private emitExecutionCompleted(toolName: string, parameters: any, result: any): void { this.context.eventBus.emit('tool:execution-completed', {
       execution: {
         id: this.generateCallId(),
         toolName,
         parameters,
         result,
-        timestamp: Date.now(),
-        status: 'success'
+        timestamp: Date.now(), status: 'success'
       }
     });
   }
 
-  private emitExecutionFailed(toolName: string, error: string): void {
-    this.context.eventBus.emit('tool:execution-failed', {
+  private emitExecutionFailed(toolName: string, error: string): void { this.context.eventBus.emit('tool:execution-failed', {
       toolName,
       error,
       callId: this.generateCallId()
@@ -1187,11 +1037,9 @@ export class AIStudioAdapter extends BaseAdapterPlugin {
   /**
    * Check if the sidebar is properly available after navigation
    */
-  private checkAndRestoreSidebar(): void {
-    this.context.logger.debug('Checking sidebar state after page navigation');
+  private checkAndRestoreSidebar(): void { this.context.logger.debug('Checking sidebar state after page navigation');
 
-    try {
-      // Check if there's an active sidebar manager
+    try { // Check if there's an active sidebar manager
       const activeSidebarManager = (window as any).activeSidebarManager;
       
       if (!activeSidebarManager) {
@@ -1203,32 +1051,28 @@ export class AIStudioAdapter extends BaseAdapterPlugin {
       this.ensureMCPPopoverConnection();
       
     } catch (error) {
-      this.context.logger.error('Error checking sidebar state after navigation:', error);
+       this.context.logger.error('Error checking sidebar state after navigation:', error);
     }
   }
 
   /**
    * Ensure MCP popover is properly connected to the sidebar after navigation
    */
-  private ensureMCPPopoverConnection(): void {
-    this.context.logger.debug('Ensuring MCP popover connection after navigation');
+  private ensureMCPPopoverConnection(): void { this.context.logger.debug('Ensuring MCP popover connection after navigation');
     
     try {
       // Check if MCP popover is still injected
-      if (!this.isMCPPopoverInjected()) {
-        this.context.logger.debug('MCP popover missing after navigation, re-injecting');
+      if (!this.isMCPPopoverInjected()) { this.context.logger.debug('MCP popover missing after navigation, re-injecting');
         this.injectMCPPopoverWithRetry(3);
-      } else {
-        this.context.logger.debug('MCP popover is still present after navigation');
+      } else { this.context.logger.debug('MCP popover is still present after navigation');
       }
     } catch (error) {
-      this.context.logger.error('Error ensuring MCP popover connection:', error);
+       this.context.logger.error('Error ensuring MCP popover connection:', error);
     }
   }
 
   // Event handlers - Enhanced for new architecture integration
-  onPageChanged?(url: string, oldUrl?: string): void {
-    this.context.logger.debug(`AI Studio page changed: from ${oldUrl || 'N/A'} to ${url}`);
+  onPageChanged?(url: string, oldUrl?: string): void { this.context.logger.debug(`AI Studio page changed: from ${oldUrl || 'N/A'} to ${url}`);
 
     // Update URL tracking
     this.lastUrl = url;
@@ -1248,26 +1092,21 @@ export class AIStudioAdapter extends BaseAdapterPlugin {
       setTimeout(() => {
         this.checkAndRestoreSidebar();
       }, 1500); // Additional delay to ensure page is fully loaded
-    } else {
-      this.context.logger.warn('Page no longer supported after navigation');
+    } else { this.context.logger.warn('Page no longer supported after navigation');
     }
 
-    // Emit page change event to stores
-    this.context.eventBus.emit('app:site-changed', {
+    // Emit page change event to stores this.context.eventBus.emit('app:site-changed', {
       site: url,
       hostname: window.location.hostname
     });
   }
 
-  onHostChanged?(newHost: string, oldHost?: string): void {
-    this.context.logger.debug(`AI Studio host changed: from ${oldHost || 'N/A'} to ${newHost}`);
+  onHostChanged?(newHost: string, oldHost?: string): void { this.context.logger.debug(`AI Studio host changed: from ${oldHost || 'N/A'} to ${newHost}`);
 
     // Re-check if the adapter is still supported
     const stillSupported = this.isSupported();
-    if (!stillSupported) {
-      this.context.logger.warn('AI Studio adapter no longer supported on this host/page');
-      // Emit deactivation event using available event type
-      this.context.eventBus.emit('adapter:deactivated', {
+    if (!stillSupported) { this.context.logger.warn('AI Studio adapter no longer supported on this host/page');
+      // Emit deactivation event using available event type this.context.eventBus.emit('adapter:deactivated', {
         pluginName: this.name,
         timestamp: Date.now()
       });
@@ -1290,58 +1129,46 @@ export class AIStudioAdapter extends BaseAdapterPlugin {
 
 
 export const findChatInputElement = (): HTMLTextAreaElement | null => {
-  // Try to find the main "Ask anything..." input first
-  let chatInput = document.querySelector('textarea.textarea[placeholder="Type something"]');
-
-  if (chatInput) {
-    logger.debug('Found AiStudio main input with "Type something" placeholder');
+  // Try to find the main "Ask anything..." input first let chatInput = document.querySelector('textarea.textarea[placeholder="Type something"]');
+  
+    if (chatInput) { logger.debug('Found AiStudio main input with "Type something" placeholder');
     return chatInput as HTMLTextAreaElement;
   }
-  // Try to find the main "Ask anything..." input first
-  chatInput = document.querySelector('textarea.textarea[aria-label="Type something or pick one from prompt gallery"]');
-
-  if (chatInput) {
-    logger.debug('Found AiStudio main input with "Type something or pick one from prompt gallery" placeholder');
+  // Try to find the main "Ask anything..." input first chatInput = document.querySelector('textarea.textarea[aria-label="Type something or pick one from prompt gallery"]');
+  
+    if (chatInput) { logger.debug('Found AiStudio main input with "Type something or pick one from prompt gallery" placeholder');
     return chatInput as HTMLTextAreaElement;
   }
 
-  // Fall back to the follow-up input if main input not found
-  chatInput = document.querySelector('textarea[placeholder="Ask follow-up"]');
-
-  if (chatInput) {
-    logger.debug('Found AiStudio follow-up input with "Ask follow-up" placeholder');
+  // Fall back to the follow-up input if main input not found chatInput = document.querySelector('textarea[placeholder="Ask follow-up"]');
+  
+    if (chatInput) { logger.debug('Found AiStudio follow-up input with "Ask follow-up" placeholder');
     return chatInput as HTMLTextAreaElement;
   }
 
   // Try to find the input with "Type something or tab to choose an example prompt" aria-label
-  chatInput = document.querySelector(
-    "textarea.textarea[aria-label='Type something or tab to choose an example prompt']",
+  chatInput = document.querySelector( "textarea.textarea[aria-label='Type something or tab to choose an example prompt']",
   );
 
-  if (chatInput) {
-    logger.debug('Found AiStudio input with "Type something or tab to choose an example prompt" aria-label');
+  if (chatInput) { logger.debug('Found AiStudio input with "Type something or tab to choose an example prompt" aria-label');
     return chatInput as HTMLTextAreaElement;
   }
 
-  // Try to find the input with "Start typing a prompt" aria-label
-  chatInput = document.querySelector("textarea.textarea[aria-label='Start typing a prompt']");
-
-  if (chatInput) {
-    logger.debug('Found AiStudio input with "Start typing a prompt" aria-label');
+  // Try to find the input with "Start typing a prompt" aria-label chatInput = document.querySelector("textarea.textarea[aria-label='Start typing a prompt']");
+  
+    if (chatInput) { logger.debug('Found AiStudio input with "Start typing a prompt" aria-label');
     return chatInput as HTMLTextAreaElement;
   }
 
-  // If neither specific placeholder is found, try a more general approach
-  chatInput = document.querySelector('textarea[placeholder*="Ask"]');
-
-  if (chatInput) {
+  // If neither specific placeholder is found, try a more general approach chatInput = document.querySelector('textarea[placeholder*="Ask"]');
+  
+    if (chatInput) {
     logger.debug(
       `Found AiStudio input with generic "Ask" in placeholder: ${(chatInput as HTMLTextAreaElement).placeholder}`,
     );
     return chatInput as HTMLTextAreaElement;
   }
-
-  logger.debug('Could not find any AiStudio chat input textarea');
+ logger.debug('Could not find any AiStudio chat input textarea');
   return null;
 };
 
@@ -1374,8 +1201,7 @@ export const insertTextToChatInput = (text: string): boolean => {
 
     if (chatInput) {
       // Append the text to the existing text in the textarea
-      const currentText = chatInput.value;
-      // Add new line before and after the current text if there's existing content
+      const currentText = chatInput.value; // Add new line before and after the current text if there's existing content
       const formattedText = currentText ? `${currentText}\n\n${text}` : text;
       chatInput.value = formattedText;
 
@@ -1385,18 +1211,14 @@ export const insertTextToChatInput = (text: string): boolean => {
 
       // Focus the textarea
       chatInput.focus();
-
-      logger.debug('Appended text to AiStudio chat input');
+ logger.debug('Appended text to AiStudio chat input');
       return true;
-    } else {
-      logger.debug('Could not find AiStudio chat input');
-      logger.error('Could not find AiStudio chat input textarea');
+    } else { logger.debug('Could not find AiStudio chat input'); logger.error('Could not find AiStudio chat input textarea');
       return false;
     }
   } catch (error: unknown) {
     const errorMessage = error instanceof Error ? error.message : String(error);
-    logger.debug(`Error inserting text into chat input: ${errorMessage}`);
-    logger.error('Error inserting text into chat input:', error);
+    logger.debug(`Error inserting text into chat input: ${errorMessage}`); logger.error('Error inserting text into chat input:', error);
     return false;
   }
 };
@@ -1410,17 +1232,14 @@ export const insertToolResultToChatInput = (result: any): boolean => {
   try {
     // Format the tool result as JSON string
     // const formattedResult = formatAsJson(result);
-    // const wrappedResult = wrapInToolOutput(formattedResult);
-    if (typeof result !== 'string') {
-      result = JSON.stringify(result, null, 2);
-      logger.debug('Converted tool result to string format');
+    // const wrappedResult = wrapInToolOutput(formattedResult); if (typeof result !== 'string') {
+      result = JSON.stringify(result, null, 2); logger.debug('Converted tool result to string format');
     }
 
     return insertTextToChatInput(result);
   } catch (error: unknown) {
     const errorMessage = error instanceof Error ? error.message : String(error);
-    logger.debug(`Error formatting tool result: ${errorMessage}`);
-    logger.error('Error formatting tool result:', error);
+    logger.debug(`Error formatting tool result: ${errorMessage}`); logger.error('Error formatting tool result:', error);
     return false;
   }
 };
@@ -1432,48 +1251,37 @@ export const insertToolResultToChatInput = (result: any): boolean => {
  */
 export const attachFileToChatInput = async (file: File): Promise<boolean> => {
   try {
-    // Detect browser
-    const isFirefox = navigator.userAgent.toLowerCase().includes('firefox');
-
-    if (isFirefox) {
-      // Firefox: Use file input method (drag-drop simulation doesn't work)
+    // Detect browser const isFirefox = navigator.userAgent.toLowerCase().includes('firefox');
+  
+      if (isFirefox) { // Firefox: Use file input method (drag-drop simulation doesn't work)
       logger.debug('Firefox detected: Using file input method');
-
-      let fileInput = document.querySelector('input[type="file"]') as HTMLInputElement;
+ let fileInput = document.querySelector('input[type="file"]') as HTMLInputElement;
 
       // If no file input exists, try to trigger it by clicking the "Add" button
-      if (!fileInput) {
-        logger.debug('No file input found, attempting to click Add button to create it');
-        const addButton = document.querySelector('button[aria-label*="Insert assets"], button[iconname="add_circle"]') as HTMLButtonElement;
+      if (!fileInput) { logger.debug('No file input found, attempting to click Add button to create it'); const addButton = document.querySelector('button[aria-label*="Insert assets"], button[iconname="add_circle"]') as HTMLButtonElement;
         if (addButton) {
-          addButton.click();
-          logger.debug('Clicked Add button, waiting for file input to appear');
+          addButton.click(); logger.debug('Clicked Add button, waiting for file input to appear');
 
           // Wait for file input to appear (with timeout)
-          await new Promise(resolve => setTimeout(resolve, 300));
-          fileInput = document.querySelector('input[type="file"]') as HTMLInputElement;
+          await new Promise(resolve => setTimeout(resolve, 300)); fileInput = document.querySelector('input[type="file"]') as HTMLInputElement;
         }
       }
 
       if (fileInput) {
         const dataTransfer = new DataTransfer();
         dataTransfer.items.add(file);
-        fileInput.files = dataTransfer.files;
-        fileInput.dispatchEvent(new Event('change', { bubbles: true }));
+        fileInput.files = dataTransfer.files; fileInput.dispatchEvent(new Event('change', { bubbles: true }));
         logger.debug(`File attached via input element (Firefox): ${file.name}`);
         return true;
       }
-
-      logger.debug('Firefox file input method failed: No file input element found');
+ logger.debug('Firefox file input method failed: No file input element found');
       return false;
     } else {
-      // Chrome/Other browsers: Use drag-and-drop method (works well)
-      logger.debug('Chrome/Other browser detected: Using drag-and-drop method');
+      // Chrome/Other browsers: Use drag-and-drop method (works well) logger.debug('Chrome/Other browser detected: Using drag-and-drop method');
+  
+        const chatInput = findChatInputElement();
 
-      const chatInput = findChatInputElement();
-
-      if (!chatInput) {
-        logger.debug('Could not find AiStudio input element for file attachment');
+      if (!chatInput) { logger.debug('Could not find AiStudio input element for file attachment');
         return false;
       }
 
@@ -1481,21 +1289,18 @@ export const attachFileToChatInput = async (file: File): Promise<boolean> => {
       const dataTransfer = new DataTransfer();
       dataTransfer.items.add(file);
 
-      // Create custom events
-      const dragOverEvent = new DragEvent('dragover', {
+      // Create custom events const dragOverEvent = new DragEvent('dragover', {
+        bubbles: true,
+        cancelable: true,
+        dataTransfer: dataTransfer,
+      });
+ const dropEvent = new DragEvent('drop', {
         bubbles: true,
         cancelable: true,
         dataTransfer: dataTransfer,
       });
 
-      const dropEvent = new DragEvent('drop', {
-        bubbles: true,
-        cancelable: true,
-        dataTransfer: dataTransfer,
-      });
-
-      // Prevent default on dragover to enable drop
-      chatInput.addEventListener('dragover', e => e.preventDefault(), { once: true });
+      // Prevent default on dragover to enable drop chatInput.addEventListener('dragover', e => e.preventDefault(), { once: true });
       chatInput.dispatchEvent(dragOverEvent);
 
       // Simulate the drop event
@@ -1510,8 +1315,7 @@ export const attachFileToChatInput = async (file: File): Promise<boolean> => {
         ]);
 
         // Focus the textarea to make it easier to paste
-        chatInput.focus();
-        logger.debug('File copied to clipboard, user can now paste manually if needed');
+        chatInput.focus(); logger.debug('File copied to clipboard, user can now paste manually if needed');
       } catch (clipboardError) {
         logger.debug(`Could not copy to clipboard: ${clipboardError}`);
       }
@@ -1521,8 +1325,7 @@ export const attachFileToChatInput = async (file: File): Promise<boolean> => {
     }
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : String(error);
-    logger.debug(`Error attaching file to AiStudio input: ${errorMessage}`);
-    logger.error('Error attaching file to AiStudio input:', error);
+    logger.debug(`Error attaching file to AiStudio input: ${errorMessage}`); logger.error('Error attaching file to AiStudio input:', error);
     return false;
   }
 };
@@ -1536,67 +1339,53 @@ export const submitChatInput = (maxWaitTime = 5000): Promise<boolean> => {
     try {
       const chatInput = findChatInputElement();
 
-      if (!chatInput) {
-        logger.debug('Could not find chat input to submit');
+      if (!chatInput) { logger.debug('Could not find chat input to submit');
         resolve(false);
         return;
       }
 
       // Define a function to find the submit button
       const findSubmitButton = (): HTMLButtonElement | null => {
-        const submitButton =
-          document.querySelector('button[aria-label="Submit"]') ||
-          document.querySelector('button[aria-label="Send"]') ||
-          document.querySelector('button[type="submit"]') ||
-          // Look for a button next to the textarea
-          chatInput.parentElement?.querySelector('button') ||
-          // Common pattern: button with paper plane icon
-          document.querySelector('button svg[stroke="currentColor"]')?.closest('button');
-
-        return submitButton as HTMLButtonElement | null;
+        const submitButton = document.querySelector('button[aria-label="Submit"]') || document.querySelector('button[aria-label="Send"]') || document.querySelector('button[type="submit"]') ||
+          // Look for a button next to the textarea chatInput.parentElement?.querySelector('button') ||
+          // Common pattern: button with paper plane icon document.querySelector('button svg[stroke="currentColor"]')?.closest('button');
+  
+          return submitButton as HTMLButtonElement | null;
       };
 
       // Try to find and check the submit button
       const submitButton = findSubmitButton();
 
-      if (submitButton) {
-        logger.debug(`Found submit button (${submitButton.getAttribute('aria-label') || 'unknown'})`);
+      if (submitButton) { logger.debug(`Found submit button (${submitButton.getAttribute('aria-label') || 'unknown'})`);
 
         // Function to check if button is enabled and click it
         const tryClickingButton = () => {
           const button = findSubmitButton();
-          if (!button) {
-            logger.debug('Submit button no longer found');
+          if (!button) { logger.debug('Submit button no longer found');
             resolve(false);
             return;
           }
 
           // Check if the button is disabled
           const isDisabled =
-            button.disabled ||
-            button.getAttribute('disabled') !== null ||
-            button.getAttribute('aria-disabled') === 'true' ||
-            button.classList.contains('disabled');
+            button.disabled || button.getAttribute('disabled') !== null || button.getAttribute('aria-disabled') === 'true' || button.classList.contains('disabled');
 
-          if (!isDisabled) {
-            logger.debug('Submit button is enabled, clicking it');
+          if (!isDisabled) { logger.debug('Submit button is enabled, clicking it');
             button.click();
             resolve(true);
-          } else {
-            logger.debug('Submit button is disabled, waiting...');
+          } else { logger.debug('Submit button is disabled, waiting...');
           }
         };
 
         // Set up a timer to periodically check if the button becomes enabled
         let elapsedTime = 0;
         const checkInterval = 200; // Check every 200ms
-
-        const intervalId = setInterval(() => {
+  
+          const intervalId = setInterval(() => {
           elapsedTime += checkInterval;
 
           tryClickingButton();
-
-          // If we've waited too long, try alternative methods
+ // If we've waited too long, try alternative methods
           if (elapsedTime >= maxWaitTime) {
             clearInterval(intervalId);
             logger.debug(`Button remained disabled for ${maxWaitTime}ms, trying alternative methods`);
@@ -1607,30 +1396,21 @@ export const submitChatInput = (maxWaitTime = 5000): Promise<boolean> => {
             // Focus the textarea first
             chatInput.focus();
 
-            // Create and dispatch keydown event (Enter key)
-            const keydownEvent = new KeyboardEvent('keydown', {
-              key: 'Enter',
-              code: 'Enter',
+            // Create and dispatch keydown event (Enter key) const keydownEvent = new KeyboardEvent('keydown', { key: 'Enter', code: 'Enter',
               keyCode: 13,
               which: 13,
               bubbles: true,
               cancelable: true,
             });
 
-            // Create and dispatch keypress event
-            const keypressEvent = new KeyboardEvent('keypress', {
-              key: 'Enter',
-              code: 'Enter',
+            // Create and dispatch keypress event const keypressEvent = new KeyboardEvent('keypress', { key: 'Enter', code: 'Enter',
               keyCode: 13,
               which: 13,
               bubbles: true,
               cancelable: true,
             });
 
-            // Create and dispatch keyup event
-            const keyupEvent = new KeyboardEvent('keyup', {
-              key: 'Enter',
-              code: 'Enter',
+            // Create and dispatch keyup event const keyupEvent = new KeyboardEvent('keyup', { key: 'Enter', code: 'Enter',
               keyCode: 13,
               which: 13,
               bubbles: true,
@@ -1642,19 +1422,14 @@ export const submitChatInput = (maxWaitTime = 5000): Promise<boolean> => {
             chatInput.dispatchEvent(keypressEvent);
             chatInput.dispatchEvent(keyupEvent);
 
-            // Try to find and submit a form as a last resort
-            const form = chatInput.closest('form');
-            if (form) {
-              logger.debug('Found form element, submitting it');
-              form.dispatchEvent(new SubmitEvent('submit', { bubbles: true, cancelable: true }));
+            // Try to find and submit a form as a last resort const form = chatInput.closest('form');
+            if (form) { logger.debug('Found form element, submitting it'); form.dispatchEvent(new SubmitEvent('submit', { bubbles: true, cancelable: true }));
             }
-
-            logger.debug('Attempted all fallback methods to submit chat input');
+ logger.debug('Attempted all fallback methods to submit chat input');
             resolve(true);
           }
         }, checkInterval);
-
-        // Initial check - maybe it's already enabled
+ // Initial check - maybe it's already enabled
         tryClickingButton();
 
         // If the button is already enabled and clicked, clear the interval
@@ -1665,36 +1440,26 @@ export const submitChatInput = (maxWaitTime = 5000): Promise<boolean> => {
         // If no button found, proceed with alternative methods immediately
         logger.debug('No submit button found, trying alternative methods');
 
-        // Method 2: Simulate Enter key press
-        logger.debug('Simulating Enter key press as fallback');
+        // Method 2: Simulate Enter key press logger.debug('Simulating Enter key press as fallback');
 
         // Focus the textarea first
         chatInput.focus();
 
-        // Create and dispatch keydown event (Enter key)
-        const keydownEvent = new KeyboardEvent('keydown', {
-          key: 'Enter',
-          code: 'Enter',
+        // Create and dispatch keydown event (Enter key) const keydownEvent = new KeyboardEvent('keydown', { key: 'Enter', code: 'Enter',
           keyCode: 13,
           which: 13,
           bubbles: true,
           cancelable: true,
         });
 
-        // Create and dispatch keypress event
-        const keypressEvent = new KeyboardEvent('keypress', {
-          key: 'Enter',
-          code: 'Enter',
+        // Create and dispatch keypress event const keypressEvent = new KeyboardEvent('keypress', { key: 'Enter', code: 'Enter',
           keyCode: 13,
           which: 13,
           bubbles: true,
           cancelable: true,
         });
 
-        // Create and dispatch keyup event
-        const keyupEvent = new KeyboardEvent('keyup', {
-          key: 'Enter',
-          code: 'Enter',
+        // Create and dispatch keyup event const keyupEvent = new KeyboardEvent('keyup', { key: 'Enter', code: 'Enter',
           keyCode: 13,
           which: 13,
           bubbles: true,
@@ -1706,20 +1471,15 @@ export const submitChatInput = (maxWaitTime = 5000): Promise<boolean> => {
         chatInput.dispatchEvent(keypressEvent);
         chatInput.dispatchEvent(keyupEvent);
 
-        // Try to find and submit a form as a last resort
-        const form = chatInput.closest('form');
-        if (form) {
-          logger.debug('Found form element, submitting it');
-          form.dispatchEvent(new SubmitEvent('submit', { bubbles: true, cancelable: true }));
+        // Try to find and submit a form as a last resort const form = chatInput.closest('form');
+        if (form) { logger.debug('Found form element, submitting it'); form.dispatchEvent(new SubmitEvent('submit', { bubbles: true, cancelable: true }));
         }
-
-        logger.debug('Attempted all methods to submit chat input');
+ logger.debug('Attempted all methods to submit chat input');
         resolve(true);
       }
     } catch (error: unknown) {
       const errorMessage = error instanceof Error ? error.message : String(error);
-      logger.debug(`Error submitting chat input: ${errorMessage}`);
-      logger.error('Error submitting chat input:', error);
+      logger.debug(`Error submitting chat input: ${errorMessage}`); logger.error('Error submitting chat input:', error);
       resolve(false);
     }
   });

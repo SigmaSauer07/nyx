@@ -1,10 +1,8 @@
-import { Transport } from '@modelcontextprotocol/sdk/shared/transport.js';
-import { Client } from '@modelcontextprotocol/sdk/client/index.js';
+import type { Transport } from '@modelcontextprotocol/sdk/shared/transport.js';
+import type { Client } from '@modelcontextprotocol/sdk/client/index.js';
 import { StreamableHTTPClientTransport } from '@modelcontextprotocol/sdk/client/streamableHttp.js';
 import type { ITransportPlugin, PluginMetadata, PluginConfig } from '../../types/plugin.js';
 import { createLogger } from '@extension/shared/lib/logger';
-
-
 const logger = createLogger('StreamableHttpPlugin');
 
 export class StreamableHttpPlugin implements ITransportPlugin {
@@ -13,7 +11,7 @@ export class StreamableHttpPlugin implements ITransportPlugin {
     version: '1.0.0',
     transportType: 'streamable-http',
     description: 'Streamable HTTP transport for MCP protocol',
-    author: 'MCP SuperAssistant'
+    author: 'Nyx',
   };
 
   private transport: Transport | null = null;
@@ -47,8 +45,7 @@ export class StreamableHttpPlugin implements ITransportPlugin {
       const transport = new StreamableHTTPClientTransport(url);
 
       // Return the transport without testing
-      // The main client will handle the connection test
-      logger.debug('[StreamableHttpPlugin] Streamable HTTP transport created successfully');
+      // The main client will handle the connection test logger.debug('[StreamableHttpPlugin] Streamable HTTP transport created successfully');
       return transport;
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : String(error);
@@ -81,7 +78,6 @@ export class StreamableHttpPlugin implements ITransportPlugin {
     }
 
     this.transport = null;
-
     logger.debug('[StreamableHttpPlugin] Disconnected');
   }
 
@@ -146,7 +142,6 @@ export class StreamableHttpPlugin implements ITransportPlugin {
     if (!this.isConnected()) {
       throw new Error('StreamableHttpPlugin: Not connected');
     }
-
     logger.debug('[StreamableHttpPlugin] Getting primitives...');
 
     try {
@@ -156,31 +151,40 @@ export class StreamableHttpPlugin implements ITransportPlugin {
 
       if (capabilities?.resources) {
         promises.push(
-          client.listResources().then(({ resources }) => {
-            resources.forEach(item => primitives.push({ type: 'resource', value: item }));
-          }).catch(error => {
-            logger.warn('[StreamableHttpPlugin] Failed to list resources:', error);
-          }),
+          client
+            .listResources()
+            .then(({ resources }) => {
+              resources.forEach(item => primitives.push({ type: 'resource', value: item }));
+            })
+            .catch(error => {
+              logger.warn('[StreamableHttpPlugin] Failed to list resources:', error);
+            }),
         );
       }
 
       if (capabilities?.tools) {
         promises.push(
-          client.listTools().then(({ tools }) => {
-            tools.forEach(item => primitives.push({ type: 'tool', value: item }));
-          }).catch(error => {
-            logger.warn('[StreamableHttpPlugin] Failed to list tools:', error);
-          }),
+          client
+            .listTools()
+            .then(({ tools }) => {
+              tools.forEach(item => primitives.push({ type: 'tool', value: item }));
+            })
+            .catch(error => {
+              logger.warn('[StreamableHttpPlugin] Failed to list tools:', error);
+            }),
         );
       }
 
       if (capabilities?.prompts) {
         promises.push(
-          client.listPrompts().then(({ prompts }) => {
-            prompts.forEach(item => primitives.push({ type: 'prompt', value: item }));
-          }).catch(error => {
-            logger.warn('[StreamableHttpPlugin] Failed to list prompts:', error);
-          }),
+          client
+            .listPrompts()
+            .then(({ prompts }) => {
+              prompts.forEach(item => primitives.push({ type: 'prompt', value: item }));
+            })
+            .catch(error => {
+              logger.warn('[StreamableHttpPlugin] Failed to list prompts:', error);
+            }),
         );
       }
 

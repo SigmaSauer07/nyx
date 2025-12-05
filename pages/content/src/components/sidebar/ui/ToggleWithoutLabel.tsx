@@ -21,16 +21,8 @@ const ToggleWithoutLabel: React.FC<ToggleWithoutLabelProps> = ({
   };
 
   const toggleSize = {
-    sm: {
-      container: 'w-8 h-4',
-      circle: 'w-3 h-3',
-      translate: 'translate-x-4',
-    },
-    md: {
-      container: 'w-10 h-5',
-      circle: 'h-4 w-4',
-      translate: 'translate-x-5',
-    },
+    sm: { container: 'w-8 h-4', circle: 'w-3 h-3', translate: 'translate-x-4' },
+    md: { container: 'w-10 h-5', circle: 'h-4 w-4', translate: 'translate-x-5' },
   };
 
   return (

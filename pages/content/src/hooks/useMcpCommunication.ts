@@ -38,13 +38,11 @@ export const useMcpCommunication = () => {
   useEffect(() => {
     const initializeCommunication = async () => {
       try {
-        if (!mcpClient.isReady()) {
-          throw new Error('MCP Client not properly initialized');
+        if (!mcpClient.isReady()) { throw new Error('MCP Client not properly initialized');
         }
 
         setIsInitialized(true);
-        setInitializationError(null);
-        logMessage('[useMcpCommunication] Communication layer initialized successfully');
+        setInitializationError(null); logMessage('[useMcpCommunication] Communication layer initialized successfully');
       } catch (error) {
         const errorMessage = error instanceof Error ? error.message : String(error);
         setInitializationError(errorMessage);
@@ -63,18 +61,15 @@ export const useMcpCommunication = () => {
    * Enhanced tool calling with validation and error handling
    */
   const callTool = useCallback(async (toolName: string, args: Record<string, unknown>) => {
-    if (!isInitialized) {
-      throw new Error('Communication layer not initialized');
+    if (!isInitialized) { throw new Error('Communication layer not initialized');
     }
 
-    if (!connection.isConnected) {
-      throw new Error('Not connected to MCP server');
+    if (!connection.isConnected) { throw new Error('Not connected to MCP server');
     }
 
     // Validate tool exists in available tools
     const availableTool = tools.find(tool => tool.name === toolName);
-    if (!availableTool) {
-      throw new Error(`Tool '${toolName}' not found in available tools. Please refresh the tool list.`);
+    if (!availableTool) { throw new Error(`Tool '${toolName}' not found in available tools. Please refresh the tool list.`);
     }
 
     try {
@@ -96,8 +91,7 @@ export const useMcpCommunication = () => {
    * Enhanced tool refresh with better error handling and validation
    */
   const refreshTools = useCallback(async (forceRefresh = false) => {
-    if (!isInitialized) {
-      throw new Error('Communication layer not initialized');
+    if (!isInitialized) { throw new Error('Communication layer not initialized');
     }
 
     try {
@@ -108,8 +102,7 @@ export const useMcpCommunication = () => {
 
       // Validate tools structure
       const validatedTools = updated.filter(tool =>
-        tool &&
-        typeof tool.name === 'string' &&
+        tool && typeof tool.name === 'string' &&
         tool.name.length > 0
       );
 
@@ -132,26 +125,22 @@ export const useMcpCommunication = () => {
    * Enhanced reconnection with comprehensive state management
    */
   const forceReconnect = useCallback(async () => {
-    if (!isInitialized) {
-      throw new Error('Communication layer not initialized');
+    if (!isInitialized) { throw new Error('Communication layer not initialized');
     }
 
     try {
-      setLastOperationTime(Date.now());
-      logMessage('[useMcpCommunication] Force reconnect requested');
+      setLastOperationTime(Date.now()); logMessage('[useMcpCommunication] Force reconnect requested');
 
       const success = await mcpClient.forceReconnect();
 
-      if (success) {
-        logMessage('[useMcpCommunication] Reconnection successful');
+      if (success) { logMessage('[useMcpCommunication] Reconnection successful');
         // Automatically refresh tools after successful reconnection
         try {
           await refreshTools(true);
         } catch (toolError) {
           logMessage(`[useMcpCommunication] Warning: Failed to refresh tools after reconnect: ${toolError}`);
         }
-      } else {
-        logMessage('[useMcpCommunication] Reconnection failed');
+      } else { logMessage('[useMcpCommunication] Reconnection failed');
       }
 
       return success;
@@ -166,19 +155,16 @@ export const useMcpCommunication = () => {
    * Enhanced server config retrieval with caching
    */
   const getServerConfig = useCallback(async () => {
-    if (!isInitialized) {
-      throw new Error('Communication layer not initialized');
+    if (!isInitialized) { throw new Error('Communication layer not initialized');
     }
 
     try {
-      setLastOperationTime(Date.now());
-      logMessage('[useMcpCommunication] Getting server config');
+      setLastOperationTime(Date.now()); logMessage('[useMcpCommunication] Getting server config');
 
       const cfg = await mcpClient.getServerConfig();
 
       // Update store with retrieved config
-      setConfig(cfg);
-      logMessage('[useMcpCommunication] Server config retrieved successfully');
+      setConfig(cfg); logMessage('[useMcpCommunication] Server config retrieved successfully');
 
       return cfg;
     } catch (error) {
@@ -192,21 +178,14 @@ export const useMcpCommunication = () => {
    * Enhanced server config update with validation
    */
   const updateServerConfig = useCallback(async (cfg: Partial<ServerConfig>) => {
-    if (!isInitialized) {
-      throw new Error('Communication layer not initialized');
+    if (!isInitialized) { throw new Error('Communication layer not initialized');
     }
 
-    // Basic validation
-    if (cfg.uri && typeof cfg.uri !== 'string') {
-      throw new Error('Server URI must be a string');
+    // Basic validation if (cfg.uri && typeof cfg.uri !== 'string') { throw new Error('Server URI must be a string');
     }
-
-    if (cfg.connectionType && !['sse', 'websocket', 'streamable-http'].includes(cfg.connectionType)) {
-      throw new Error('Connection type must be either "sse", "websocket", or "streamable-http"');
+ if (cfg.connectionType && !['sse', 'websocket', 'streamable-http'].includes(cfg.connectionType)) { throw new Error('Connection type must be either "sse", "websocket", or "streamable-http"');
     }
-
-    if (cfg.timeout && (typeof cfg.timeout !== 'number' || cfg.timeout <= 0)) {
-      throw new Error('Timeout must be a positive number');
+ if (cfg.timeout && (typeof cfg.timeout !== 'number' || cfg.timeout <= 0)) { throw new Error('Timeout must be a positive number');
     }
 
     try {
@@ -217,10 +196,8 @@ export const useMcpCommunication = () => {
 
       if (success) {
         // Update local store with merged config
-        setConfig({ ...config, ...cfg });
-        logMessage('[useMcpCommunication] Server config updated successfully');
-      } else {
-        logMessage('[useMcpCommunication] Server config update failed');
+        setConfig({ ...config, ...cfg }); logMessage('[useMcpCommunication] Server config updated successfully');
+      } else { logMessage('[useMcpCommunication] Server config update failed');
       }
 
       return success;
@@ -255,13 +232,10 @@ export const useMcpCommunication = () => {
         }
       }
 
-      // Validate tool name
-      if (!toolName || typeof toolName !== 'string') {
-        return 'Error: Tool name is required and must be a string';
+      // Validate tool name if (!toolName || typeof toolName !== 'string') { return 'Error: Tool name is required and must be a string';
       }
 
-      const result = await callTool(toolName, toolArgs);
-      return typeof result === 'string' ? result : JSON.stringify(result, null, 2);
+      const result = await callTool(toolName, toolArgs); return typeof result === 'string' ? result : JSON.stringify(result, null, 2);
     } catch (err) {
       const msg = err instanceof Error ? err.message : String(err);
       return `Error: ${msg}`;
@@ -276,10 +250,8 @@ export const useMcpCommunication = () => {
   const normalizedTools = useMemo(() => {
     // First normalize the tools structure
     const normalized = tools.map((tool: Tool) => ({
-      name: tool.name,
-      description: tool.description || '',
-      // Ensure schema is always a string for legacy compatibility
-      schema: typeof (tool as any).schema === 'string'
+      name: tool.name, description: tool.description || '',
+      // Ensure schema is always a string for legacy compatibility schema: typeof (tool as any).schema === 'string'
         ? (tool as any).schema
         : JSON.stringify(tool.input_schema || {}),
       // Keep original input_schema for new components
@@ -298,8 +270,7 @@ export const useMcpCommunication = () => {
   }, [tools, isToolEnabled]);
 
   // Throttled debug logging to prevent spam - only log significant changes
-  useEffect(() => {
-    // Only log when there's a meaningful change in tool count or first load
+  useEffect(() => { // Only log when there's a meaningful change in tool count or first load
     const toolCount = normalizedTools.length;
     if (toolCount > 0) {
       logMessage(`[useMcpCommunication] Available tool names: ${normalizedTools.map(t => t.name).slice(0, 3).join(', ')}${toolCount > 3 ? `...and ${toolCount - 3} more` : ''}`);
@@ -312,15 +283,13 @@ export const useMcpCommunication = () => {
       logMessage(`[useMcpCommunication] Schema status for available tools:`);
       // Only log a summary, not individual tool details
       const toolsWithSchema = normalizedTools.filter(tool => 
-        (tool.input_schema && Object.keys(tool.input_schema).length > 0) ||
-        (tool.schema && tool.schema !== '{}')
+        (tool.input_schema && Object.keys(tool.input_schema).length > 0) || (tool.schema && tool.schema !== '{}')
       );
       logMessage(`  ${toolsWithSchema.length}/${normalizedTools.length} tools have valid schemas`);
     }
   }, [normalizedTools.length]); // Only run when tool count changes
 
-  // Enhanced status with more granular information
-  const serverStatus = connection.status as 'connected' | 'disconnected' | 'reconnecting' | 'error';
+  // Enhanced status with more granular information const serverStatus = connection.status as 'connected' | 'disconnected' | 'reconnecting' | 'error';
   const connectionHealth = {
     isHealthy: connection.isConnected && !connection.error,
     lastConnectedAt: connection.lastConnectedAt,
@@ -334,11 +303,9 @@ export const useMcpCommunication = () => {
     /* Core state (reactive from Zustand stores)                           */
     /* -------------------------------------------------------------------- */
     connectionStatus: connection.status,
-    isConnected: connection.isConnected,
-    isConnecting: connection.status === 'connecting',
+    isConnected: connection.isConnected, isConnecting: connection.status === 'connecting',
     isReconnecting: connection.isReconnecting,
-    availableTools: normalizedTools,
-    lastConnectionError: connection.error || '',
+    availableTools: normalizedTools, lastConnectionError: connection.error || '',
     serverConfig: config,
 
     /* -------------------------------------------------------------------- */
@@ -356,8 +323,7 @@ export const useMcpCommunication = () => {
     refreshTools,
     forceReconnect,
     forceConnectionStatusCheck: useCallback(async () => {
-      if (!isInitialized) {
-        throw new Error('Communication layer not initialized');
+      if (!isInitialized) { throw new Error('Communication layer not initialized');
       }
       return await mcpClient.forceConnectionStatusCheck();
     }, [isInitialized]),

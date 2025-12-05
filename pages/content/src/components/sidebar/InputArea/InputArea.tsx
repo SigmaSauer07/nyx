@@ -5,17 +5,14 @@ import { Typography, Icon, Button } from '../ui';
 import { cn } from '@src/lib/utils';
 import { Card, CardHeader, CardContent } from '@src/components/ui/card';
 import { createLogger } from '@extension/shared/lib/logger';
-
-
-const logger = createLogger('InputArea');
+ const logger = createLogger('InputArea');
 
 interface InputAreaProps {
   onSubmit: (text: string) => void;
   onToggleMinimize: () => void;
 }
 
-const InputArea: React.FC<InputAreaProps> = ({ onSubmit, onToggleMinimize }) => {
-  const [inputText, setInputText] = useState('');
+const InputArea: React.FC<InputAreaProps> = ({ onSubmit, onToggleMinimize }) => { const [inputText, setInputText] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -29,10 +26,9 @@ const InputArea: React.FC<InputAreaProps> = ({ onSubmit, onToggleMinimize }) => 
         // Wait 200ms before submitting
         await new Promise(resolve => setTimeout(resolve, 300));
         onSubmit(processedText);
-        await new Promise(resolve => setTimeout(resolve, 100));
-        setInputText('');
+        await new Promise(resolve => setTimeout(resolve, 100)); setInputText('');
       } catch (error) {
-        logger.error('Error submitting input:', error);
+       logger.error('Error submitting input:', error);
       } finally {
         setIsSubmitting(false);
       }
@@ -40,8 +36,7 @@ const InputArea: React.FC<InputAreaProps> = ({ onSubmit, onToggleMinimize }) => 
   };
 
   const handleKeyDown = (e: KeyboardEvent<HTMLTextAreaElement>) => {
-    // If Enter is pressed without Shift, submit the form
-    if (e.key === 'Enter' && !e.shiftKey) {
+    // If Enter is pressed without Shift, submit the form if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
       if (inputText.trim()) {
         handleSubmit(e as unknown as React.FormEvent);
@@ -75,9 +70,7 @@ const InputArea: React.FC<InputAreaProps> = ({ onSubmit, onToggleMinimize }) => 
           </div>
           <Button
             type="submit"
-            disabled={isSubmitting || !inputText.trim()}
-            className={cn('px-4 py-2 h-9', isSubmitting || !inputText.trim() ? 'opacity-50' : '')}
-            variant={isSubmitting || !inputText.trim() ? 'outline' : 'default'}>
+            disabled={isSubmitting || !inputText.trim()} className={cn('px-4 py-2 h-9', isSubmitting || !inputText.trim() ? 'opacity-50' : '')} variant={isSubmitting || !inputText.trim() ? 'outline' : 'default'}>
             {isSubmitting ? (
               <>
                 <Icon name="refresh" size="sm" className="animate-spin mr-2" />

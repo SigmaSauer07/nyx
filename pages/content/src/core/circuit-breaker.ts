@@ -7,18 +7,14 @@
 
 import { eventBus } from '../events/event-bus';
 import { createLogger } from '@extension/shared/lib/logger';
-
-
-const logger = createLogger('CircuitBreaker');
+ const logger = createLogger('CircuitBreaker');
 
 export interface CircuitBreakerConfig {
   failureThreshold: number;
   resetTimeout: number;
   monitoringWindow: number;
   eventBus?: typeof eventBus;
-}
-
-export type CircuitBreakerState = 'closed' | 'open' | 'half-open';
+} export type CircuitBreakerState = 'closed' | 'open' | 'half-open';
 
 export interface CircuitBreakerStats {
   state: CircuitBreakerState;
@@ -28,8 +24,7 @@ export interface CircuitBreakerStats {
   nextAttemptTime: number;
 }
 
-class CircuitBreaker {
-  private state: CircuitBreakerState = 'closed';
+class CircuitBreaker { private state: CircuitBreakerState = 'closed';
   private failureCount = 0;
   private successCount = 0;
   private lastFailureTime = 0;
@@ -49,18 +44,14 @@ class CircuitBreaker {
       this.eventBus = config.eventBus;
     } else {
       this.eventBus = eventBus;
-    }
-    logger.debug('[CircuitBreaker] Initialized with config:', this.config);
+    } logger.debug('[CircuitBreaker] Initialized with config:', this.config);
   }
 
   /**
    * Execute a function with circuit breaker protection
-   */
-  async execute<T>(operation: () => Promise<T>, operationName = 'unknown'): Promise<T> {
-    if (this.state === 'open') {
+   */ async execute<T>(operation: () => Promise<T>, operationName = 'unknown'): Promise<T> { if (this.state === 'open') {
       if (Date.now() < this.nextAttemptTime) {
-        const error = new Error(`Circuit breaker is OPEN for operation: ${operationName}`);
-        this.eventBus?.emit('error:circuit-breaker-blocked', {
+        const error = new Error(`Circuit breaker is OPEN for operation: ${operationName}`); this.eventBus?.emit('error:circuit-breaker-blocked', {
           operation: operationName,
           state: this.state,
           nextAttemptTime: this.nextAttemptTime,
@@ -68,9 +59,7 @@ class CircuitBreaker {
         });
         throw error;
       } else {
-        // Time to try half-open
-        this.state = 'half-open';
-        this.eventBus?.emit('error:circuit-breaker-half-open', {
+        // Time to try half-open this.state = 'half-open'; this.eventBus?.emit('error:circuit-breaker-half-open', {
           operation: operationName,
           state: this.state,
         });
@@ -89,12 +78,9 @@ class CircuitBreaker {
 
   /**
    * Execute a synchronous function with circuit breaker protection
-   */
-  executeSync<T>(operation: () => T, operationName = 'unknown'): T {
-    if (this.state === 'open') {
+   */ executeSync<T>(operation: () => T, operationName = 'unknown'): T { if (this.state === 'open') {
       if (Date.now() < this.nextAttemptTime) {
-        const error = new Error(`Circuit breaker is OPEN for operation: ${operationName}`);
-        this.eventBus?.emit('error:circuit-breaker-blocked', {
+        const error = new Error(`Circuit breaker is OPEN for operation: ${operationName}`); this.eventBus?.emit('error:circuit-breaker-blocked', {
           operation: operationName,
           state: this.state,
           nextAttemptTime: this.nextAttemptTime,
@@ -102,9 +88,7 @@ class CircuitBreaker {
         });
         throw error;
       } else {
-        // Time to try half-open
-        this.state = 'half-open';
-        this.eventBus?.emit('error:circuit-breaker-half-open', {
+        // Time to try half-open this.state = 'half-open'; this.eventBus?.emit('error:circuit-breaker-half-open', {
           operation: operationName,
           state: this.state,
         });
@@ -123,12 +107,9 @@ class CircuitBreaker {
 
   private onSuccess(operationName: string): void {
     this.successCount++;
-    
-    if (this.state === 'half-open') {
-      // Successful operation in half-open state - close the circuit
-      this.state = 'closed';
-      this.failureCount = 0;
-      this.eventBus?.emit('error:circuit-breaker-closed', {
+     if (this.state === 'half-open') {
+      // Successful operation in half-open state - close the circuit this.state = 'closed';
+      this.failureCount = 0; this.eventBus?.emit('error:circuit-breaker-closed', {
         operation: operationName,
         state: this.state,
         stats: this.getStats(),
@@ -146,11 +127,9 @@ class CircuitBreaker {
       this.failureCount = 1; // Reset count but keep this failure
     }
 
-    if (this.failureCount >= this.config.failureThreshold) {
-      this.state = 'open';
+    if (this.failureCount >= this.config.failureThreshold) { this.state = 'open';
       this.nextAttemptTime = Date.now() + this.config.resetTimeout;
-      
-      this.eventBus?.emit('error:circuit-breaker-opened', {
+       this.eventBus?.emit('error:circuit-breaker-opened', {
         operation: operationName,
         state: this.state,
         error,
@@ -177,10 +156,8 @@ class CircuitBreaker {
   /**
    * Force the circuit breaker to open (for testing or emergency situations)
    */
-  forceOpen(resetTimeout?: number): void {
-    this.state = 'open';
-    this.nextAttemptTime = Date.now() + (resetTimeout || this.config.resetTimeout);
-    this.eventBus?.emit('error:circuit-breaker-forced-open', {
+  forceOpen(resetTimeout?: number): void { this.state = 'open';
+    this.nextAttemptTime = Date.now() + (resetTimeout || this.config.resetTimeout); this.eventBus?.emit('error:circuit-breaker-forced-open', {
       state: this.state,
       nextAttemptTime: this.nextAttemptTime,
     });
@@ -189,11 +166,9 @@ class CircuitBreaker {
   /**
    * Force the circuit breaker to close (reset)
    */
-  forceClose(): void {
-    this.state = 'closed';
+  forceClose(): void { this.state = 'closed';
     this.failureCount = 0;
-    this.nextAttemptTime = 0;
-    this.eventBus?.emit('error:circuit-breaker-forced-closed', {
+    this.nextAttemptTime = 0; this.eventBus?.emit('error:circuit-breaker-forced-closed', {
       state: this.state,
     });
   }
@@ -201,21 +176,16 @@ class CircuitBreaker {
   /**
    * Check if the circuit breaker allows operations
    */
-  isOperational(): boolean {
-    if (this.state === 'closed') return true;
-    if (this.state === 'half-open') return true;
-    if (this.state === 'open' && Date.now() >= this.nextAttemptTime) return true;
+  isOperational(): boolean { if (this.state === 'closed') return true; if (this.state === 'half-open') return true; if (this.state === 'open' && Date.now() >= this.nextAttemptTime) return true;
     return false;
   }
 
   cleanup(): void {
-    // Reset state
-    this.state = 'closed';
+    // Reset state this.state = 'closed';
     this.failureCount = 0;
     this.successCount = 0;
     this.lastFailureTime = 0;
-    this.nextAttemptTime = 0;
-    logger.debug('[CircuitBreaker] Cleaned up');
+    this.nextAttemptTime = 0; logger.debug('[CircuitBreaker] Cleaned up');
   }
 }
 

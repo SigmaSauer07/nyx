@@ -83,6 +83,5 @@ export const resetPerformanceMetrics = (): void => {
   metrics.averageScanTime = 0;
   metrics.maxScanTime = 0;
   metrics.scanStartTimes = {};
-
   logMessage('Performance metrics reset');
 };

@@ -1,9 +1,7 @@
 import * as React from 'react';
 import { cn } from '@src/lib/utils';
 import type { VariantProps } from 'class-variance-authority';
-import { cva } from 'class-variance-authority';
-
-// Simpler Slot implementation that doesn't try to access children.ref
+import { cva } from 'class-variance-authority'; // Simpler Slot implementation that doesn't try to access children.ref
 const Slot = React.forwardRef<HTMLElement, React.HTMLAttributes<HTMLElement> & { children?: React.ReactNode }>(
   ({ children, ...props }, ref) => {
     if (!children || !React.isValidElement(children)) {
@@ -31,17 +29,9 @@ const buttonVariants = cva(
         ghost: 'hover:bg-accent hover:text-accent-foreground dark:hover:bg-accent dark:hover:text-accent-foreground',
         link: 'text-primary underline-offset-4 hover:underline dark:text-primary-foreground',
       },
-      size: {
-        default: 'h-10 px-4 py-2',
-        sm: 'h-9 rounded-md px-3',
-        lg: 'h-11 rounded-md px-8',
-        icon: 'h-10 w-10',
-      },
+      size: { default: 'h-10 px-4 py-2', sm: 'h-9 rounded-md px-3', lg: 'h-11 rounded-md px-8', icon: 'h-10 w-10' },
     },
-    defaultVariants: {
-      variant: 'default',
-      size: 'default',
-    },
+    defaultVariants: { variant: 'default', size: 'default' },
   },
 );
 

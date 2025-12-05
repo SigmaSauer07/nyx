@@ -5,8 +5,7 @@ export interface SidebarPreferences {
   isPushMode: boolean;
   sidebarWidth: number;
   isMinimized: boolean;
-  autoSubmit: boolean;
-  theme: 'light' | 'dark' | 'system';
+  autoSubmit: boolean; theme: 'light' | 'dark' | 'system';
   customInstructions: string;
   customInstructionsEnabled: boolean;
 }
@@ -14,13 +13,10 @@ export interface SidebarPreferences {
 // Tool Permissions
 export interface ToolPermission {
   serverName: string;
-  toolName: string;
-  permission: 'always' | 'once' | 'never';
+  toolName: string; permission: 'always' | 'once' | 'never';
   url: string;
   timestamp: number;
-}
-
-const STORAGE_KEY = 'mcp_sidebar_preferences';
+} const STORAGE_KEY = 'mcp_sidebar_preferences';
 const TOOL_PERMISSIONS_KEY = 'mcp_tool_permissions';
 const TOOL_ENABLEMENT_KEY = 'mcp_tool_enablement';
 
@@ -29,9 +25,7 @@ const DEFAULT_PREFERENCES: SidebarPreferences = {
   isPushMode: false,
   sidebarWidth: 320,
   isMinimized: false,
-  autoSubmit: false,
-  theme: 'system',
-  customInstructions: '',
+  autoSubmit: false, theme: 'system', customInstructions: '',
   customInstructionsEnabled: false,
 };
 
@@ -40,20 +34,16 @@ const DEFAULT_PREFERENCES: SidebarPreferences = {
  */
 export const getSidebarPreferences = async (): Promise<SidebarPreferences> => {
   try {
-    if (!chrome.storage || !chrome.storage.local) {
-      logMessage('[Storage] Chrome storage API not available');
+    if (!chrome.storage || !chrome.storage.local) { logMessage('[Storage] Chrome storage API not available');
       return DEFAULT_PREFERENCES;
     }
 
-    const result = await chrome.storage.local.get(STORAGE_KEY);
-    const preferences = result && typeof result === 'object' ? (result[STORAGE_KEY] as SidebarPreferences) : undefined;
+    const result = await chrome.storage.local.get(STORAGE_KEY); const preferences = result && typeof result === 'object' ? (result[STORAGE_KEY] as SidebarPreferences) : undefined;
 
-    if (!preferences) {
-      logMessage('[Storage] No stored sidebar preferences found, using defaults');
+    if (!preferences) { logMessage('[Storage] No stored sidebar preferences found, using defaults');
       return DEFAULT_PREFERENCES;
     }
-
-    logMessage('[Storage] Retrieved sidebar preferences from storage');
+ logMessage('[Storage] Retrieved sidebar preferences from storage');
     return {
       ...DEFAULT_PREFERENCES,
       ...(preferences || {}),
@@ -71,8 +61,7 @@ export const getSidebarPreferences = async (): Promise<SidebarPreferences> => {
  */
 export const saveSidebarPreferences = async (preferences: Partial<SidebarPreferences>): Promise<void> => {
   try {
-    if (!chrome.storage || !chrome.storage.local) {
-      logMessage('[Storage] Chrome storage API not available');
+    if (!chrome.storage || !chrome.storage.local) { logMessage('[Storage] Chrome storage API not available');
       return;
     }
 
@@ -109,12 +98,9 @@ export const getToolPermissions = (): ToolPermission[] => {
 };
 
 /**
- * Save a tool permission to localStorage
- * Only 'always' permissions are stored, 'once' and 'never' are not stored
+ * Save a tool permission to localStorage * Only 'always' permissions are stored, 'once' and 'never' are not stored
  */
-export const saveToolPermission = (permission: ToolPermission): void => {
-  // Skip saving if permission is 'once' or 'never'
-  if (permission.permission === 'once' || permission.permission === 'never') {
+export const saveToolPermission = (permission: ToolPermission): void => { // Skip saving if permission is 'once' or 'never' if (permission.permission === 'once' || permission.permission === 'never') {
     logMessage(
       `[Storage] Skipping save for ${permission.permission} permission for ${permission.serverName}.${permission.toolName} on ${permission.url}`,
     );
@@ -128,12 +114,9 @@ export const saveToolPermission = (permission: ToolPermission): void => {
     const filteredPermissions = currentPermissions.filter(
       p => !(p.serverName === permission.serverName && p.toolName === permission.toolName && p.url === permission.url),
     );
-
-    // Only add the new permission if it's 'always'
-    if (permission.permission === 'always') {
+ // Only add the new permission if it's 'always' if (permission.permission === 'always') {
       filteredPermissions.push(permission);
-      logMessage(
-        `[Storage] Saved 'always' permission for ${permission.serverName}.${permission.toolName} on URL: ${permission.url}`,
+      logMessage( `[Storage] Saved 'always' permission for ${permission.serverName}.${permission.toolName} on URL: ${permission.url}`,
       );
     }
 
@@ -144,10 +127,7 @@ export const saveToolPermission = (permission: ToolPermission): void => {
 };
 
 /**
- * Check if a tool has permission to be auto-executed
- * @returns 'always' or null if no permission found
- * Note: 'once' and 'never' permissions are not stored
- */
+ * Check if a tool has permission to be auto-executed * @returns 'always' or null if no permission found * Note: 'once' and 'never' permissions are not stored */
 export const checkToolPermission = (serverName: string, toolName: string): 'always' | null => {
   try {
     const permissions = getToolPermissions();
@@ -161,9 +141,7 @@ export const checkToolPermission = (serverName: string, toolName: string): 'alwa
     if (!permission) {
       return null;
     }
-
-    // Only 'always' permissions are stored, so we only return 'always'
-    return permission.permission === 'always' ? 'always' : null;
+ // Only 'always' permissions are stored, so we only return 'always' return permission.permission === 'always' ? 'always' : null;
   } catch (error) {
     logMessage(`[Storage] Error checking tool permission: ${error instanceof Error ? error.message : String(error)}`);
     return null;
@@ -192,16 +170,13 @@ export const clearToolPermission = (serverName: string, toolName: string, url: s
  */
 export const getToolEnablementState = async (): Promise<Set<string>> => {
   try {
-    if (!chrome.storage || !chrome.storage.local) {
-      logMessage('[Storage] Chrome storage API not available');
+    if (!chrome.storage || !chrome.storage.local) { logMessage('[Storage] Chrome storage API not available');
       return new Set();
     }
 
-    const result = await chrome.storage.local.get(TOOL_ENABLEMENT_KEY);
-    const enabledToolsArray = result && typeof result === 'object' ? (result[TOOL_ENABLEMENT_KEY] as string[]) : undefined;
+    const result = await chrome.storage.local.get(TOOL_ENABLEMENT_KEY); const enabledToolsArray = result && typeof result === 'object' ? (result[TOOL_ENABLEMENT_KEY] as string[]) : undefined;
 
-    if (!enabledToolsArray || !Array.isArray(enabledToolsArray)) {
-      logMessage('[Storage] No stored tool enablement state found, returning empty set');
+    if (!enabledToolsArray || !Array.isArray(enabledToolsArray)) { logMessage('[Storage] No stored tool enablement state found, returning empty set');
       return new Set();
     }
 
@@ -221,8 +196,7 @@ export const getToolEnablementState = async (): Promise<Set<string>> => {
  */
 export const saveToolEnablementState = async (enabledTools: Set<string>): Promise<void> => {
   try {
-    if (!chrome.storage || !chrome.storage.local) {
-      logMessage('[Storage] Chrome storage API not available');
+    if (!chrome.storage || !chrome.storage.local) { logMessage('[Storage] Chrome storage API not available');
       return;
     }
 
@@ -239,13 +213,11 @@ export const saveToolEnablementState = async (enabledTools: Set<string>): Promis
  */
 export const clearToolEnablementState = async (): Promise<void> => {
   try {
-    if (!chrome.storage || !chrome.storage.local) {
-      logMessage('[Storage] Chrome storage API not available');
+    if (!chrome.storage || !chrome.storage.local) { logMessage('[Storage] Chrome storage API not available');
       return;
     }
 
-    await chrome.storage.local.remove(TOOL_ENABLEMENT_KEY);
-    logMessage('[Storage] Cleared tool enablement state from storage');
+    await chrome.storage.local.remove(TOOL_ENABLEMENT_KEY); logMessage('[Storage] Cleared tool enablement state from storage');
   } catch (error) {
     logMessage(`[Storage] Error clearing tool enablement state: ${error instanceof Error ? error.message : String(error)}`);
   }

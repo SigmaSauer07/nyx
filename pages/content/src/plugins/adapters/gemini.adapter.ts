@@ -5,8 +5,7 @@ import { createLogger } from '@extension/shared/lib/logger';
 
 /**
  * Gemini Adapter for Google Gemini (gemini.google.com)
- *
- * This adapter provides specialized functionality for interacting with Google Gemini's
+ * * This adapter provides specialized functionality for interacting with Google Gemini's
  * chat interface, including text insertion, form submission, and file attachment capabilities.
  *
  * Migrated from the legacy adapter system to the new plugin architecture.
@@ -15,35 +14,18 @@ import { createLogger } from '@extension/shared/lib/logger';
 
 const logger = createLogger('GeminiAdapter');
 
-export class GeminiAdapter extends BaseAdapterPlugin {
-  readonly name = 'GeminiAdapter';
-  readonly version = '2.0.0'; // Incremented for new architecture
-  readonly hostnames = ['gemini.google.com'];
-  readonly capabilities: AdapterCapability[] = [
-    'text-insertion',
-    'form-submission',
-    'file-attachment',
-    'dom-manipulation'
+export class GeminiAdapter extends BaseAdapterPlugin { readonly name = 'GeminiAdapter'; readonly version = '2.0.0'; // Incremented for new architecture readonly hostnames = ['gemini.google.com'];
+  readonly capabilities: AdapterCapability[] = [ 'text-insertion', 'form-submission', 'file-attachment', 'dom-manipulation'
   ];
-
-  // CSS selectors for Gemini's UI elements - loaded from configuration
+ // CSS selectors for Gemini's UI elements - loaded from configuration
   private config: AdapterConfig | null = null;
 
   // Legacy selectors as fallbacks (will be removed once config system is stable)
   private readonly fallbackSelectors = {
-    CHAT_INPUT: 'div.ql-editor.textarea.new-input-ui p, .ql-editor p, div[contenteditable="true"]',
-    SUBMIT_BUTTON: 'button.mat-mdc-icon-button.send-button, button[aria-label*="Send"], button[data-testid="send-button"]',
-    FILE_UPLOAD_BUTTON: 'button[aria-label="Add files"], button[aria-label*="attach"]',
-    FILE_INPUT: 'input[type="file"]',
-    MAIN_PANEL: '.chat-web, .main-content, .conversation-container',
-    DROP_ZONE: 'div[xapfileselectordropzone], .text-input-field, .input-area, .ql-editor, .chat-input-container',
-    FILE_PREVIEW: '.file-preview, .xap-filed-upload-preview, .attachment-preview',
-    BUTTON_INSERTION_CONTAINER: '.leading-actions-wrapper, .input-area .actions, .chat-input-actions',
-    FALLBACK_INSERTION: '.input-area, .chat-input-container, .conversation-input'
+    CHAT_INPUT: 'div.ql-editor.textarea.new-input-ui p, .ql-editor p, div[contenteditable="true"]', SUBMIT_BUTTON: 'button.mat-mdc-icon-button.send-button, button[aria-label*="Send"], button[data-testid="send-button"]', FILE_UPLOAD_BUTTON: 'button[aria-label="Add files"], button[aria-label*="attach"]', FILE_INPUT: 'input[type="file"]', MAIN_PANEL: '.chat-web, .main-content, .conversation-container', DROP_ZONE: 'div[xapfileselectordropzone], .text-input-field, .input-area, .ql-editor, .chat-input-container', FILE_PREVIEW: '.file-preview, .xap-filed-upload-preview, .attachment-preview', BUTTON_INSERTION_CONTAINER: '.leading-actions-wrapper, .input-area .actions, .chat-input-actions', FALLBACK_INSERTION: '.input-area, .chat-input-container, .conversation-input'
   };
 
-  // URL patterns for navigation tracking
-  private lastUrl: string = '';
+  // URL patterns for navigation tracking private lastUrl: string = '';
   private urlCheckInterval: NodeJS.Timeout | null = null;
 
   // State management integration
@@ -71,8 +53,7 @@ export class GeminiAdapter extends BaseAdapterPlugin {
   }
 
   async initialize(context: PluginContext): Promise<void> {
-    // Guard against multiple initialization
-    if (this.currentStatus === 'initializing' || this.currentStatus === 'active') {
+    // Guard against multiple initialization if (this.currentStatus === 'initializing' || this.currentStatus === 'active') {
       this.context?.logger.warn(`Gemini adapter instance #${this.instanceId} already initialized or active, skipping re-initialization`);
       return;
     }
@@ -95,8 +76,7 @@ export class GeminiAdapter extends BaseAdapterPlugin {
   }
 
   async activate(): Promise<void> {
-    // Guard against multiple activation
-    if (this.currentStatus === 'active') {
+    // Guard against multiple activation if (this.currentStatus === 'active') {
       this.context?.logger.warn(`Gemini adapter instance #${this.instanceId} already active, skipping re-activation`);
       return;
     }
@@ -111,22 +91,18 @@ export class GeminiAdapter extends BaseAdapterPlugin {
     this.setupDOMObservers();
     this.setupUIIntegration();
 
-    // Emit activation event for store synchronization
-    this.context.eventBus.emit('adapter:activated', {
+    // Emit activation event for store synchronization this.context.eventBus.emit('adapter:activated', {
       pluginName: this.name,
       timestamp: Date.now()
     });
   }
 
   async deactivate(): Promise<void> {
-    // Guard against double deactivation
-    if (this.currentStatus === 'inactive' || this.currentStatus === 'disabled') {
-      this.context?.logger.warn('Gemini adapter already inactive, skipping deactivation');
+    // Guard against double deactivation if (this.currentStatus === 'inactive' || this.currentStatus === 'disabled') { this.context?.logger.warn('Gemini adapter already inactive, skipping deactivation');
       return;
     }
 
-    await super.deactivate();
-    this.context.logger.debug('Deactivating Gemini adapter...');
+    await super.deactivate(); this.context.logger.debug('Deactivating Gemini adapter...');
 
     // Clean up UI integration
     this.cleanupUIIntegration();
@@ -137,16 +113,14 @@ export class GeminiAdapter extends BaseAdapterPlugin {
     this.domObserversSetup = false;
     this.uiIntegrationSetup = false;
 
-    // Emit deactivation event
-    this.context.eventBus.emit('adapter:deactivated', {
+    // Emit deactivation event this.context.eventBus.emit('adapter:deactivated', {
       pluginName: this.name,
       timestamp: Date.now()
     });
   }
 
   async cleanup(): Promise<void> {
-    await super.cleanup();
-    this.context.logger.debug('Cleaning up Gemini adapter...');
+    await super.cleanup(); this.context.logger.debug('Cleaning up Gemini adapter...');
 
     // Clear URL tracking interval
     if (this.urlCheckInterval) {
@@ -164,8 +138,7 @@ export class GeminiAdapter extends BaseAdapterPlugin {
     this.cleanupUIIntegration();
     this.cleanupDOMObservers();
     
-    // Remove injected Gemini styles
-    const styleElement = document.getElementById('mcp-gemini-button-styles');
+    // Remove injected Gemini styles const styleElement = document.getElementById('mcp-gemini-button-styles');
     if (styleElement) {
       styleElement.remove();
       this.geminiStylesInjected = false;
@@ -182,16 +155,14 @@ export class GeminiAdapter extends BaseAdapterPlugin {
    * Insert text into the Gemini chat input field
    * Enhanced with better selector handling and event integration
    */
-  async insertText(text: string, options?: { targetElement?: HTMLElement }): Promise<boolean> {
-    this.context.logger.debug(`Attempting to insert text into Gemini chat input: ${text.substring(0, 50)}${text.length > 50 ? '...' : ''}`);
+  async insertText(text: string, options?: { targetElement?: HTMLElement }): Promise<boolean> { this.context.logger.debug(`Attempting to insert text into Gemini chat input: ${text.substring(0, 50)}${text.length > 50 ? '...' : ''}`);
 
     let targetElement: HTMLElement | null = null;
 
     if (options?.targetElement) {
       targetElement = options.targetElement;
     } else {
-      // Try multiple selectors for better compatibility
-      const selectors = this.getSelector('chatInput').split(', ');
+      // Try multiple selectors for better compatibility const selectors = this.getSelector('chatInput').split(', ');
       for (const selector of selectors) {
         targetElement = document.querySelector(selector.trim()) as HTMLElement;
         if (targetElement) {
@@ -201,32 +172,23 @@ export class GeminiAdapter extends BaseAdapterPlugin {
       }
     }
 
-    if (!targetElement) {
-      this.context.logger.error('Could not find Gemini chat input element');
-      this.emitExecutionFailed('insertText', 'Chat input element not found');
+    if (!targetElement) { this.context.logger.error('Could not find Gemini chat input element'); this.emitExecutionFailed('insertText', 'Chat input element not found');
       return false;
     }
 
     try {
-      // Store the original value
-      const originalValue = targetElement.textContent || '';
+      // Store the original value const originalValue = targetElement.textContent || '';
 
       // Focus the input element
       targetElement.focus();
 
-      // Insert the text by updating the content and dispatching appropriate events
-      // Append the text to the original value on a new line if there's existing content
+      // Insert the text by updating the content and dispatching appropriate events // Append the text to the original value on a new line if there's existing content
       const newContent = originalValue ? originalValue + '\n' + text : text;
       targetElement.textContent = newContent;
 
-      // Dispatch events to simulate user typing for better compatibility
-      targetElement.dispatchEvent(new Event('input', { bubbles: true }));
-      targetElement.dispatchEvent(new Event('change', { bubbles: true }));
-      targetElement.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true }));
-      targetElement.dispatchEvent(new KeyboardEvent('keyup', { bubbles: true }));
+      // Dispatch events to simulate user typing for better compatibility targetElement.dispatchEvent(new Event('input', { bubbles: true })); targetElement.dispatchEvent(new Event('change', { bubbles: true })); targetElement.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true })); targetElement.dispatchEvent(new KeyboardEvent('keyup', { bubbles: true }));
 
-      // Emit success event to the new event system
-      this.emitExecutionCompleted('insertText', { text }, {
+      // Emit success event to the new event system this.emitExecutionCompleted('insertText', { text }, {
         success: true,
         originalLength: originalValue.length,
         newLength: text.length,
@@ -237,8 +199,7 @@ export class GeminiAdapter extends BaseAdapterPlugin {
       return true;
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : String(error);
-      this.context.logger.error(`Error inserting text into Gemini chat input: ${errorMessage}`);
-      this.emitExecutionFailed('insertText', errorMessage);
+      this.context.logger.error(`Error inserting text into Gemini chat input: ${errorMessage}`); this.emitExecutionFailed('insertText', errorMessage);
       return false;
     }
   }
@@ -247,13 +208,11 @@ export class GeminiAdapter extends BaseAdapterPlugin {
    * Submit the current text in the Gemini chat input
    * Enhanced with multiple selector fallbacks and better error handling
    */
-  async submitForm(options?: { formElement?: HTMLFormElement }): Promise<boolean> {
-    this.context.logger.debug('Attempting to submit Gemini chat input');
+  async submitForm(options?: { formElement?: HTMLFormElement }): Promise<boolean> { this.context.logger.debug('Attempting to submit Gemini chat input');
 
     let submitButton: HTMLButtonElement | null = null;
 
-    // Try multiple selectors for better compatibility
-    const selectors = this.getSelector('submitButton').split(', ');
+    // Try multiple selectors for better compatibility const selectors = this.getSelector('submitButton').split(', ');
     for (const selector of selectors) {
       submitButton = document.querySelector(selector.trim()) as HTMLButtonElement;
       if (submitButton) {
@@ -262,46 +221,35 @@ export class GeminiAdapter extends BaseAdapterPlugin {
       }
     }
 
-    if (!submitButton) {
-      this.context.logger.error('Could not find Gemini submit button');
-      this.emitExecutionFailed('submitForm', 'Submit button not found');
+    if (!submitButton) { this.context.logger.error('Could not find Gemini submit button'); this.emitExecutionFailed('submitForm', 'Submit button not found');
       return false;
     }
 
     try {
       // Check if the button is disabled
-      if (submitButton.disabled) {
-        this.context.logger.warn('Gemini submit button is disabled');
-        this.emitExecutionFailed('submitForm', 'Submit button is disabled');
+      if (submitButton.disabled) { this.context.logger.warn('Gemini submit button is disabled'); this.emitExecutionFailed('submitForm', 'Submit button is disabled');
         return false;
       }
 
       // Check if the button is visible and clickable
       const rect = submitButton.getBoundingClientRect();
-      if (rect.width === 0 || rect.height === 0) {
-        this.context.logger.warn('Gemini submit button is not visible');
-        this.emitExecutionFailed('submitForm', 'Submit button is not visible');
+      if (rect.width === 0 || rect.height === 0) { this.context.logger.warn('Gemini submit button is not visible'); this.emitExecutionFailed('submitForm', 'Submit button is not visible');
         return false;
       }
 
       // Click the submit button to send the message
       submitButton.click();
 
-      // Emit success event to the new event system
-      this.emitExecutionCompleted('submitForm', {
-        formElement: options?.formElement?.tagName || 'unknown'
+      // Emit success event to the new event system this.emitExecutionCompleted('submitForm', { formElement: options?.formElement?.tagName || 'unknown'
       }, {
-        success: true,
-        method: 'submitButton.click',
+        success: true, method: 'submitButton.click',
         buttonSelector: selectors.find(s => document.querySelector(s.trim()) === submitButton)
       });
-
-      this.context.logger.debug('Gemini chat input submitted successfully');
+ this.context.logger.debug('Gemini chat input submitted successfully');
       return true;
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : String(error);
-      this.context.logger.error(`Error submitting Gemini chat input: ${errorMessage}`);
-      this.emitExecutionFailed('submitForm', errorMessage);
+      this.context.logger.error(`Error submitting Gemini chat input: ${errorMessage}`); this.emitExecutionFailed('submitForm', errorMessage);
       return false;
     }
   }
@@ -315,21 +263,18 @@ export class GeminiAdapter extends BaseAdapterPlugin {
 
     try {
       // Validate file before attempting attachment
-      if (!file || file.size === 0) {
-        this.emitExecutionFailed('attachFile', 'Invalid file: file is empty or null');
+      if (!file || file.size === 0) { this.emitExecutionFailed('attachFile', 'Invalid file: file is empty or null');
         return false;
       }
 
       // Check if file upload is supported on current page
-      if (!this.supportsFileUpload()) {
-        this.emitExecutionFailed('attachFile', 'File upload not supported on current page');
+      if (!this.supportsFileUpload()) { this.emitExecutionFailed('attachFile', 'File upload not supported on current page');
         return false;
       }
 
       // Load drop listener script into page context
       const success = await this.injectFileDropListener();
-      if (!success) {
-        this.emitExecutionFailed('attachFile', 'Failed to inject file drop listener');
+      if (!success) { this.emitExecutionFailed('attachFile', 'Failed to inject file drop listener');
         return false;
       }
 
@@ -338,51 +283,43 @@ export class GeminiAdapter extends BaseAdapterPlugin {
 
       // Post message to page context for file drop simulation
       window.postMessage(
-        {
-          type: 'MCP_DROP_FILE',
+        { type: 'MCP_DROP_FILE',
           fileName: file.name,
           fileType: file.type,
           fileSize: file.size,
           lastModified: file.lastModified,
           fileData: dataUrl,
-        },
-        '*'
+        }, '*'
       );
 
       // Check for file preview to confirm success
       const previewFound = await this.checkFilePreview();
 
-      if (previewFound) {
-        this.emitExecutionCompleted('attachFile', {
+      if (previewFound) { this.emitExecutionCompleted('attachFile', {
           fileName: file.name,
           fileType: file.type,
-          fileSize: file.size,
-          inputElement: options?.inputElement?.tagName || 'unknown'
+          fileSize: file.size, inputElement: options?.inputElement?.tagName || 'unknown'
         }, {
           success: true,
-          previewFound: true,
-          method: 'drag-drop-simulation'
+          previewFound: true, method: 'drag-drop-simulation'
         });
         this.context.logger.debug(`File attached successfully: ${file.name}`);
         return true;
       } else {
-        // Still consider it successful even if preview not found (optimistic)
-        this.emitExecutionCompleted('attachFile', {
+        // Still consider it successful even if preview not found (optimistic) this.emitExecutionCompleted('attachFile', {
           fileName: file.name,
           fileType: file.type,
           fileSize: file.size
         }, {
           success: true,
-          previewFound: false,
-          method: 'drag-drop-simulation'
+          previewFound: false, method: 'drag-drop-simulation'
         });
         this.context.logger.debug(`File attachment initiated (preview not confirmed): ${file.name}`);
         return true;
       }
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : String(error);
-      this.context.logger.error(`Error attaching file to Gemini: ${errorMessage}`);
-      this.emitExecutionFailed('attachFile', errorMessage);
+      this.context.logger.error(`Error attaching file to Gemini: ${errorMessage}`); this.emitExecutionFailed('attachFile', errorMessage);
       return false;
     }
   }
@@ -398,11 +335,9 @@ export class GeminiAdapter extends BaseAdapterPlugin {
     this.context.logger.debug(`Checking if Gemini adapter supports: ${currentUrl}`);
 
     // Check hostname first
-    const isGeminiHost = this.hostnames.some(hostname => {
-      if (typeof hostname === 'string') {
+    const isGeminiHost = this.hostnames.some(hostname => { if (typeof hostname === 'string') {
         return currentHost.includes(hostname);
-      }
-      // hostname is RegExp if it's not a string
+      } // hostname is RegExp if it's not a string
       return (hostname as RegExp).test(currentHost);
     });
 
@@ -434,11 +369,9 @@ export class GeminiAdapter extends BaseAdapterPlugin {
    * Check if file upload is supported on the current page
    * Enhanced with multiple selector checking and better detection
    */
-  supportsFileUpload(): boolean {
-    this.context.logger.debug('Checking file upload support for Gemini');
+  supportsFileUpload(): boolean { this.context.logger.debug('Checking file upload support for Gemini');
 
-    // Check for drop zones
-    const dropZoneSelectors = this.getSelector('dropZone').split(', ');
+    // Check for drop zones const dropZoneSelectors = this.getSelector('dropZone').split(', ');
     for (const selector of dropZoneSelectors) {
       const dropZone = document.querySelector(selector.trim());
       if (dropZone) {
@@ -447,8 +380,7 @@ export class GeminiAdapter extends BaseAdapterPlugin {
       }
     }
 
-    // Check for file upload buttons
-    const uploadButtonSelectors = this.getSelector('fileUploadButton').split(', ');
+    // Check for file upload buttons const uploadButtonSelectors = this.getSelector('fileUploadButton').split(', ');
     for (const selector of uploadButtonSelectors) {
       const uploadButton = document.querySelector(selector.trim());
       if (uploadButton) {
@@ -457,22 +389,18 @@ export class GeminiAdapter extends BaseAdapterPlugin {
       }
     }
 
-    // Check for file input elements
-    const fileInput = document.querySelector(this.getSelector('fileInput'));
-    if (fileInput) {
-      this.context.logger.debug('Found file input element');
+    // Check for file input elements const fileInput = document.querySelector(this.getSelector('fileInput'));
+    if (fileInput) { this.context.logger.debug('Found file input element');
       return true;
     }
-
-    this.context.logger.debug('No file upload support detected');
+ this.context.logger.debug('No file upload support detected');
     return false;
   }
 
   // Private helper methods
 
   /**
-   * Get Gemini-specific button styles that match the toolbox drawer items
-   * Based on the Material Design Components used in Gemini's interface
+   * Get Gemini-specific button styles that match the toolbox drawer items * Based on the Material Design Components used in Gemini's interface
    */
   private getGeminiButtonStyles(): string {
     return `
@@ -522,8 +450,7 @@ export class GeminiAdapter extends BaseAdapterPlugin {
         outline: 2px solid #1a73e8;
         outline-offset: 2px;
       }
-
-      /* Active toggle state - matches Gemini's toolbox drawer pressed state */
+ /* Active toggle state - matches Gemini's toolbox drawer pressed state */
       .mcp-gemini-button-base.mcp-button-active {
         background-color: rgba(138, 180, 248, 0.2);
         color: #1557c0;
@@ -583,8 +510,7 @@ export class GeminiAdapter extends BaseAdapterPlugin {
         align-items: center;
         justify-content: center;
         font-size: 20px;
-        line-height: 1;
-        font-family: 'Material Symbols Outlined', 'Google Material Icons';
+        line-height: 1; font-family: 'Material Symbols Outlined', 'Google Material Icons';
       }
 
       /* Dark mode support */
@@ -636,8 +562,7 @@ export class GeminiAdapter extends BaseAdapterPlugin {
           transition: none;
         }
       }
-
-      /* Integration with Gemini's toolbox drawer layout */
+ /* Integration with Gemini's toolbox drawer layout */
       .leading-actions-wrapper .mcp-gemini-button-base,
       .input-area .mcp-gemini-button-base,
       .chat-input-actions .mcp-gemini-button-base {
@@ -684,27 +609,23 @@ export class GeminiAdapter extends BaseAdapterPlugin {
    * Inject Gemini-specific button styles into the page
    */
   private injectGeminiButtonStyles(): void {
-    if (this.geminiStylesInjected) {
-      this.context.logger.debug('Gemini button styles already injected, skipping');
+    if (this.geminiStylesInjected) { this.context.logger.debug('Gemini button styles already injected, skipping');
       return;
     }
 
-    try {
-      const styleId = 'mcp-gemini-button-styles';
+    try { const styleId = 'mcp-gemini-button-styles';
       const existingStyles = document.getElementById(styleId);
       if (existingStyles) {
         existingStyles.remove();
       }
-
-      const styleElement = document.createElement('style');
+ const styleElement = document.createElement('style');
       styleElement.id = styleId;
       styleElement.textContent = this.getGeminiButtonStyles();
       document.head.appendChild(styleElement);
 
-      this.geminiStylesInjected = true;
-      this.context.logger.debug('Gemini button styles injected successfully');
+      this.geminiStylesInjected = true; this.context.logger.debug('Gemini button styles injected successfully');
     } catch (error) {
-      this.context.logger.error('Failed to inject Gemini button styles:', error);
+       this.context.logger.error('Failed to inject Gemini button styles:', error);
     }
   }
 
@@ -727,8 +648,8 @@ export class GeminiAdapter extends BaseAdapterPlugin {
   }
 
   // New architecture integration methods
-
-  private setupStoreEventListeners(): void {
+  
+    private setupStoreEventListeners(): void {
     if (this.storeEventListenersSetup) {
       this.context.logger.warn(`Store event listeners already set up for instance #${this.instanceId}, skipping`);
       return;
@@ -736,16 +657,12 @@ export class GeminiAdapter extends BaseAdapterPlugin {
 
     this.context.logger.debug(`Setting up store event listeners for Gemini adapter instance #${this.instanceId}`);
 
-    // Listen for tool execution events from the store
-    this.context.eventBus.on('tool:execution-completed', (data) => {
-      this.context.logger.debug('Tool execution completed:', data);
+    // Listen for tool execution events from the store this.context.eventBus.on('tool:execution-completed', (data) => { this.context.logger.debug('Tool execution completed:', data);
       // Handle auto-actions based on store state
       this.handleToolExecutionCompleted(data);
     });
 
-    // Listen for UI state changes
-    this.context.eventBus.on('ui:sidebar-toggle', (data) => {
-      this.context.logger.debug('Sidebar toggled:', data);
+    // Listen for UI state changes this.context.eventBus.on('ui:sidebar-toggle', (data) => { this.context.logger.debug('Sidebar toggled:', data);
     });
 
     this.storeEventListenersSetup = true;
@@ -763,10 +680,8 @@ export class GeminiAdapter extends BaseAdapterPlugin {
     this.mutationObserver = new MutationObserver((mutations) => {
       let shouldReinject = false;
 
-      mutations.forEach((mutation) => {
-        if (mutation.type === 'childList') {
-          // Check if our MCP popover was removed
-          if (!document.getElementById('mcp-popover-container')) {
+      mutations.forEach((mutation) => { if (mutation.type === 'childList') {
+          // Check if our MCP popover was removed if (!document.getElementById('mcp-popover-container')) {
             shouldReinject = true;
           }
         }
@@ -775,8 +690,7 @@ export class GeminiAdapter extends BaseAdapterPlugin {
       if (shouldReinject) {
         // Only attempt re-injection if we can find an insertion point
         const insertionPoint = this.findButtonInsertionPoint();
-        if (insertionPoint) {
-          this.context.logger.debug('MCP popover removed, attempting to re-inject');
+        if (insertionPoint) { this.context.logger.debug('MCP popover removed, attempting to re-inject');
           this.setupUIIntegration();
         }
       }
@@ -804,9 +718,7 @@ export class GeminiAdapter extends BaseAdapterPlugin {
     // Wait for page to be ready, then inject MCP popover
     this.waitForPageReady().then(() => {
       this.injectMCPPopoverWithRetry();
-    }).catch((error) => {
-      this.context.logger.error('Failed to wait for page ready for MCP popover injection:', error);
-      // Don't set up periodic check if we can't find insertion point
+    }).catch((error) => { this.context.logger.error('Failed to wait for page ready for MCP popover injection:', error); // Don't set up periodic check if we can't find insertion point
       return;
     });
 
@@ -846,9 +758,7 @@ export class GeminiAdapter extends BaseAdapterPlugin {
     const attemptInjection = (attempt: number) => {
       this.context.logger.debug(`Attempting MCP popover injection (attempt ${attempt}/${maxRetries})`);
 
-      // Check if popover already exists
-      if (document.getElementById('mcp-popover-container')) {
-        this.context.logger.debug('MCP popover already exists');
+      // Check if popover already exists if (document.getElementById('mcp-popover-container')) { this.context.logger.debug('MCP popover already exists');
         return;
       }
 
@@ -860,8 +770,7 @@ export class GeminiAdapter extends BaseAdapterPlugin {
         // Retry after delay
         this.context.logger.debug(`Insertion point not found, retrying in 1 second (attempt ${attempt}/${maxRetries})`);
         setTimeout(() => attemptInjection(attempt + 1), 1000);
-      } else {
-        this.context.logger.warn('Failed to inject MCP popover after maximum retries');
+      } else { this.context.logger.warn('Failed to inject MCP popover after maximum retries');
       }
     };
 
@@ -871,12 +780,10 @@ export class GeminiAdapter extends BaseAdapterPlugin {
   private setupPeriodicPopoverCheck(): void {
     // Check every 5 seconds if the popover is still there
     if (!this.popoverCheckInterval) {
-      this.popoverCheckInterval = setInterval(() => {
-        if (!document.getElementById('mcp-popover-container')) {
+      this.popoverCheckInterval = setInterval(() => { if (!document.getElementById('mcp-popover-container')) {
           // Only attempt re-injection if we can find an insertion point
           const insertionPoint = this.findButtonInsertionPoint();
-          if (insertionPoint) {
-            this.context.logger.debug('MCP popover missing, attempting to re-inject');
+          if (insertionPoint) { this.context.logger.debug('MCP popover missing, attempting to re-inject');
             this.injectMCPPopoverWithRetry(3); // Fewer retries for periodic checks
           }
         }
@@ -884,8 +791,7 @@ export class GeminiAdapter extends BaseAdapterPlugin {
     }
   }
 
-  private cleanupDOMObservers(): void {
-    this.context.logger.debug('Cleaning up DOM observers for Gemini adapter');
+  private cleanupDOMObservers(): void { this.context.logger.debug('Cleaning up DOM observers for Gemini adapter');
 
     if (this.mutationObserver) {
       this.mutationObserver.disconnect();
@@ -893,11 +799,9 @@ export class GeminiAdapter extends BaseAdapterPlugin {
     }
   }
 
-  private cleanupUIIntegration(): void {
-    this.context.logger.debug('Cleaning up UI integration for Gemini adapter');
+  private cleanupUIIntegration(): void { this.context.logger.debug('Cleaning up UI integration for Gemini adapter');
 
-    // Remove MCP popover if it exists
-    const popoverContainer = document.getElementById('mcp-popover-container');
+    // Remove MCP popover if it exists const popoverContainer = document.getElementById('mcp-popover-container');
     if (popoverContainer) {
       popoverContainer.remove();
     }
@@ -905,46 +809,36 @@ export class GeminiAdapter extends BaseAdapterPlugin {
     this.mcpPopoverContainer = null;
   }
 
-  private handleToolExecutionCompleted(data: any): void {
-    this.context.logger.debug('Handling tool execution completion in Gemini adapter:', data);
+  private handleToolExecutionCompleted(data: any): void { this.context.logger.debug('Handling tool execution completion in Gemini adapter:', data);
 
     // Use the base class method to check if we should handle events
-    if (!this.shouldHandleEvents()) {
-      this.context.logger.debug('Gemini adapter should not handle events, ignoring tool execution event');
+    if (!this.shouldHandleEvents()) { this.context.logger.debug('Gemini adapter should not handle events, ignoring tool execution event');
       return;
     }
 
     // Get current UI state from stores to determine auto-actions
     const uiState = this.context.stores.ui;
     if (uiState && data.execution) {
-      // Handle auto-insert, auto-submit based on store state
-      // This integrates with the new architecture's state management
+      // Handle auto-insert, auto-submit based on store state // This integrates with the new architecture's state management
       this.context.logger.debug('Tool execution handled with new architecture integration');
     }
   }
 
-  private findButtonInsertionPoint(): { container: Element; insertAfter: Element | null } | null {
-    this.context.logger.debug('Finding button insertion point for MCP popover');
+  private findButtonInsertionPoint(): { container: Element; insertAfter: Element | null } | null { this.context.logger.debug('Finding button insertion point for MCP popover');
 
-    // Try primary selector first using getSelector method
-    const buttonInsertionSelector = this.getSelector('buttonInsertionContainer');
-    const selectors = buttonInsertionSelector.split(', ');
-    
-    for (const selector of selectors) {
+    // Try primary selector first using getSelector method const buttonInsertionSelector = this.getSelector('buttonInsertionContainer'); const selectors = buttonInsertionSelector.split(', ');
+      
+      for (const selector of selectors) {
       const wrapper = document.querySelector(selector.trim());
       if (wrapper) {
-        this.context.logger.debug(`Found insertion point: ${selector.trim()}`);
-        const btns = wrapper.querySelectorAll('button');
+        this.context.logger.debug(`Found insertion point: ${selector.trim()}`); const btns = wrapper.querySelectorAll('button');
         const after = btns.length > 1 ? btns[1] : btns.length > 0 ? btns[0] : null;
         return { container: wrapper, insertAfter: after };
       }
     }
 
     // Try fallback selectors
-    const fallbackSelectors = [
-      '.input-area .actions',
-      '.chat-input-actions',
-      '.conversation-input .actions'
+    const fallbackSelectors = [ '.input-area .actions', '.chat-input-actions', '.conversation-input .actions'
     ];
 
     for (const selector of fallbackSelectors) {
@@ -954,35 +848,25 @@ export class GeminiAdapter extends BaseAdapterPlugin {
         return { container, insertAfter: null };
       }
     }
-
-    this.context.logger.debug('Could not find suitable insertion point for MCP popover');
+ this.context.logger.debug('Could not find suitable insertion point for MCP popover');
     return null;
   }
 
-  private injectMCPPopover(insertionPoint: { container: Element; insertAfter: Element | null }): void {
-    this.context.logger.debug('Injecting MCP popover into Gemini interface');
+  private injectMCPPopover(insertionPoint: { container: Element; insertAfter: Element | null }): void { this.context.logger.debug('Injecting MCP popover into Gemini interface');
 
     try {
-      // Check if popover already exists
-      if (document.getElementById('mcp-popover-container')) {
-        this.context.logger.debug('MCP popover already exists, skipping injection');
+      // Check if popover already exists if (document.getElementById('mcp-popover-container')) { this.context.logger.debug('MCP popover already exists, skipping injection');
         return;
       }
 
-      // Create container for the popover
-      const reactContainer = document.createElement('div');
-      reactContainer.id = 'mcp-popover-container';
-      reactContainer.style.display = 'inline-block';
-      reactContainer.style.margin = '0 4px';
+      // Create container for the popover const reactContainer = document.createElement('div'); reactContainer.id = 'mcp-popover-container'; reactContainer.style.display = 'inline-block'; reactContainer.style.margin = '0 4px';
 
       // Insert at appropriate location
       const { container, insertAfter } = insertionPoint;
       if (insertAfter && insertAfter.parentNode === container) {
-        container.insertBefore(reactContainer, insertAfter.nextSibling);
-        this.context.logger.debug('Inserted popover container after specified element');
+        container.insertBefore(reactContainer, insertAfter.nextSibling); this.context.logger.debug('Inserted popover container after specified element');
       } else {
-        container.appendChild(reactContainer);
-        this.context.logger.debug('Appended popover container to container element');
+        container.appendChild(reactContainer); this.context.logger.debug('Appended popover container to container element');
       }
 
       // Store reference
@@ -990,30 +874,21 @@ export class GeminiAdapter extends BaseAdapterPlugin {
 
       // Render the React MCP Popover using the new architecture
       this.renderMCPPopover(reactContainer);
-
-      this.context.logger.debug('MCP popover injected and rendered successfully');
+ this.context.logger.debug('MCP popover injected and rendered successfully');
     } catch (error) {
-      this.context.logger.error('Failed to inject MCP popover:', error);
+       this.context.logger.error('Failed to inject MCP popover:', error);
     }
   }
 
-  private renderMCPPopover(container: HTMLElement): void {
-    this.context.logger.debug('Rendering MCP popover with new architecture integration');
+  private renderMCPPopover(container: HTMLElement): void { this.context.logger.debug('Rendering MCP popover with new architecture integration');
 
     try {
-      // Import React and ReactDOM dynamically to avoid bundling issues
-      import('react').then(React => {
-        import('react-dom/client').then(ReactDOM => {
-          import('../../components/mcpPopover/mcpPopover').then(({ MCPPopover }) => {
+      // Import React and ReactDOM dynamically to avoid bundling issues import('react').then(React => { import('react-dom/client').then(ReactDOM => { import('../../components/mcpPopover/mcpPopover').then(({ MCPPopover }) => {
             // Create toggle state manager that integrates with new stores
             const toggleStateManager = this.createToggleStateManager();
 
             // Create adapter button configuration for Gemini styling
-            const adapterButtonConfig = {
-              className: 'mcp-gemini-button-base',
-              contentClassName: 'mcp-gemini-button-content',
-              textClassName: 'mcp-gemini-button-text',
-              activeClassName: 'mcp-button-active'
+            const adapterButtonConfig = { className: 'mcp-gemini-button-base', contentClassName: 'mcp-gemini-button-content', textClassName: 'mcp-gemini-button-text', activeClassName: 'mcp-button-active'
             };
 
             // Create React root and render
@@ -1025,19 +900,15 @@ export class GeminiAdapter extends BaseAdapterPlugin {
                 adapterName: this.name
               })
             );
-
-            this.context.logger.debug('MCP popover rendered successfully with new architecture');
-          }).catch(error => {
-            this.context.logger.error('Failed to import MCPPopover component:', error);
+ this.context.logger.debug('MCP popover rendered successfully with new architecture');
+          }).catch(error => { this.context.logger.error('Failed to import MCPPopover component:', error);
           });
-        }).catch(error => {
-          this.context.logger.error('Failed to import ReactDOM:', error);
+        }).catch(error => { this.context.logger.error('Failed to import ReactDOM:', error);
         });
-      }).catch(error => {
-        this.context.logger.error('Failed to import React:', error);
+      }).catch(error => { this.context.logger.error('Failed to import React:', error);
       });
     } catch (error) {
-      this.context.logger.error('Failed to render MCP popover:', error);
+       this.context.logger.error('Failed to render MCP popover:', error);
     }
   }
 
@@ -1064,7 +935,7 @@ export class GeminiAdapter extends BaseAdapterPlugin {
             autoExecute: false // Default for now, can be extended
           };
         } catch (error) {
-          context.logger.error('Error getting toggle state:', error);
+       context.logger.error('Error getting toggle state:', error);
           // Return safe defaults in case of error
           return {
             mcpEnabled: false,
@@ -1075,20 +946,16 @@ export class GeminiAdapter extends BaseAdapterPlugin {
         }
       },
 
-      setMCPEnabled: (enabled: boolean) => {
-        context.logger.debug(`Setting MCP ${enabled ? 'enabled' : 'disabled'} - controlling sidebar visibility via MCP state`);
+      setMCPEnabled: (enabled: boolean) => { context.logger.debug(`Setting MCP ${enabled ? 'enabled' : 'disabled'} - controlling sidebar visibility via MCP state`);
 
         try {
           // Primary method: Control MCP state through UI store (which will automatically control sidebar)
-          if (context.stores.ui?.setMCPEnabled) {
-            context.stores.ui.setMCPEnabled(enabled, 'mcp-popover-toggle');
+          if (context.stores.ui?.setMCPEnabled) { context.stores.ui.setMCPEnabled(enabled, 'mcp-popover-toggle');
             context.logger.debug(`MCP state set to: ${enabled} via UI store`);
-          } else {
-            context.logger.warn('UI store setMCPEnabled method not available');
+          } else { context.logger.warn('UI store setMCPEnabled method not available');
             
             // Fallback: Control sidebar visibility directly if MCP state setter not available
-            if (context.stores.ui?.setSidebarVisibility) {
-              context.stores.ui.setSidebarVisibility(enabled, 'mcp-popover-toggle-fallback');
+            if (context.stores.ui?.setSidebarVisibility) { context.stores.ui.setSidebarVisibility(enabled, 'mcp-popover-toggle-fallback');
               context.logger.debug(`Sidebar visibility set to: ${enabled} via UI store fallback`);
             }
           }
@@ -1096,31 +963,24 @@ export class GeminiAdapter extends BaseAdapterPlugin {
           // Secondary method: Control through global sidebar manager as additional safeguard
           const sidebarManager = (window as any).activeSidebarManager;
           if (sidebarManager) {
-            if (enabled) {
-              context.logger.debug('Showing sidebar via activeSidebarManager');
-              sidebarManager.show().catch((error: any) => {
-                context.logger.error('Error showing sidebar:', error);
+            if (enabled) { context.logger.debug('Showing sidebar via activeSidebarManager');
+              sidebarManager.show().catch((error: any) => { context.logger.error('Error showing sidebar:', error);
               });
-            } else {
-              context.logger.debug('Hiding sidebar via activeSidebarManager');
-              sidebarManager.hide().catch((error: any) => {
-                context.logger.error('Error hiding sidebar:', error);
+            } else { context.logger.debug('Hiding sidebar via activeSidebarManager');
+              sidebarManager.hide().catch((error: any) => { context.logger.error('Error hiding sidebar:', error);
               });
             }
-          } else {
-            context.logger.warn('activeSidebarManager not available on window - will rely on UI store only');
+          } else { context.logger.warn('activeSidebarManager not available on window - will rely on UI store only');
           }
-
-          context.logger.debug(`MCP toggle completed: MCP ${enabled ? 'enabled' : 'disabled'}, sidebar ${enabled ? 'shown' : 'hidden'}`);
+ context.logger.debug(`MCP toggle completed: MCP ${enabled ? 'enabled' : 'disabled'}, sidebar ${enabled ? 'shown' : 'hidden'}`);
         } catch (error) {
-          context.logger.error('Error in setMCPEnabled:', error);
+       context.logger.error('Error in setMCPEnabled:', error);
         }
 
         stateManager.updateUI();
       },
 
-      setAutoInsert: (enabled: boolean) => {
-        context.logger.debug(`Setting Auto Insert ${enabled ? 'enabled' : 'disabled'}`);
+      setAutoInsert: (enabled: boolean) => { context.logger.debug(`Setting Auto Insert ${enabled ? 'enabled' : 'disabled'}`);
 
         // Update preferences through store
         if (context.stores.ui?.updatePreferences) {
@@ -1130,8 +990,7 @@ export class GeminiAdapter extends BaseAdapterPlugin {
         stateManager.updateUI();
       },
 
-      setAutoSubmit: (enabled: boolean) => {
-        context.logger.debug(`Setting Auto Submit ${enabled ? 'enabled' : 'disabled'}`);
+      setAutoSubmit: (enabled: boolean) => { context.logger.debug(`Setting Auto Submit ${enabled ? 'enabled' : 'disabled'}`);
 
         // Update preferences through store
         if (context.stores.ui?.updatePreferences) {
@@ -1141,20 +1000,16 @@ export class GeminiAdapter extends BaseAdapterPlugin {
         stateManager.updateUI();
       },
 
-      setAutoExecute: (enabled: boolean) => {
-        context.logger.debug(`Setting Auto Execute ${enabled ? 'enabled' : 'disabled'}`);
+      setAutoExecute: (enabled: boolean) => { context.logger.debug(`Setting Auto Execute ${enabled ? 'enabled' : 'disabled'}`);
         // Can be extended to handle auto execute functionality
         stateManager.updateUI();
       },
 
-      updateUI: () => {
-        context.logger.debug('Updating MCP popover UI');
+      updateUI: () => { context.logger.debug('Updating MCP popover UI');
 
-        // Dispatch custom event to update the popover
-        const popoverContainer = document.getElementById('mcp-popover-container');
+        // Dispatch custom event to update the popover const popoverContainer = document.getElementById('mcp-popover-container');
         if (popoverContainer) {
-          const currentState = stateManager.getState();
-          const event = new CustomEvent('mcp:update-toggle-state', {
+          const currentState = stateManager.getState(); const event = new CustomEvent('mcp:update-toggle-state', {
             detail: { toggleState: currentState }
           });
           popoverContainer.dispatchEvent(event);
@@ -1168,28 +1023,24 @@ export class GeminiAdapter extends BaseAdapterPlugin {
   /**
    * Public method to manually inject MCP popover (for debugging or external calls)
    */
-  public injectMCPPopoverManually(): void {
-    this.context.logger.debug('Manual MCP popover injection requested');
+  public injectMCPPopoverManually(): void { this.context.logger.debug('Manual MCP popover injection requested');
     this.injectMCPPopoverWithRetry();
   }
 
   /**
    * Check if MCP popover is currently injected
    */
-  public isMCPPopoverInjected(): boolean {
-    return !!document.getElementById('mcp-popover-container');
+  public isMCPPopoverInjected(): boolean { return !!document.getElementById('mcp-popover-container');
   }
 
   /**
    * Get selector from configuration with fallback
-   */
-  private getSelector(selectorName: keyof AdapterConfig['selectors']): string {
+   */ private getSelector(selectorName: keyof AdapterConfig['selectors']): string {
     if (this.config?.selectors[selectorName]) {
       return this.config.selectors[selectorName];
     }
     
-    // Fallback to legacy selectors
-    const fallbackMap: Record<keyof AdapterConfig['selectors'], string> = {
+    // Fallback to legacy selectors const fallbackMap: Record<keyof AdapterConfig['selectors'], string> = {
       chatInput: this.fallbackSelectors.CHAT_INPUT,
       submitButton: this.fallbackSelectors.SUBMIT_BUTTON,
       fileUploadButton: this.fallbackSelectors.FILE_UPLOAD_BUTTON,
@@ -1199,30 +1050,9 @@ export class GeminiAdapter extends BaseAdapterPlugin {
       filePreview: this.fallbackSelectors.FILE_PREVIEW,
       buttonInsertionContainer: this.fallbackSelectors.BUTTON_INSERTION_CONTAINER,
       fallbackInsertion: this.fallbackSelectors.FALLBACK_INSERTION,
-      // Optional selectors - return empty string if not in fallback
-      newChatButton: '',
-      conversationHistory: '',
-      conversationItem: '',
-      messageContainer: '',
-      userMessage: '',
-      aiMessage: '',
-      loadingIndicator: '',
-      typingIndicator: '',
-      toolbar: '',
-      toolbarActions: '',
-      settingsButton: '',
-      optionsMenu: '',
-      voiceInputButton: '',
-      modelSelector: '',
-      responseActions: '',
-      copyButton: '',
-      regenerateButton: '',
-      shareButton: '',
-      errorMessage: '',
-      retryButton: ''
+      // Optional selectors - return empty string if not in fallback newChatButton: '', conversationHistory: '', conversationItem: '', messageContainer: '', userMessage: '', aiMessage: '', loadingIndicator: '', typingIndicator: '', toolbar: '', toolbarActions: '', settingsButton: '', optionsMenu: '', voiceInputButton: '', modelSelector: '', responseActions: '', copyButton: '', regenerateButton: '', shareButton: '', errorMessage: '', retryButton: ''
     };
-    
-    return fallbackMap[selectorName] || '';
+     return fallbackMap[selectorName] || '';
   }
 
   /**
@@ -1233,11 +1063,9 @@ export class GeminiAdapter extends BaseAdapterPlugin {
       // Initialize the config manager with context
       adapterConfigManager.initialize(this.context);
       
-      // Load configuration
-      this.config = await adapterConfigManager.getAdapterConfig('gemini');
-      this.context?.logger.debug('[GeminiAdapter] Configuration loaded successfully');
+      // Load configuration this.config = await adapterConfigManager.getAdapterConfig('gemini'); this.context?.logger.debug('[GeminiAdapter] Configuration loaded successfully');
     } catch (error) {
-      this.context?.logger.warn('[GeminiAdapter] Failed to load configuration, using defaults:', error);
+       this.context?.logger.warn('[GeminiAdapter] Failed to load configuration, using defaults:', error);
       this.config = null; // Will use fallback selectors
     }
   }
@@ -1246,10 +1074,7 @@ export class GeminiAdapter extends BaseAdapterPlugin {
    * Listen for remote config updates
    */
   private setupConfigUpdateListener(): void {
-    // Listen for remote config updates
-    this.context?.eventBus.on('remote-config:updated', (data) => {
-      if (data.changes.includes('gemini_adapter_config')) {
-        this.context?.logger.debug('[GeminiAdapter] Remote config updated, refreshing configuration');
+    // Listen for remote config updates this.context?.eventBus.on('remote-config:updated', (data) => { if (data.changes.includes('gemini_adapter_config')) { this.context?.logger.debug('[GeminiAdapter] Remote config updated, refreshing configuration');
         this.refreshConfig();
       }
     });
@@ -1260,33 +1085,27 @@ export class GeminiAdapter extends BaseAdapterPlugin {
    */
   private async refreshConfig(): Promise<void> {
     try {
-      // Clear cache for this adapter
-      adapterConfigManager.clearCache('gemini');
+      // Clear cache for this adapter adapterConfigManager.clearCache('gemini');
       
-      // Reload configuration
-      this.config = await adapterConfigManager.getAdapterConfig('gemini');
-      this.context?.logger.debug('[GeminiAdapter] Configuration refreshed successfully');
+      // Reload configuration this.config = await adapterConfigManager.getAdapterConfig('gemini'); this.context?.logger.debug('[GeminiAdapter] Configuration refreshed successfully');
     } catch (error) {
-      this.context?.logger.warn('[GeminiAdapter] Failed to refresh configuration:', error);
+       this.context?.logger.warn('[GeminiAdapter] Failed to refresh configuration:', error);
     }
   }
 
   private async injectFileDropListener(): Promise<boolean> {
-    try {
-      const listenerUrl = this.context.chrome.runtime.getURL('dragDropListener.js');
-      const scriptEl = document.createElement('script');
+    try { const listenerUrl = this.context.chrome.runtime.getURL('dragDropListener.js'); const scriptEl = document.createElement('script');
       scriptEl.src = listenerUrl;
       
       await new Promise<void>((resolve, reject) => {
-        scriptEl.onload = () => resolve();
-        scriptEl.onerror = () => reject(new Error('Failed to load drop listener script'));
+        scriptEl.onload = () => resolve(); scriptEl.onerror = () => reject(new Error('Failed to load drop listener script'));
         (document.head || document.documentElement).appendChild(scriptEl);
       });
       
       scriptEl.remove();
       return true;
     } catch (error) {
-      this.context.logger.error('Failed to inject file drop listener:', error);
+       this.context.logger.error('Failed to inject file drop listener:', error);
       return false;
     }
   }
@@ -1302,34 +1121,28 @@ export class GeminiAdapter extends BaseAdapterPlugin {
 
   private async checkFilePreview(): Promise<boolean> {
     return new Promise(resolve => {
-      setTimeout(() => {
-        const filePreview = document.querySelector(this.getSelector('filePreview'));
-        if (filePreview) {
-          this.context.logger.debug('File preview element found after attachment');
+      setTimeout(() => { const filePreview = document.querySelector(this.getSelector('filePreview'));
+        if (filePreview) { this.context.logger.debug('File preview element found after attachment');
           resolve(true);
-        } else {
-          this.context.logger.warn('File preview element not found after attachment');
+        } else { this.context.logger.warn('File preview element not found after attachment');
           resolve(false);
         }
       }, 500);
     });
   }
 
-  private emitExecutionCompleted(toolName: string, parameters: any, result: any): void {
-    this.context.eventBus.emit('tool:execution-completed', {
+  private emitExecutionCompleted(toolName: string, parameters: any, result: any): void { this.context.eventBus.emit('tool:execution-completed', {
       execution: {
         id: this.generateCallId(),
         toolName,
         parameters,
         result,
-        timestamp: Date.now(),
-        status: 'success'
+        timestamp: Date.now(), status: 'success'
       }
     });
   }
 
-  private emitExecutionFailed(toolName: string, error: string): void {
-    this.context.eventBus.emit('tool:execution-failed', {
+  private emitExecutionFailed(toolName: string, error: string): void { this.context.eventBus.emit('tool:execution-failed', {
       toolName,
       error,
       callId: this.generateCallId()
@@ -1343,11 +1156,9 @@ export class GeminiAdapter extends BaseAdapterPlugin {
   /**
    * Check if the sidebar is properly available after navigation
    */
-  private checkAndRestoreSidebar(): void {
-    this.context.logger.debug('Checking sidebar state after page navigation');
+  private checkAndRestoreSidebar(): void { this.context.logger.debug('Checking sidebar state after page navigation');
 
-    try {
-      // Check if there's an active sidebar manager
+    try { // Check if there's an active sidebar manager
       const activeSidebarManager = (window as any).activeSidebarManager;
       
       if (!activeSidebarManager) {
@@ -1359,32 +1170,28 @@ export class GeminiAdapter extends BaseAdapterPlugin {
       this.ensureMCPPopoverConnection();
       
     } catch (error) {
-      this.context.logger.error('Error checking sidebar state after navigation:', error);
+       this.context.logger.error('Error checking sidebar state after navigation:', error);
     }
   }
 
   /**
    * Ensure MCP popover is properly connected to the sidebar after navigation
    */
-  private ensureMCPPopoverConnection(): void {
-    this.context.logger.debug('Ensuring MCP popover connection after navigation');
+  private ensureMCPPopoverConnection(): void { this.context.logger.debug('Ensuring MCP popover connection after navigation');
     
     try {
       // Check if MCP popover is still injected
-      if (!this.isMCPPopoverInjected()) {
-        this.context.logger.debug('MCP popover missing after navigation, re-injecting');
+      if (!this.isMCPPopoverInjected()) { this.context.logger.debug('MCP popover missing after navigation, re-injecting');
         this.injectMCPPopoverWithRetry(3);
-      } else {
-        this.context.logger.debug('MCP popover is still present after navigation');
+      } else { this.context.logger.debug('MCP popover is still present after navigation');
       }
     } catch (error) {
-      this.context.logger.error('Error ensuring MCP popover connection:', error);
+       this.context.logger.error('Error ensuring MCP popover connection:', error);
     }
   }
 
   // Event handlers - Enhanced for new architecture integration
-  onPageChanged?(url: string, oldUrl?: string): void {
-    this.context.logger.debug(`Gemini page changed: from ${oldUrl || 'N/A'} to ${url}`);
+  onPageChanged?(url: string, oldUrl?: string): void { this.context.logger.debug(`Gemini page changed: from ${oldUrl || 'N/A'} to ${url}`);
 
     // Update URL tracking
     this.lastUrl = url;
@@ -1404,26 +1211,21 @@ export class GeminiAdapter extends BaseAdapterPlugin {
       setTimeout(() => {
         this.checkAndRestoreSidebar();
       }, 1500); // Additional delay to ensure page is fully loaded
-    } else {
-      this.context.logger.warn('Page no longer supported after navigation');
+    } else { this.context.logger.warn('Page no longer supported after navigation');
     }
 
-    // Emit page change event to stores
-    this.context.eventBus.emit('app:site-changed', {
+    // Emit page change event to stores this.context.eventBus.emit('app:site-changed', {
       site: url,
       hostname: window.location.hostname
     });
   }
 
-  onHostChanged?(newHost: string, oldHost?: string): void {
-    this.context.logger.debug(`Gemini host changed: from ${oldHost || 'N/A'} to ${newHost}`);
+  onHostChanged?(newHost: string, oldHost?: string): void { this.context.logger.debug(`Gemini host changed: from ${oldHost || 'N/A'} to ${newHost}`);
 
     // Re-check if the adapter is still supported
     const stillSupported = this.isSupported();
-    if (!stillSupported) {
-      this.context.logger.warn('Gemini adapter no longer supported on this host/page');
-      // Emit deactivation event using available event type
-      this.context.eventBus.emit('adapter:deactivated', {
+    if (!stillSupported) { this.context.logger.warn('Gemini adapter no longer supported on this host/page');
+      // Emit deactivation event using available event type this.context.eventBus.emit('adapter:deactivated', {
         pluginName: this.name,
         timestamp: Date.now()
       });

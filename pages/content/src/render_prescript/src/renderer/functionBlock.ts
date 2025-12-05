@@ -5,8 +5,7 @@ import {
   addRawXmlToggle,
   addExecuteButton,
   setupAutoScroll,
-  smoothlyUpdateBlockContent,
-  extractFunctionParameters,
+  smoothlyUpdateBlockContent, extractFunctionParameters,
 } from './components';
 import { applyThemeClass } from '../utils/themeDetector';
 import { getPreviousExecution, getPreviousExecutionLegacy, generateContentSignature } from '../mcpexecute/storage';
@@ -14,11 +13,9 @@ import type { ParamValueElement } from '../core/types';
 import { extractJSONFunctionInfo, extractJSONParameters } from '../parser/jsonFunctionParser';
 import { createLogger } from '@extension/shared/lib/logger';
 
-// Define custom property for tracking scroll state
-
-const logger = createLogger('FunctionBlockRenderer');
-
-declare global {
+// Define custom property for tracking scroll state const logger = createLogger('FunctionBlockRenderer');
+  
+  declare global {
   interface HTMLElement {
     _userHasScrolled?: boolean;
     _scrollInitialized?: boolean;
@@ -38,8 +35,7 @@ const STREAMING_TIMEOUT = 1500;
 const REGEX_CACHE = {
   paramStartRegex: /<parameter\s+name="([^"]+)"[^>]*>/gs,
   invokeMatch: /<invoke name="([^"]+)"(?:\s+call_id="([^"]+)")?>/i,
-  cdataMatch: /<!\[CDATA\[(.*?)(?:\]\]>)?$/s,
-  endParameterTag: '</parameter>',
+  cdataMatch: /<!\[CDATA\[(.*?)(?:\]\]>)?$/s, endParameterTag: '</parameter>',
 } as const;
 
 // Type definitions
@@ -103,44 +99,13 @@ function getAutomationState() {
 
 // Common style configurations
 const STREAMING_STYLES = {
-  pre: {
-    margin: '0',
-    padding: '12px 14px',
-    whiteSpace: 'pre-wrap',
-    wordWrap: 'break-word',
-    width: '100%',
-    fontFamily: 'var(--font-mono)',
-    fontSize: '13px',
-    lineHeight: '1.5',
-    transition: 'opacity 0.1s ease-out',
-    transform: 'translateZ(0)',
-    backfaceVisibility: 'hidden',
-    perspective: '1000px',
-    color: 'inherit',
-    background: 'transparent',
-    border: 'none',
-    overflow: 'auto',
-    maxHeight: '300px',
-    scrollBehavior: 'smooth',
+  pre: { margin: '0', padding: '12px 14px', whiteSpace: 'pre-wrap', wordWrap: 'break-word', width: '100%', fontFamily: 'var(--font-mono)', fontSize: '13px', lineHeight: '1.5', transition: 'opacity 0.1s ease-out', transform: 'translateZ(0)', backfaceVisibility: 'hidden', perspective: '1000px', color: 'inherit', background: 'transparent', border: 'none', overflow: 'auto', maxHeight: '300px', scrollBehavior: 'smooth',
   },
-  paramValue: {
-    transition: 'all 0.15s cubic-bezier(0.4, 0, 0.2, 1)',
-    transformOrigin: 'top left',
-    willChange: 'auto',
-    contain: 'layout style paint',
-    minHeight: '1.2em',
-    position: 'relative',
+  paramValue: { transition: 'all 0.15s cubic-bezier(0.4, 0, 0.2, 1)', transformOrigin: 'top left', willChange: 'auto', contain: 'layout style paint', minHeight: '1.2em', position: 'relative',
   },
-  contentWrapper: {
-    position: 'relative',
-    overflow: 'hidden',
-    minHeight: 'inherit',
+  contentWrapper: { position: 'relative', overflow: 'hidden', minHeight: 'inherit',
   },
-  paramsContainer: {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '4px',
-    width: '100%',
+  paramsContainer: { display: 'flex', flexDirection: 'column', gap: '4px', width: '100%',
   },
 } as const;
 
@@ -207,10 +172,7 @@ const CacheUtils = {
     let cache = elementQueryCache.get(blockDiv);
 
     if (!cache || now - cache.lastCacheTime > CACHE_TTL) {
-      cache = {
-        functionNameElement: blockDiv.querySelector<HTMLDivElement>('.function-name') || undefined,
-        paramsContainer: blockDiv.querySelector<HTMLDivElement>('.function-params') || undefined,
-        buttonContainer: blockDiv.querySelector<HTMLDivElement>('.function-buttons') || undefined,
+      cache = { functionNameElement: blockDiv.querySelector<HTMLDivElement>('.function-name') || undefined, paramsContainer: blockDiv.querySelector<HTMLDivElement>('.function-params') || undefined, buttonContainer: blockDiv.querySelector<HTMLDivElement>('.function-buttons') || undefined,
         lastCacheTime: now,
       };
       elementQueryCache.set(blockDiv, cache);
@@ -231,8 +193,7 @@ const CacheUtils = {
       };
     }
 
-    const invokeMatch = REGEX_CACHE.invokeMatch.exec(rawContent);
-    const functionName = invokeMatch ? invokeMatch[1] : 'function';
+    const invokeMatch = REGEX_CACHE.invokeMatch.exec(rawContent); const functionName = invokeMatch ? invokeMatch[1] : 'function';
     const callId =
       invokeMatch && invokeMatch[2]
         ? invokeMatch[2]
@@ -341,13 +302,11 @@ const ScrollUtils = {
       }, 3000);
     };
 
-    const cleanup = () => {
-      element.removeEventListener('scroll', onScroll);
+    const cleanup = () => { element.removeEventListener('scroll', onScroll);
       if (scrollTimeout) clearTimeout(scrollTimeout);
       (element as any)._scrollInitialized = false;
     };
-
-    element.addEventListener('scroll', onScroll, { passive: true });
+ element.addEventListener('scroll', onScroll, { passive: true });
     (element as any)._scrollInitialized = true;
     (element as any)._scrollCleanup = cleanup;
 
@@ -357,8 +316,7 @@ const ScrollUtils = {
   setupScrollTracking: (paramValueElement: HTMLElement): void => {
     if (!(paramValueElement as any)._scrollHandlersInitialized) {
       ScrollUtils.createScrollHandler(paramValueElement);
-
-      const preElement = paramValueElement.querySelector('pre');
+ const preElement = paramValueElement.querySelector('pre');
       if (preElement) {
         ScrollUtils.createScrollHandler(preElement);
       }
@@ -380,8 +338,7 @@ const ScrollUtils = {
 
           if (diff > 10) {
             paramValueElement.scrollTo({
-              top: targetScroll,
-              behavior: 'smooth',
+              top: targetScroll, behavior: 'smooth',
             });
           } else if (diff > 0) {
             paramValueElement.scrollTop = targetScroll;
@@ -389,8 +346,7 @@ const ScrollUtils = {
         }
       }
 
-      // Auto-scroll the inner pre element if it exists and has content
-      const preElement = paramValueElement.querySelector('pre');
+      // Auto-scroll the inner pre element if it exists and has content const preElement = paramValueElement.querySelector('pre');
       if (preElement && preElement.scrollHeight > preElement.clientHeight) {
         const shouldAutoScrollPre = forceScroll || !(preElement as any)._userHasScrolled;
 
@@ -401,8 +357,7 @@ const ScrollUtils = {
 
           if (diff > 10) {
             preElement.scrollTo({
-              top: targetScroll,
-              behavior: 'smooth',
+              top: targetScroll, behavior: 'smooth',
             });
           } else if (diff > 0) {
             preElement.scrollTop = targetScroll;
@@ -415,8 +370,7 @@ const ScrollUtils = {
   // Enhanced scroll function specifically for streaming content
   performStreamingScroll: (paramValueElement: HTMLElement): void => {
     // Reset user scroll tracking during active streaming
-    (paramValueElement as any)._userHasScrolled = false;
-    const preElement = paramValueElement.querySelector('pre');
+    (paramValueElement as any)._userHasScrolled = false; const preElement = paramValueElement.querySelector('pre');
     if (preElement) {
       (preElement as any)._userHasScrolled = false;
     }
@@ -427,8 +381,7 @@ const ScrollUtils = {
 };
 
 // Monaco editor CSP-compatible configuration
-const configureMonacoEditorForCSP = (): void => {
-  if (typeof window !== 'undefined' && (window as any).monaco) {
+const configureMonacoEditorForCSP = (): void => { if (typeof window !== 'undefined' && (window as any).monaco) {
     try {
       (window as any).monaco.editor.onDidCreateEditor((editor: any) => {
         editor.updateOptions({
@@ -443,13 +396,11 @@ const configureMonacoEditorForCSP = (): void => {
       });
 
       (window as any).MonacoEnvironment = {
-        getWorkerUrl: () =>
-          'data:text/javascript;charset=utf-8,logger.debug("Monaco worker disabled for CSP compatibility");',
+        getWorkerUrl: () => 'data:text/javascript;charset=utf-8,logger.debug("Monaco worker disabled for CSP compatibility");',
       };
-
-      logger.debug('Monaco editor configured for CSP compatibility');
+ logger.debug('Monaco editor configured for CSP compatibility');
     } catch (e) {
-      logger.error('Failed to configure Monaco editor for CSP:', e);
+       logger.error('Failed to configure Monaco editor for CSP:', e);
     }
   }
 };
@@ -460,8 +411,7 @@ const injectStreamingStyles = (() => {
   return () => {
     if (injected) return;
     injected = true;
-
-    const style = DOMUtils.createElement<HTMLStyleElement>('style');
+ const style = DOMUtils.createElement<HTMLStyleElement>('style');
     style.textContent = `
       .streaming-param-name {
         position: relative;
@@ -521,8 +471,7 @@ const injectStreamingStyles = (() => {
       .function-block.theme-dark .param-value[data-streaming="true"] pre {
         color: inherit !important;
       }
-      
-      /* Spinner animation styles - ensure they're loaded */
+       /* Spinner animation styles - ensure they're loaded */
       .spinner {
         display: inline-block;
         width: 14px;
@@ -581,34 +530,27 @@ export const executionTracker: ExecutionTracker = {
     );
 
     let effectiveFunctionName = functionName;
-
-    if (typeof effectiveFunctionName === 'undefined' || effectiveFunctionName === null) {
-      let functionNameFromMemory = '';
-      for (const key of this.executedFunctions) {
-        const parts = key.split(':');
+ if (typeof effectiveFunctionName === 'undefined' || effectiveFunctionName === null) { let functionNameFromMemory = '';
+      for (const key of this.executedFunctions) { const parts = key.split(':');
         if (parts.length === 3 && parts[1] === callId && parts[2] === contentSignature) {
           functionNameFromMemory = parts[0];
           break;
         }
       }
       if (functionNameFromMemory) {
-        effectiveFunctionName = functionNameFromMemory;
-        logger.debug(`Found functionName='${effectiveFunctionName}' from executedFunctions set`);
+        effectiveFunctionName = functionNameFromMemory; logger.debug(`Found functionName='${effectiveFunctionName}' from executedFunctions set`);
       }
     }
-
-    if (typeof effectiveFunctionName === 'string') {
+ if (typeof effectiveFunctionName === 'string') {
       const key = `${effectiveFunctionName}:${callId}:${contentSignature}`;
       const inMemory = this.executedFunctions.has(key);
-      const inStorage = getPreviousExecution(effectiveFunctionName, callId, contentSignature) !== null;
-      logger.debug(`isFunctionExecuted (Standard Check): Key='${key}', inMemory=${inMemory}, inStorage=${inStorage}`,
+      const inStorage = getPreviousExecution(effectiveFunctionName, callId, contentSignature) !== null; logger.debug(`isFunctionExecuted (Standard Check): Key='${key}', inMemory=${inMemory}, inStorage=${inStorage}`,
       );
       return inMemory || inStorage;
     } else {
       const key = `${callId}:${contentSignature}`;
       const inMemory = this.executedFunctions.has(key) || this.executedFunctions.has(`:${callId}:${contentSignature}`);
-      const inStorage = getPreviousExecutionLegacy(callId, contentSignature) !== null;
-      logger.debug(`isFunctionExecuted (Legacy Check): Key='${key}', inMemory=${inMemory}, inStorage=${inStorage}`,
+      const inStorage = getPreviousExecutionLegacy(callId, contentSignature) !== null; logger.debug(`isFunctionExecuted (Legacy Check): Key='${key}', inMemory=${inMemory}, inStorage=${inStorage}`,
       );
       return inMemory || inStorage;
     }
@@ -645,107 +587,64 @@ export const executionTracker: ExecutionTracker = {
 
 // Auto expand/collapse utilities
 const AutoExpandUtils = {
-  expandBlock: (blockDiv: HTMLDivElement, animate: boolean = true): void => {
-    if (blockDiv.classList.contains('expanded')) return;
-    
-    const expandButton = blockDiv.querySelector('.expand-button') as HTMLButtonElement;
-    const expandableContent = blockDiv.querySelector('.expandable-content') as HTMLDivElement;
+  expandBlock: (blockDiv: HTMLDivElement, animate: boolean = true): void => { if (blockDiv.classList.contains('expanded')) return;
+     const expandButton = blockDiv.querySelector('.expand-button') as HTMLButtonElement; const expandableContent = blockDiv.querySelector('.expandable-content') as HTMLDivElement;
     
     if (!expandButton || !expandableContent) return;
-    
-    blockDiv.classList.add('expanded', 'auto-expanded');
+     blockDiv.classList.add('expanded', 'auto-expanded');
     
     if (animate) {
       // Smooth expansion animation
-      DOMUtils.applyStyles(expandableContent, {
-        display: 'block',
-        maxHeight: '0px',
-        opacity: '0',
-        paddingTop: '0',
-        paddingBottom: '0',
+      DOMUtils.applyStyles(expandableContent, { display: 'block', maxHeight: '0px', opacity: '0', paddingTop: '0', paddingBottom: '0',
       });
       
       const targetHeight = expandableContent.scrollHeight + 24;
       
       requestAnimationFrame(() => {
-        DOMUtils.applyStyles(expandableContent, {
-          maxHeight: targetHeight + 'px',
-          opacity: '1',
-          paddingTop: '12px',
-          paddingBottom: '12px',
-          transition: 'all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
+        DOMUtils.applyStyles(expandableContent, { maxHeight: targetHeight + 'px', opacity: '1', paddingTop: '12px', paddingBottom: '12px', transition: 'all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
         });
-        
-        const expandIcon = expandButton.querySelector('svg path');
-        if (expandIcon) {
-          expandIcon.setAttribute('d', 'M16 14l-4-4-4 4');
-        }
-        expandButton.title = 'Collapse function details';
+         const expandIcon = expandButton.querySelector('svg path');
+        if (expandIcon) { expandIcon.setAttribute('d', 'M16 14l-4-4-4 4');
+        } expandButton.title = 'Collapse function details';
       });
     } else {
       // Instant expansion
-      DOMUtils.applyStyles(expandableContent, {
-        display: 'block',
-        maxHeight: 'none',
-        opacity: '1',
-        paddingTop: '12px',
-        paddingBottom: '12px',
+      DOMUtils.applyStyles(expandableContent, { display: 'block', maxHeight: 'none', opacity: '1', paddingTop: '12px', paddingBottom: '12px',
       });
     }
   },
   
-  collapseBlock: (blockDiv: HTMLDivElement, animate: boolean = true): void => {
-    if (!blockDiv.classList.contains('expanded') || !blockDiv.classList.contains('auto-expanded')) return;
-    
-    const expandButton = blockDiv.querySelector('.expand-button') as HTMLButtonElement;
-    const expandableContent = blockDiv.querySelector('.expandable-content') as HTMLDivElement;
+  collapseBlock: (blockDiv: HTMLDivElement, animate: boolean = true): void => { if (!blockDiv.classList.contains('expanded') || !blockDiv.classList.contains('auto-expanded')) return;
+     const expandButton = blockDiv.querySelector('.expand-button') as HTMLButtonElement; const expandableContent = blockDiv.querySelector('.expandable-content') as HTMLDivElement;
     
     if (!expandButton || !expandableContent) return;
-    
-    blockDiv.classList.remove('expanded', 'auto-expanded');
+     blockDiv.classList.remove('expanded', 'auto-expanded');
     
     if (animate) {
       // Smooth collapse animation
-      const currentHeight = expandableContent.scrollHeight;
-      expandableContent.style.maxHeight = currentHeight + 'px';
+      const currentHeight = expandableContent.scrollHeight; expandableContent.style.maxHeight = currentHeight + 'px';
       expandableContent.offsetHeight; // Force reflow
-      
-      requestAnimationFrame(() => {
-        DOMUtils.applyStyles(expandableContent, {
-          maxHeight: '0px',
-          opacity: '0',
-          paddingTop: '0',
-          paddingBottom: '0',
-          transition: 'all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
-        });
         
-        const expandIcon = expandButton.querySelector('svg path');
-        if (expandIcon) {
-          expandIcon.setAttribute('d', 'M8 10l4 4 4-4');
-        }
-        expandButton.title = 'Expand function details';
+        requestAnimationFrame(() => {
+        DOMUtils.applyStyles(expandableContent, { maxHeight: '0px', opacity: '0', paddingTop: '0', paddingBottom: '0', transition: 'all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
+        });
+         const expandIcon = expandButton.querySelector('svg path');
+        if (expandIcon) { expandIcon.setAttribute('d', 'M8 10l4 4 4-4');
+        } expandButton.title = 'Expand function details';
       });
       
       // Hide after animation completes
-      setTimeout(() => {
-        if (!blockDiv.classList.contains('expanded')) {
-          expandableContent.style.display = 'none';
+      setTimeout(() => { if (!blockDiv.classList.contains('expanded')) { expandableContent.style.display = 'none';
         }
       }, 400);
     } else {
       // Instant collapse
-      DOMUtils.applyStyles(expandableContent, {
-        display: 'none',
-        maxHeight: '0px',
-        opacity: '0',
-        paddingTop: '0',
-        paddingBottom: '0',
+      DOMUtils.applyStyles(expandableContent, { display: 'none', maxHeight: '0px', opacity: '0', paddingTop: '0', paddingBottom: '0',
       });
     }
   },
   
-  scheduleAutoCollapse: (blockDiv: HTMLDivElement, delay: number = 2000): void => {
-    const blockId = blockDiv.getAttribute('data-block-id');
+  scheduleAutoCollapse: (blockDiv: HTMLDivElement, delay: number = 2000): void => { const blockId = blockDiv.getAttribute('data-block-id');
     if (!blockId) return;
     
     const timeoutKey = `auto-collapse-${blockId}`;
@@ -754,9 +653,7 @@ const AutoExpandUtils = {
     PerformanceUtils.setManagedTimeout(
       timeoutKey,
       () => {
-        // Only collapse if no streaming is active and block is auto-expanded
-        const stillStreaming = blockDiv.querySelector('[data-streaming="true"]');
-        if (!stillStreaming && blockDiv.classList.contains('auto-expanded')) {
+        // Only collapse if no streaming is active and block is auto-expanded const stillStreaming = blockDiv.querySelector('[data-streaming="true"]'); if (!stillStreaming && blockDiv.classList.contains('auto-expanded')) {
           AutoExpandUtils.collapseBlock(blockDiv, true);
         }
       },
@@ -772,34 +669,24 @@ const BlockElementUtils = {
     callId: string,
     isComplete: boolean,
     isPreExistingIncomplete: boolean,
-  ): HTMLDivElement => {
-    const functionNameElement = DOMUtils.createElement<HTMLDivElement>('div', 'function-name');
+  ): HTMLDivElement => { const functionNameElement = DOMUtils.createElement<HTMLDivElement>('div', 'function-name');
+ const leftSection = DOMUtils.createElement<HTMLDivElement>('div', 'function-name-left');
 
-    const leftSection = DOMUtils.createElement<HTMLDivElement>('div', 'function-name-left');
-
-    // Create a container for function name and spinner (inline)
-    const functionNameRow = DOMUtils.createElement<HTMLDivElement>('div', 'function-name-row');
-    DOMUtils.applyStyles(functionNameRow, {
-      display: 'flex',
-      alignItems: 'center',
-      gap: '8px',
+    // Create a container for function name and spinner (inline) const functionNameRow = DOMUtils.createElement<HTMLDivElement>('div', 'function-name-row');
+    DOMUtils.applyStyles(functionNameRow, { display: 'flex', alignItems: 'center', gap: '8px',
     });
-
-    const functionNameText = DOMUtils.createElement<HTMLSpanElement>('span', 'function-name-text');
+ const functionNameText = DOMUtils.createElement<HTMLSpanElement>('span', 'function-name-text');
     functionNameText.textContent = functionName;
     functionNameRow.appendChild(functionNameText);
 
-    if (!isComplete && !isPreExistingIncomplete) {
-      const spinner = DOMUtils.createElement<HTMLDivElement>('div', 'spinner');
+    if (!isComplete && !isPreExistingIncomplete) { const spinner = DOMUtils.createElement<HTMLDivElement>('div', 'spinner');
       functionNameRow.appendChild(spinner);
     }
 
     leftSection.appendChild(functionNameRow);
+ const rightSection = DOMUtils.createElement<HTMLDivElement>('div', 'function-name-right');
 
-    const rightSection = DOMUtils.createElement<HTMLDivElement>('div', 'function-name-right');
-
-    if (callId) {
-      const callIdElement = DOMUtils.createElement<HTMLSpanElement>('span', 'call-id');
+    if (callId) { const callIdElement = DOMUtils.createElement<HTMLSpanElement>('span', 'call-id');
       callIdElement.textContent = callId;
       rightSection.appendChild(callIdElement);
     }
@@ -810,25 +697,17 @@ const BlockElementUtils = {
     return functionNameElement;
   },
 
-  createExpandButton: (): HTMLButtonElement => {
-    const expandButton = DOMUtils.createElement<HTMLButtonElement>('button', 'expand-button');
+  createExpandButton: (): HTMLButtonElement => { const expandButton = DOMUtils.createElement<HTMLButtonElement>('button', 'expand-button');
     expandButton.innerHTML = `
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path d="M8 10l4 4 4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
       </svg>
-    `;
-    expandButton.title = 'Expand function details';
+    `; expandButton.title = 'Expand function details';
     return expandButton;
   },
 
-  createExpandableContent: (): HTMLDivElement => {
-    const expandableContent = DOMUtils.createElement<HTMLDivElement>('div', 'expandable-content');
-    DOMUtils.applyStyles(expandableContent, {
-      display: 'none',
-      overflow: 'hidden',
-      transition: 'all 0.25s cubic-bezier(0.4, 0, 0.2, 1)',
-      maxHeight: '0px',
-      opacity: '0',
+  createExpandableContent: (): HTMLDivElement => { const expandableContent = DOMUtils.createElement<HTMLDivElement>('div', 'expandable-content');
+    DOMUtils.applyStyles(expandableContent, { display: 'none', overflow: 'hidden', transition: 'all 0.25s cubic-bezier(0.4, 0, 0.2, 1)', maxHeight: '0px', opacity: '0',
     });
     return expandableContent;
   },
@@ -841,67 +720,43 @@ const BlockElementUtils = {
     const toggleExpandCollapse = (e: Event) => {
       e.preventDefault();
       e.stopPropagation();
-
-      const isCurrentlyExpanded = blockDiv.classList.contains('expanded');
-      const expandIcon = expandButton.querySelector('svg path');
+ const isCurrentlyExpanded = blockDiv.classList.contains('expanded'); const expandIcon = expandButton.querySelector('svg path');
 
       if (isCurrentlyExpanded) {
-        // Collapse
-        blockDiv.classList.remove('expanded');
+        // Collapse blockDiv.classList.remove('expanded');
 
         // Get current computed height including padding
-        const currentHeight = expandableContent.scrollHeight;
-        expandableContent.style.maxHeight = currentHeight + 'px';
+        const currentHeight = expandableContent.scrollHeight; expandableContent.style.maxHeight = currentHeight + 'px';
         expandableContent.offsetHeight; // Force reflow
-
-        requestAnimationFrame(() => {
-          DOMUtils.applyStyles(expandableContent, {
-            maxHeight: '0px',
-            opacity: '0',
-            paddingTop: '0',
-            paddingBottom: '0',
+  
+          requestAnimationFrame(() => {
+          DOMUtils.applyStyles(expandableContent, { maxHeight: '0px', opacity: '0', paddingTop: '0', paddingBottom: '0',
           });
 
-          if (expandIcon) {
-            expandIcon.setAttribute('d', 'M8 10l4 4 4-4');
-          }
-          expandButton.title = 'Expand function details';
+          if (expandIcon) { expandIcon.setAttribute('d', 'M8 10l4 4 4-4');
+          } expandButton.title = 'Expand function details';
         });
 
         // Hide after animation completes
-        setTimeout(() => {
-          if (!blockDiv.classList.contains('expanded')) {
-            expandableContent.style.display = 'none';
+        setTimeout(() => { if (!blockDiv.classList.contains('expanded')) { expandableContent.style.display = 'none';
           }
         }, 250);
       } else {
-        // Expand
-        blockDiv.classList.add('expanded');
+        // Expand blockDiv.classList.add('expanded');
 
         // Prepare for expansion
-        DOMUtils.applyStyles(expandableContent, {
-          display: 'block',
-          maxHeight: '0px',
-          opacity: '0',
-          paddingTop: '0',
-          paddingBottom: '0',
+        DOMUtils.applyStyles(expandableContent, { display: 'block', maxHeight: '0px', opacity: '0', paddingTop: '0', paddingBottom: '0',
         });
 
         // Calculate target height with padding
         const targetHeight = expandableContent.scrollHeight + 24; // 12px top + 12px bottom padding
-
-        requestAnimationFrame(() => {
-          DOMUtils.applyStyles(expandableContent, {
-            maxHeight: targetHeight + 'px',
-            opacity: '1',
-            paddingTop: '12px',
-            paddingBottom: '12px',
+  
+          requestAnimationFrame(() => {
+          DOMUtils.applyStyles(expandableContent, { maxHeight: targetHeight + 'px', opacity: '1', paddingTop: '12px', paddingBottom: '12px',
           });
 
-          if (expandIcon) {
-            expandIcon.setAttribute('d', 'M16 14l-4-4-4 4');
-          }
-          expandButton.title = 'Collapse function details';
+          if (expandIcon) { expandIcon.setAttribute('d', 'M16 14l-4-4-4 4');
+          } expandButton.title = 'Collapse function details';
         });
       }
     };
@@ -909,11 +764,9 @@ const BlockElementUtils = {
     // Attach click handler to expand button
     expandButton.onclick = toggleExpandCollapse;
 
-    // Make entire function-name area clickable
-    const functionNameElement = blockDiv.querySelector('.function-name') as HTMLDivElement;
+    // Make entire function-name area clickable const functionNameElement = blockDiv.querySelector('.function-name') as HTMLDivElement;
     if (functionNameElement) {
-      DOMUtils.applyStyles(functionNameElement, {
-        cursor: 'pointer',
+      DOMUtils.applyStyles(functionNameElement, { cursor: 'pointer',
       });
       functionNameElement.onclick = toggleExpandCollapse;
     }
@@ -922,16 +775,12 @@ const BlockElementUtils = {
 
 // Parameter element utilities
 const ParamElementUtils = {
-  createParamName: (name: string, paramId: string): HTMLDivElement => {
-    const paramNameElement = DOMUtils.createElement<HTMLDivElement>('div', 'param-name', { 'data-param-id': paramId });
+  createParamName: (name: string, paramId: string): HTMLDivElement => { const paramNameElement = DOMUtils.createElement<HTMLDivElement>('div', 'param-name', { 'data-param-id': paramId });
     paramNameElement.textContent = name;
     return paramNameElement;
   },
 
-  createParamValue: (paramId: string, name: string): HTMLDivElement => {
-    const paramValueElement = DOMUtils.createElement<HTMLDivElement>('div', 'param-value', {
-      'data-param-id': paramId,
-      'data-param-name': name,
+  createParamValue: (paramId: string, name: string): HTMLDivElement => { const paramValueElement = DOMUtils.createElement<HTMLDivElement>('div', 'param-value', { 'data-param-id': paramId, 'data-param-name': name,
     });
 
     DOMUtils.applyStyles(paramValueElement, STREAMING_STYLES.paramValue);
@@ -940,13 +789,10 @@ const ParamElementUtils = {
 
   createStreamingContent: (
     paramValueElement: HTMLDivElement,
-  ): { preElement: HTMLPreElement; contentWrapper: HTMLDivElement } => {
-    paramValueElement.innerHTML = '';
-
-    const contentWrapper = DOMUtils.createElement<HTMLDivElement>('div', 'content-wrapper');
+  ): { preElement: HTMLPreElement; contentWrapper: HTMLDivElement } => { paramValueElement.innerHTML = '';
+ const contentWrapper = DOMUtils.createElement<HTMLDivElement>('div', 'content-wrapper');
     DOMUtils.applyStyles(contentWrapper, STREAMING_STYLES.contentWrapper);
-
-    const preElement = DOMUtils.createElement<HTMLPreElement>('pre');
+ const preElement = DOMUtils.createElement<HTMLPreElement>('pre');
     DOMUtils.applyStyles(preElement, STREAMING_STYLES.pre);
 
     contentWrapper.appendChild(preElement);
@@ -955,14 +801,11 @@ const ParamElementUtils = {
     return { preElement, contentWrapper };
   },
 
-  updateContent: (preElement: HTMLPreElement, displayValue: string, isStreaming: boolean): void => {
-    const currentText = preElement.textContent || '';
+  updateContent: (preElement: HTMLPreElement, displayValue: string, isStreaming: boolean): void => { const currentText = preElement.textContent || '';
     if (currentText !== displayValue) {
-      if (isStreaming && displayValue.length > currentText.length + 50) {
-        preElement.style.opacity = '0.85';
+      if (isStreaming && displayValue.length > currentText.length + 50) { preElement.style.opacity = '0.85';
         setTimeout(() => {
-          preElement.textContent = displayValue;
-          preElement.style.opacity = '1';
+          preElement.textContent = displayValue; preElement.style.opacity = '1';
         }, 8);
       } else {
         preElement.textContent = displayValue;
@@ -979,20 +822,13 @@ const ParamElementUtils = {
     const timeoutKey = `streaming-timeout-${paramId}`;
     PerformanceUtils.cleanupTimeout(timeoutKey);
 
-    if (isStreaming) {
-      if (!paramNameElement.classList.contains('streaming-param-name')) {
-        paramNameElement.classList.add('streaming-param-name');
-      }
-      paramValueElement.setAttribute('data-streaming', 'true');
-
-      if (!paramValueElement.hasAttribute('data-streaming-styled')) {
-        DOMUtils.applyStyles(paramValueElement, {
-          willChange: 'scroll-position, contents',
-          containIntrinsicSize: 'auto 1.2em',
+    if (isStreaming) { if (!paramNameElement.classList.contains('streaming-param-name')) { paramNameElement.classList.add('streaming-param-name');
+      } paramValueElement.setAttribute('data-streaming', 'true');
+ if (!paramValueElement.hasAttribute('data-streaming-styled')) {
+        DOMUtils.applyStyles(paramValueElement, { willChange: 'scroll-position, contents', containIntrinsicSize: 'auto 1.2em',
         });
 
-        ParamElementUtils.checkAndApplyOverflow(paramValueElement);
-        paramValueElement.setAttribute('data-streaming-styled', 'true');
+        ParamElementUtils.checkAndApplyOverflow(paramValueElement); paramValueElement.setAttribute('data-streaming-styled', 'true');
         ScrollUtils.setupScrollTracking(paramValueElement);
       }
 
@@ -1002,36 +838,22 @@ const ParamElementUtils = {
       PerformanceUtils.setManagedTimeout(
         timeoutKey,
         () => {
-          if (paramNameElement && document.body.contains(paramNameElement)) {
-            paramNameElement.classList.remove('streaming-param-name');
-            if (paramValueElement) {
-              paramValueElement.removeAttribute('data-streaming');
-              paramValueElement.removeAttribute('data-streaming-styled');
-              DOMUtils.applyStyles(paramValueElement, {
-                willChange: 'auto',
-                containIntrinsicSize: 'auto',
+          if (paramNameElement && document.body.contains(paramNameElement)) { paramNameElement.classList.remove('streaming-param-name');
+            if (paramValueElement) { paramValueElement.removeAttribute('data-streaming'); paramValueElement.removeAttribute('data-streaming-styled');
+              DOMUtils.applyStyles(paramValueElement, { willChange: 'auto', containIntrinsicSize: 'auto',
               });
             }
           }
         },
         STREAMING_TIMEOUT,
       );
-    } else {
-      if (paramNameElement.classList.contains('streaming-param-name')) {
-        setTimeout(() => {
-          paramNameElement.classList.remove('streaming-param-name');
-          paramValueElement.removeAttribute('data-streaming');
-          paramValueElement.removeAttribute('data-streaming-styled');
-          DOMUtils.applyStyles(paramValueElement, {
-            willChange: 'auto',
-            containIntrinsicSize: 'auto',
+    } else { if (paramNameElement.classList.contains('streaming-param-name')) {
+        setTimeout(() => { paramNameElement.classList.remove('streaming-param-name'); paramValueElement.removeAttribute('data-streaming'); paramValueElement.removeAttribute('data-streaming-styled');
+          DOMUtils.applyStyles(paramValueElement, { willChange: 'auto', containIntrinsicSize: 'auto',
           });
           
-          // Check if block should auto-collapse when streaming ends
-          const blockDiv = paramValueElement.closest('.function-block') as HTMLDivElement;
-          if (blockDiv && blockDiv.classList.contains('auto-expanded')) {
-            // Check if any other parameters are still streaming
-            const stillStreaming = blockDiv.querySelector('[data-streaming="true"]');
+          // Check if block should auto-collapse when streaming ends const blockDiv = paramValueElement.closest('.function-block') as HTMLDivElement; if (blockDiv && blockDiv.classList.contains('auto-expanded')) {
+            // Check if any other parameters are still streaming const stillStreaming = blockDiv.querySelector('[data-streaming="true"]');
             if (!stillStreaming) {
               AutoExpandUtils.scheduleAutoCollapse(blockDiv, 1200);
             }
@@ -1044,20 +866,13 @@ const ParamElementUtils = {
   },
 
   checkAndApplyOverflow: (paramValueElement: HTMLDivElement): void => {
-    const needsScroll = paramValueElement.scrollHeight > 300;
-    const hasScroll = paramValueElement.style.overflow === 'auto';
+    const needsScroll = paramValueElement.scrollHeight > 300; const hasScroll = paramValueElement.style.overflow === 'auto';
 
     if (needsScroll && !hasScroll) {
-      DOMUtils.applyStyles(paramValueElement, {
-        overflow: 'auto',
-        maxHeight: '300px',
-        scrollBehavior: 'smooth',
-        scrollbarWidth: 'thin',
+      DOMUtils.applyStyles(paramValueElement, { overflow: 'auto', maxHeight: '300px', scrollBehavior: 'smooth', scrollbarWidth: 'thin',
       });
     } else if (!needsScroll && hasScroll) {
-      DOMUtils.applyStyles(paramValueElement, {
-        overflow: 'visible',
-        maxHeight: 'none',
+      DOMUtils.applyStyles(paramValueElement, { overflow: 'visible', maxHeight: 'none',
       });
     }
   },
@@ -1080,8 +895,8 @@ const AutoExecutionUtils = {
       // Get auto execute delay from window state
       const automationState = (window as any).__mcpAutomationState;
       const autoExecuteDelay = (automationState?.autoExecuteDelay || 0) * 1000; // Convert to milliseconds
-
-      logger.debug(`Using delay of ${autoExecuteDelay}ms for block ${blockId}`);
+  
+        logger.debug(`Using delay of ${autoExecuteDelay}ms for block ${blockId}`);
 
       PerformanceUtils.setManagedTimeout(
         `auto-exec-${blockId}-${attempts}`,
@@ -1116,8 +931,7 @@ const AutoExecutionUtils = {
             executionTracker.cleanupBlock(blockId);
             return;
           }
-
-          const executeButton = currentBlock.querySelector<HTMLButtonElement>('.execute-button');
+ const executeButton = currentBlock.querySelector<HTMLButtonElement>('.execute-button');
           if (executeButton) {
             logger.debug(`Auto-execute: Executing function ${functionDetails.functionName}`);
             executeButton.click();
@@ -1139,10 +953,8 @@ const AutoExecutionUtils = {
     setupAutoExecution();
   },
 
-  findReplacementBlock: (functionDetails: any): HTMLDivElement | null => {
-    const potentialBlocks = document.querySelectorAll<HTMLDivElement>('.function-block');
-    for (const block of potentialBlocks) {
-      const preElement = block.querySelector('pre');
+  findReplacementBlock: (functionDetails: any): HTMLDivElement | null => { const potentialBlocks = document.querySelectorAll<HTMLDivElement>('.function-block');
+    for (const block of potentialBlocks) { const preElement = block.querySelector('pre');
       if (!preElement?.textContent) continue;
 
       const match = REGEX_CACHE.invokeMatch.exec(preElement.textContent);
@@ -1163,9 +975,7 @@ const AutoExecutionUtils = {
     }
     return null;
   },
-};
-
-// Configure Monaco once before rendering any blocks
+}; // Configure Monaco once before rendering any blocks
 if (typeof window !== 'undefined') {
   configureMonacoEditorForCSP();
 }
@@ -1178,8 +988,7 @@ export const renderFunctionCall = (block: HTMLPreElement, isProcessingRef: { cur
 
   const functionInfo = containsFunctionCalls(block);
 
-  if (CONFIG.debug) {
-    logger.debug('[Render] containsFunctionCalls result:', {
+  if (CONFIG.debug) { logger.debug('[Render] containsFunctionCalls result:', {
       hasFunctionCalls: functionInfo.hasFunctionCalls,
       detectedBlockType: functionInfo.detectedBlockType,
       isComplete: functionInfo.isComplete,
@@ -1188,31 +997,23 @@ export const renderFunctionCall = (block: HTMLPreElement, isProcessingRef: { cur
     });
   }
 
-  // Early exit checks
-  if (!functionInfo.hasFunctionCalls || block.closest('.function-block')) {
-    if (CONFIG.debug && !functionInfo.hasFunctionCalls) {
-      const textContent = block.textContent?.trim() || '';
-      if (textContent.length === 0) {
-        logger.debug('[Render] Skipping empty block - waiting for content');
-      } else if (textContent.length < 10) {
-        logger.debug('[Render] Skipping very short content - waiting for more data');
-      } else {
-        logger.debug('[Render] Early exit - no function calls detected');
+  // Early exit checks if (!functionInfo.hasFunctionCalls || block.closest('.function-block')) {
+    if (CONFIG.debug && !functionInfo.hasFunctionCalls) { const textContent = block.textContent?.trim() || '';
+      if (textContent.length === 0) { logger.debug('[Render] Skipping empty block - waiting for content');
+      } else if (textContent.length < 10) { logger.debug('[Render] Skipping very short content - waiting for more data');
+      } else { logger.debug('[Render] Early exit - no function calls detected');
       }
     }
     return false;
   }
-
-  const textContent = block.textContent?.trim() || '';
+ const textContent = block.textContent?.trim() || '';
   if (textContent.length < 10) {
-    if (CONFIG.debug) {
-      logger.debug('[Render] Skipping block with insufficient content (length:', textContent.length, ')');
+    if (CONFIG.debug) { logger.debug('[Render] Skipping block with insufficient content (length:', textContent.length, ')');
     }
     return false;
   }
 
-  const blockId =
-    block.getAttribute('data-block-id') || `block-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`;
+  const blockId = block.getAttribute('data-block-id') || `block-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`;
 
   // Skip if resyncing or already complete and stable
   if ((window as any).resyncingBlocks?.has(blockId)) {
@@ -1220,8 +1021,7 @@ export const renderFunctionCall = (block: HTMLPreElement, isProcessingRef: { cur
     return false;
   }
 
-  const existingFunctionBlock = document.querySelector(`.function-block[data-block-id="${blockId}"]`);
-  if (existingFunctionBlock && existingFunctionBlock.classList.contains('function-complete')) {
+  const existingFunctionBlock = document.querySelector(`.function-block[data-block-id="${blockId}"]`); if (existingFunctionBlock && existingFunctionBlock.classList.contains('function-complete')) {
     if (CONFIG.debug) logger.debug(`Skipping render for completed block ${blockId}`);
     return false;
   }
@@ -1248,28 +1048,23 @@ export const renderFunctionCall = (block: HTMLPreElement, isProcessingRef: { cur
   if (!existingDiv) {
     isNewRender = true;
     if (!processedElements.has(block)) {
-      processedElements.add(block);
-      block.setAttribute('data-block-id', blockId);
+      processedElements.add(block); block.setAttribute('data-block-id', blockId);
     }
   } else {
     // Check if block was previously complete (has function-complete class)
-    // Once complete, it should stay complete to prevent flickering
-    previousCompletionStatus = existingDiv.classList.contains('function-complete');
+    // Once complete, it should stay complete to prevent flickering previousCompletionStatus = existingDiv.classList.contains('function-complete');
   }
-
-  const rawContent = block.textContent?.trim() || '';
+ const rawContent = block.textContent?.trim() || '';
   const { tag, content } = extractLanguageTag(rawContent);
 
-  // Determine if JSON or XML format
-  const isJSONFormat = functionInfo.detectedBlockType === 'json';
+  // Determine if JSON or XML format const isJSONFormat = functionInfo.detectedBlockType === 'json';
   let functionName: string;
   let callId: string;
   let partialParameters: Record<string, string>;
   let description: string | null = null;
 
   if (isJSONFormat) {
-    const jsonInfo = extractJSONFunctionInfo(rawContent);
-    functionName = jsonInfo.functionName || 'function';
+    const jsonInfo = extractJSONFunctionInfo(rawContent); functionName = jsonInfo.functionName || 'function';
     callId = jsonInfo.callId || `block-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`;
     description = jsonInfo.description;
     partialParameters = extractJSONParameters(rawContent);
@@ -1279,45 +1074,33 @@ export const renderFunctionCall = (block: HTMLPreElement, isProcessingRef: { cur
     callId = parsed.callId;
     partialParameters = parsed.parameters;
   }
-
-  const blockDiv = existingDiv || DOMUtils.createElement<HTMLDivElement>('div');
+ const blockDiv = existingDiv || DOMUtils.createElement<HTMLDivElement>('div');
 
   // Setup new render
-  if (isNewRender) {
-    blockDiv.className = 'function-block';
-    blockDiv.setAttribute('data-block-id', blockId);
+  if (isNewRender) { blockDiv.className = 'function-block'; blockDiv.setAttribute('data-block-id', blockId);
     applyThemeClass(blockDiv);
     renderedFunctionBlocks.set(blockId, blockDiv);
     
-    // Ensure blocks start collapsed by default
-    blockDiv.classList.remove('expanded', 'auto-expanded');
+    // Ensure blocks start collapsed by default blockDiv.classList.remove('expanded', 'auto-expanded');
   }
 
   // Handle state transitions
   if (!isNewRender) {
-    const justCompleted = previousCompletionStatus === false && functionInfo.isComplete;
-    // Prevent flickering: once a block is complete, don't allow it to become incomplete
+    const justCompleted = previousCompletionStatus === false && functionInfo.isComplete; // Prevent flickering: once a block is complete, don't allow it to become incomplete
     // This prevents re-rendering loops caused by temporary parsing issues
     const justBecameIncomplete = previousCompletionStatus === true && !functionInfo.isComplete;
 
     if (justCompleted) {
-      blockDiv.classList.remove('function-loading');
-      blockDiv.classList.add('function-complete');
-      const spinner = blockDiv.querySelector('.spinner');
-      if (spinner) spinner.remove();
-    } else if (justBecameIncomplete && !blockDiv.classList.contains('function-complete')) {
-      // Only transition to incomplete if the block wasn't already marked as complete
+      blockDiv.classList.remove('function-loading'); blockDiv.classList.add('function-complete'); const spinner = blockDiv.querySelector('.spinner');
+      if (spinner) spinner.remove(); } else if (justBecameIncomplete && !blockDiv.classList.contains('function-complete')) { // Only transition to incomplete if the block wasn't already marked as complete
       // This prevents flickering from temporary state changes
-      blockDiv.classList.remove('function-complete');
-      blockDiv.classList.add('function-loading');
+      blockDiv.classList.remove('function-complete'); blockDiv.classList.add('function-loading');
     }
   } else {
-    if (!functionInfo.isComplete && !isPreExistingIncomplete) {
-      blockDiv.classList.add('function-loading');
+    if (!functionInfo.isComplete && !isPreExistingIncomplete) { blockDiv.classList.add('function-loading');
     }
 
-    if (tag || functionInfo.languageTag) {
-      const langTag = DOMUtils.createElement<HTMLDivElement>('div', 'language-tag');
+    if (tag || functionInfo.languageTag) { const langTag = DOMUtils.createElement<HTMLDivElement>('div', 'language-tag');
       langTag.textContent = tag || functionInfo.languageTag;
       blockDiv.appendChild(langTag);
     }
@@ -1338,29 +1121,23 @@ export const renderFunctionCall = (block: HTMLPreElement, isProcessingRef: { cur
 
     cachedElements.functionNameElement = functionNameElement;
     elementQueryCache.set(blockDiv, { ...cachedElements, lastCacheTime: Date.now() });
-  } else {
-    const nameText = functionNameElement.querySelector<HTMLSpanElement>('.function-name-text');
+  } else { const nameText = functionNameElement.querySelector<HTMLSpanElement>('.function-name-text');
     if (nameText) DOMUtils.updateTextIfChanged(nameText, functionName);
-
-    const callIdElement = functionNameElement.querySelector<HTMLSpanElement>('.call-id');
+ const callIdElement = functionNameElement.querySelector<HTMLSpanElement>('.call-id');
     if (callId) {
       if (callIdElement) {
         DOMUtils.updateTextIfChanged(callIdElement, callId);
-      } else {
-        const newCallId = DOMUtils.createElement<HTMLSpanElement>('span', 'call-id');
+      } else { const newCallId = DOMUtils.createElement<HTMLSpanElement>('span', 'call-id');
         newCallId.textContent = callId;
         functionNameElement.appendChild(newCallId);
       }
     }
   }
 
-  // Setup expand/collapse functionality
-  let expandButton = functionNameElement?.querySelector('.expand-button') as HTMLButtonElement | null;
-  let expandableContent = blockDiv.querySelector('.expandable-content') as HTMLDivElement | null;
-
-  if (!expandButton && functionNameElement) {
-    expandButton = BlockElementUtils.createExpandButton();
-    const rightSection = functionNameElement.querySelector('.function-name-right');
+  // Setup expand/collapse functionality let expandButton = functionNameElement?.querySelector('.expand-button') as HTMLButtonElement | null; let expandableContent = blockDiv.querySelector('.expandable-content') as HTMLDivElement | null;
+  
+    if (!expandButton && functionNameElement) {
+    expandButton = BlockElementUtils.createExpandButton(); const rightSection = functionNameElement.querySelector('.function-name-right');
     if (rightSection) {
       rightSection.appendChild(expandButton);
     } else {
@@ -1374,12 +1151,7 @@ export const renderFunctionCall = (block: HTMLPreElement, isProcessingRef: { cur
     
     // Ensure content starts hidden for new blocks
     if (isNewRender) {
-      DOMUtils.applyStyles(expandableContent, {
-        display: 'none',
-        maxHeight: '0px',
-        opacity: '0',
-        paddingTop: '0',
-        paddingBottom: '0',
+      DOMUtils.applyStyles(expandableContent, { display: 'none', maxHeight: '0px', opacity: '0', paddingTop: '0', paddingBottom: '0',
       });
     }
   }
@@ -1390,25 +1162,13 @@ export const renderFunctionCall = (block: HTMLPreElement, isProcessingRef: { cur
 
   // Add description section if present (JSON format)
   // Insert it inside the function-name-left section, below the function name
-  if (description && functionNameElement) {
-    const leftSection = functionNameElement.querySelector('.function-name-left') as HTMLDivElement;
-    if (leftSection && !leftSection.querySelector('.function-description')) {
+  if (description && functionNameElement) { const leftSection = functionNameElement.querySelector('.function-name-left') as HTMLDivElement; if (leftSection && !leftSection.querySelector('.function-description')) {
       // Change flex direction to column to stack elements vertically
-      DOMUtils.applyStyles(leftSection, {
-        flexDirection: 'column',
-        alignItems: 'flex-start',
+      DOMUtils.applyStyles(leftSection, { flexDirection: 'column', alignItems: 'flex-start',
       });
-
-      const descriptionElement = DOMUtils.createElement<HTMLDivElement>('div', 'function-description');
+ const descriptionElement = DOMUtils.createElement<HTMLDivElement>('div', 'function-description');
       descriptionElement.textContent = description;
-      DOMUtils.applyStyles(descriptionElement, {
-        fontSize: '12px',
-        color: 'inherit',
-        marginTop: '4px',
-        fontStyle: 'bold',
-        lineHeight: '1.4',
-        display: 'block',
-        opacity: '0.8',
+      DOMUtils.applyStyles(descriptionElement, { fontSize: '12px', color: 'inherit', marginTop: '4px', fontStyle: 'bold', lineHeight: '1.4', display: 'block', opacity: '0.8',
       });
 
       // Append description to the left section (below function name)
@@ -1418,8 +1178,7 @@ export const renderFunctionCall = (block: HTMLPreElement, isProcessingRef: { cur
 
   // Create parameter container
   let paramsContainer = cachedElements.paramsContainer;
-  if (!paramsContainer) {
-    paramsContainer = DOMUtils.createElement<HTMLDivElement>('div', 'function-params');
+  if (!paramsContainer) { paramsContainer = DOMUtils.createElement<HTMLDivElement>('div', 'function-params');
     DOMUtils.applyStyles(paramsContainer, STREAMING_STYLES.paramsContainer);
     expandableContent!.appendChild(paramsContainer);
 
@@ -1431,8 +1190,7 @@ export const renderFunctionCall = (block: HTMLPreElement, isProcessingRef: { cur
   Object.entries(partialParameters).forEach(([paramName, extractedValue]) => {
     let isParamStreaming: boolean;
 
-    if (isJSONFormat) {
-      // For JSON: parameter is streaming if function_call_end hasn't arrived
+    if (isJSONFormat) { // For JSON: parameter is streaming if function_call_end hasn't arrived
       isParamStreaming = !functionInfo.isComplete;
     } else {
       // For XML: check if parameter closing tag exists
@@ -1456,8 +1214,7 @@ export const renderFunctionCall = (block: HTMLPreElement, isProcessingRef: { cur
       completeParameters = extractFunctionParameters(rawContent);
     }
 
-    // Auto-collapse if the block was auto-expanded and is now complete
-    if (blockDiv.classList.contains('auto-expanded')) {
+    // Auto-collapse if the block was auto-expanded and is now complete if (blockDiv.classList.contains('auto-expanded')) {
       AutoExpandUtils.scheduleAutoCollapse(blockDiv, 1500);
     }
   }
@@ -1470,19 +1227,15 @@ export const renderFunctionCall = (block: HTMLPreElement, isProcessingRef: { cur
   // Replace original element on new render
   if (isNewRender) {
     if (block.parentNode) {
-      block.parentNode.insertBefore(blockDiv, block);
-      block.style.display = 'none';
-    } else {
-      if (CONFIG.debug) logger.warn('Function call block has no parent element, cannot insert rendered block');
+      block.parentNode.insertBefore(blockDiv, block); block.style.display = 'none';
+    } else { if (CONFIG.debug) logger.warn('Function call block has no parent element, cannot insert rendered block');
       return false;
     }
   }
 
   // Create button container
   let buttonContainer = cachedElements.buttonContainer;
-  if (!buttonContainer) {
-    buttonContainer = DOMUtils.createElement<HTMLDivElement>('div', 'function-buttons');
-    buttonContainer.style.marginTop = '12px';
+  if (!buttonContainer) { buttonContainer = DOMUtils.createElement<HTMLDivElement>('div', 'function-buttons'); buttonContainer.style.marginTop = '12px';
     blockDiv.appendChild(buttonContainer);
 
     cachedElements.buttonContainer = buttonContainer;
@@ -1490,12 +1243,10 @@ export const renderFunctionCall = (block: HTMLPreElement, isProcessingRef: { cur
   }
 
   // Add buttons for complete functions
-  if (functionInfo.isComplete) {
-    if (!blockDiv.querySelector('.raw-toggle')) {
+  if (functionInfo.isComplete) { if (!blockDiv.querySelector('.raw-toggle')) {
       addRawXmlToggle(buttonContainer!, rawContent);
     }
-
-    if (!blockDiv.querySelector('.execute-button')) {
+ if (!blockDiv.querySelector('.execute-button')) {
       if (!completeParameters) {
         if (isJSONFormat) {
           completeParameters = extractJSONParameters(rawContent);
@@ -1574,8 +1325,7 @@ export const createOrUpdateParamElement = (
     if (paramValueElement) paramCache[`value-${paramId}`] = paramValueElement;
     elementQueryCache.set(container, paramCache);
   }
-
-  // Create elements if they don't exist
+ // Create elements if they don't exist
   if (!paramNameElement) {
     paramNameElement = ParamElementUtils.createParamName(name, paramId);
     container.appendChild(paramNameElement);
@@ -1591,21 +1341,16 @@ export const createOrUpdateParamElement = (
   }
 
   // Update content if changed
-  const displayValue = typeof value === 'object' ? JSON.stringify(value, null, 2) : String(value);
-  const currentValue = paramValueElement.getAttribute('data-current-value');
+  const displayValue = typeof value === 'object' ? JSON.stringify(value, null, 2) : String(value); const currentValue = paramValueElement.getAttribute('data-current-value');
 
   if (currentValue === displayValue && !isStreaming) {
     return;
   }
+ paramValueElement.setAttribute('data-current-value', displayValue);
 
-  paramValueElement.setAttribute('data-current-value', displayValue);
-
-  // Handle streaming vs static content
-  if (isStreaming || paramValueElement.hasAttribute('data-streaming')) {
-    let preElement = paramValueElement.querySelector('pre') as HTMLPreElement;
-    let contentWrapper = paramValueElement.querySelector('.content-wrapper') as HTMLDivElement;
-
-    if (!preElement || !contentWrapper) {
+  // Handle streaming vs static content if (isStreaming || paramValueElement.hasAttribute('data-streaming')) { let preElement = paramValueElement.querySelector('pre') as HTMLPreElement; let contentWrapper = paramValueElement.querySelector('.content-wrapper') as HTMLDivElement;
+  
+      if (!preElement || !contentWrapper) {
       const elements = ParamElementUtils.createStreamingContent(paramValueElement);
       preElement = elements.preElement;
       contentWrapper = elements.contentWrapper;
@@ -1626,25 +1371,20 @@ export const createOrUpdateParamElement = (
     }
   } else {
     if (paramValueElement.textContent !== displayValue) {
-      if (paramValueElement.textContent && paramValueElement.textContent.length > 0) {
-        paramValueElement.style.opacity = '0.9';
+      if (paramValueElement.textContent && paramValueElement.textContent.length > 0) { paramValueElement.style.opacity = '0.9';
         setTimeout(() => {
-          paramValueElement.textContent = displayValue;
-          paramValueElement.style.opacity = '1';
+          paramValueElement.textContent = displayValue; paramValueElement.style.opacity = '1';
         }, 50);
       } else {
         paramValueElement.textContent = displayValue;
       }
     }
   }
-
-  paramValueElement.setAttribute('data-param-value', JSON.stringify(value));
+ paramValueElement.setAttribute('data-param-value', JSON.stringify(value));
   ParamElementUtils.handleStreamingState(paramNameElement, paramValueElement, paramId, isStreaming);
   
   // Handle auto-expansion for streaming content
-  if (isStreaming) {
-    const blockDiv = container.closest('.function-block') as HTMLDivElement;
-    if (blockDiv && !blockDiv.classList.contains('expanded')) {
+  if (isStreaming) { const blockDiv = container.closest('.function-block') as HTMLDivElement; if (blockDiv && !blockDiv.classList.contains('expanded')) {
       AutoExpandUtils.expandBlock(blockDiv, true);
     }
   }
@@ -1673,9 +1413,7 @@ export const performanceCleanup = {
     });
   },
 
-  getCacheStats: () => ({
-    contentParsingCacheSize: 'WeakMap (size not available - auto-managed)',
-    elementQueryCacheSize: 'WeakMap (size not available - auto-managed)',
+  getCacheStats: () => ({ contentParsingCacheSize: 'WeakMap (size not available - auto-managed)', elementQueryCacheSize: 'WeakMap (size not available - auto-managed)',
     renderedFunctionBlocksSize: renderedFunctionBlocks.size,
     pendingDOMUpdatesSize: pendingDOMUpdates.size,
     activeTimeoutsSize: activeTimeouts.size,
@@ -1691,11 +1429,8 @@ export const performanceUtils = {
   cleanupTimeout: PerformanceUtils.cleanupTimeout,
   setManagedTimeout: PerformanceUtils.setManagedTimeout,
   REGEX_CACHE,
-};
-
-// Cleanup on page unload to prevent memory leaks
-if (typeof window !== 'undefined') {
-  window.addEventListener('beforeunload', () => {
+}; // Cleanup on page unload to prevent memory leaks
+if (typeof window !== 'undefined') { window.addEventListener('beforeunload', () => {
     performanceCleanup.clearAllCaches();
   });
 }

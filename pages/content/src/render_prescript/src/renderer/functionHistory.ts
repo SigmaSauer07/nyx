@@ -8,17 +8,14 @@ import type { ExecutedFunction } from '../mcpexecute/storage';
 import {
   formatExecutionTime,
   getExecutedFunctionsForCurrentUrl,
-  storeExecutedFunction,
-  getPreviousExecution,
+  storeExecutedFunction, getPreviousExecution,
 } from '../mcpexecute/storage';
 import { displayResult } from './components';
 import { createLogger } from '@extension/shared/lib/logger';
 
-// Add type declaration for global mcpClient access
-
-const logger = createLogger('FunctionHistory');
-
-declare global {
+// Add type declaration for global mcpClient access const logger = createLogger('FunctionHistory');
+  
+  declare global {
   interface Window {
     mcpClient?: any;
   }
@@ -37,27 +34,18 @@ export const createHistoryPanel = (
   callId: string,
   contentSignature: string,
 ): HTMLDivElement => {
-  // First, remove any existing history panels to ensure we only have one
-  const existingPanels = blockDiv.querySelectorAll('.function-history-panel');
+  // First, remove any existing history panels to ensure we only have one const existingPanels = blockDiv.querySelectorAll('.function-history-panel');
   existingPanels.forEach(panel => panel.remove());
-
-  // Also check if we're in a function-buttons container and need to clean up the parent block
-  if (blockDiv.classList.contains('function-buttons')) {
-    const parentBlock = blockDiv.closest('.function-block');
-    if (parentBlock) {
-      const parentPanels = parentBlock.querySelectorAll('.function-history-panel');
+ // Also check if we're in a function-buttons container and need to clean up the parent block
+  if (blockDiv.classList.contains('function-buttons')) { const parentBlock = blockDiv.closest('.function-block');
+    if (parentBlock) { const parentPanels = parentBlock.querySelectorAll('.function-history-panel');
       parentPanels.forEach(panel => panel.remove());
     }
   }
 
-  // Create history panel
-  const historyPanel = document.createElement('div');
-  historyPanel.className = 'function-history-panel';
-  historyPanel.style.display = 'none';
+  // Create history panel const historyPanel = document.createElement('div'); historyPanel.className = 'function-history-panel'; historyPanel.style.display = 'none';
 
-  // Add to block div
-  if (blockDiv.classList.contains('function-buttons')) {
-    // If we're in a button container, add historyPanel to the parent
+  // Add to block div if (blockDiv.classList.contains('function-buttons')) { // If we're in a button container, add historyPanel to the parent
     const parentBlock = blockDiv.closest('.function-block');
     if (parentBlock) {
       parentBlock.appendChild(historyPanel);
@@ -83,18 +71,12 @@ export const updateHistoryPanel = (
   executionData: ExecutedFunction,
   mcpClient: any,
 ): void => {
-  // Clear existing content
-  historyPanel.innerHTML = '';
+  // Clear existing content historyPanel.innerHTML = '';
 
-  // Create header
-  const header = document.createElement('div');
-  header.className = 'function-history-header';
-  header.textContent = 'Execution History';
+  // Create header const header = document.createElement('div'); header.className = 'function-history-header'; header.textContent = 'Execution History';
   historyPanel.appendChild(header);
 
-  // Create execution info
-  const executionInfo = document.createElement('div');
-  executionInfo.className = 'function-execution-info';
+  // Create execution info const executionInfo = document.createElement('div'); executionInfo.className = 'function-execution-info';
 
   // Format the execution time
   const executionTime = formatExecutionTime(executionData.executedAt);
@@ -105,51 +87,34 @@ export const updateHistoryPanel = (
   `;
   historyPanel.appendChild(executionInfo);
 
-  // Create re-execute button
-  const reExecuteBtn = document.createElement('button');
-  reExecuteBtn.className = 'function-reexecute-button';
-  reExecuteBtn.textContent = 'Re-execute';
+  // Create re-execute button const reExecuteBtn = document.createElement('button'); reExecuteBtn.className = 'function-reexecute-button'; reExecuteBtn.textContent = 'Re-execute';
 
   // Handle re-execution with async mcpClient
-  reExecuteBtn.onclick = async () => {
-    // Create results panel if it doesn't exist
+  reExecuteBtn.onclick = async () => { // Create results panel if it doesn't exist
     let resultsPanel = historyPanel.parentElement?.querySelector(
       `.function-results-panel[data-call-id="${executionData.callId}"]`,
     ) as HTMLDivElement;
 
     // overflow
     if (resultsPanel) {
-      resultsPanel.style.overflow = 'auto';
-      resultsPanel.style.maxHeight = '200px';
+      resultsPanel.style.overflow = 'auto'; resultsPanel.style.maxHeight = '200px';
     }
 
-    if (!resultsPanel) {
-      resultsPanel = document.createElement('div');
-      resultsPanel.className = 'function-results-panel';
-      resultsPanel.setAttribute('data-call-id', executionData.callId);
-      resultsPanel.setAttribute('data-function-name', executionData.functionName);
-      resultsPanel.style.display = 'block';
+    if (!resultsPanel) { resultsPanel = document.createElement('div'); resultsPanel.className = 'function-results-panel'; resultsPanel.setAttribute('data-call-id', executionData.callId); resultsPanel.setAttribute('data-function-name', executionData.functionName); resultsPanel.style.display = 'block';
       historyPanel.parentElement?.appendChild(resultsPanel);
-    } else {
-      resultsPanel.style.display = 'block';
-      resultsPanel.innerHTML = '';
+    } else { resultsPanel.style.display = 'block'; resultsPanel.innerHTML = '';
     }
 
-    // Create loading indicator
-    const loadingIndicator = document.createElement('div');
-    loadingIndicator.className = 'function-results-loading';
-    loadingIndicator.textContent = 'Executing...';
+    // Create loading indicator const loadingIndicator = document.createElement('div'); loadingIndicator.className = 'function-results-loading'; loadingIndicator.textContent = 'Executing...';
     resultsPanel.appendChild(loadingIndicator);
 
     try {
-      if (!mcpClient) {
-        displayResult(resultsPanel, loadingIndicator, false, 'Error: mcpClient not found');
+      if (!mcpClient) { displayResult(resultsPanel, loadingIndicator, false, 'Error: mcpClient not found');
         return;
       }
 
       // Check if mcpClient is ready
-      if (!mcpClient.isReady || !mcpClient.isReady()) {
-        displayResult(resultsPanel, loadingIndicator, false, 'Error: MCP client not ready');
+      if (!mcpClient.isReady || !mcpClient.isReady()) { displayResult(resultsPanel, loadingIndicator, false, 'Error: MCP client not ready');
         return;
       }
 
@@ -177,21 +142,14 @@ export const updateHistoryPanel = (
         // Enhanced error handling for different error types
         let errorMessage = toolError instanceof Error ? toolError.message : String(toolError);
         
-        // Check for connection-related errors and provide better user feedback
-        if (errorMessage.includes('not connected') || errorMessage.includes('connection')) {
-          errorMessage = 'Connection lost. Please check your MCP server connection.';
-        } else if (errorMessage.includes('timeout')) {
-          errorMessage = 'Request timed out. Please try again.';
-        } else if (errorMessage.includes('server unavailable') || errorMessage.includes('SERVER_UNAVAILABLE')) {
-          errorMessage = 'MCP server is unavailable. Please check the server status.';
+        // Check for connection-related errors and provide better user feedback if (errorMessage.includes('not connected') || errorMessage.includes('connection')) { errorMessage = 'Connection lost. Please check your MCP server connection.'; } else if (errorMessage.includes('timeout')) { errorMessage = 'Request timed out. Please try again.'; } else if (errorMessage.includes('server unavailable') || errorMessage.includes('SERVER_UNAVAILABLE')) { errorMessage = 'MCP server is unavailable. Please check the server status.';
         }
         
         displayResult(resultsPanel, loadingIndicator, false, errorMessage);
       }
 
     } catch (error: any) {
-      const errorMessage = error instanceof Error ? error.message : String(error);
-      logger.error('Re-execute error:', error);
+      const errorMessage = error instanceof Error ? error.message : String(error); logger.error('Re-execute error:', error);
       
       displayResult(
         resultsPanel,
@@ -204,8 +162,7 @@ export const updateHistoryPanel = (
 
   historyPanel.appendChild(reExecuteBtn);
 
-  // Show the panel
-  historyPanel.style.display = 'block';
+  // Show the panel historyPanel.style.display = 'block';
 };
 
 /**
@@ -249,8 +206,7 @@ export const checkAndDisplayFunctionHistory = (
 
     // Update the panel with the latest execution data
     updateHistoryPanel(historyPanel, latestExecution, mcpClient);
-
-    // Log that we're showing only the latest execution
+ // Log that we're showing only the latest execution
     logger.debug(
       `Showing only the latest execution from ${matchingExecutions.length} matches for function ${functionName}`,
     );

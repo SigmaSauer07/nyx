@@ -1,10 +1,7 @@
 import { createLogger } from '@extension/shared/lib/logger';
-
 const logger = createLogger('useBackgroundCommunication');
 
-// // pages/content/src/utils/backgroundCommunication.ts
-
-// import { useState, useEffect, useCallback, useMemo, useRef } from 'react';
+// // pages/content/src/utils/backgroundCommunication.ts // import { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 // import { mcpHandler } from '@src/utils/mcpHandler';
 // import type { Primitive, Tool, BackgroundCommunication, ServerConfig } from '@src/types/mcp';
 // import { logMessage } from '@src/utils/helpers';
@@ -25,9 +22,7 @@ const logger = createLogger('useBackgroundCommunication');
 //   const MAX_RECONNECT_ATTEMPTS = 5;
 //   const BASE_RETRY_DELAY_MS = 5000; // 5 seconds
 //   const MAX_RETRY_DELAY_MS = 5 * 60 * 1000; // 5 minutes
-//   const CIRCUIT_BREAKER_RESET_MS = 15 * 60 * 1000; // 15 minutes
-
-//   // State for server connection status with enhanced error tracking
+//   const CIRCUIT_BREAKER_RESET_MS = 15 * 60 * 1000; // 15 minutes //   // State for server connection status with enhanced error tracking
 //   const [serverStatus, setServerStatus] = useState<'connected' | 'disconnected' | 'error' | 'reconnecting'>(
 //     'disconnected',
 //   );
@@ -43,9 +38,7 @@ const logger = createLogger('useBackgroundCommunication');
 //   const lastConnectionAttemptRef = useRef<number>(0);
 //   const [circuitBreakerOpen, setCircuitBreakerOpen] = useState<boolean>(false);
 //   const circuitBreakerTimeoutRef = useRef<number | null>(null);
-//   const logThrottleRef = useRef<{ [key: string]: number }>({});
-
-//   // Function to fetch available tools from the MCP server - declare early to avoid reference errors
+//   const logThrottleRef = useRef<{ [key: string]: number }>({}); //   // Function to fetch available tools from the MCP server - declare early to avoid reference errors
 //   const getAvailableTools = useCallback(async (): Promise<Tool[]> => {
 //     return new Promise((resolve, reject) => {
 //       // Use getAvailableToolPrimitives instead of getAvailableTools
@@ -66,9 +59,7 @@ const logger = createLogger('useBackgroundCommunication');
 //         }
 //       });
 //     });
-//   }, []);
-
-//   // Track tool fetch requests to prevent duplicates with improved locking mechanism
+//   }, []); //   // Track tool fetch requests to prevent duplicates with improved locking mechanism
 //   const toolFetchRequestRef = useRef<{
 //     inProgress: boolean;
 //     lastFetch: number;
@@ -83,9 +74,7 @@ const logger = createLogger('useBackgroundCommunication');
 //     lockAcquired: false,
 //     lockTimestamp: 0,
 //     toolsHash: '',
-//   });
-
-//   // Function to calculate a simple hash of the tools list to detect changes
+//   }); //   // Function to calculate a simple hash of the tools list to detect changes
 //   const calculateToolsHash = useCallback((tools: Tool[]): string => {
 //     // Sort tools by name to ensure consistent hash
 //     const sortedTools = [...tools].sort((a, b) => a.name.localeCompare(b.name));
@@ -93,9 +82,7 @@ const logger = createLogger('useBackgroundCommunication');
 //     const toolsString = sortedTools.map(tool => `${tool.name}:${tool.description}`).join('|');
 //     // Return a simple hash of the string
 //     return String(toolsString.split('').reduce((a, b) => (a * 31 + b.charCodeAt(0)) | 0, 0));
-//   }, []);
-
-//   // Function to refresh the tools list with smarter caching and better locking
+//   }, []); //   // Function to refresh the tools list with smarter caching and better locking
 //   const refreshTools = useCallback(
 //     async (forceRefresh: boolean = false): Promise<Tool[]> => {
 //       // Acquire lock with timeout to prevent deadlocks
@@ -138,15 +125,11 @@ const logger = createLogger('useBackgroundCommunication');
 //       ) {
 //         logMessage('[Background Communication] Using cached tools list (recent fetch)');
 //         return availableToolsRef.current;
-//       }
-
-//       // If there's already a request in progress, return the existing promise
+//       } //       // If there's already a request in progress, return the existing promise
 //       if (toolFetchRequestRef.current.inProgress && toolFetchRequestRef.current.promise) {
 //         logMessage('[Background Communication] Tool fetch already in progress, reusing request');
 //         return toolFetchRequestRef.current.promise;
-//       }
-
-//       // Try to acquire lock
+//       } //       // Try to acquire lock
 //       if (!acquireLock()) {
 //         // If we couldn't acquire the lock, wait for the existing request
 //         logMessage('[Background Communication] Waiting for lock to be released');
@@ -166,9 +149,7 @@ const logger = createLogger('useBackgroundCommunication');
 //         }
 //       }
 
-//       logMessage(`[Background Communication] Refreshing tools list (forceRefresh: ${forceRefresh})`);
-
-//       // Create a new promise for this fetch request
+//       logMessage(`[Background Communication] Refreshing tools list (forceRefresh: ${forceRefresh})`); //       // Create a new promise for this fetch request
 //       const fetchPromise = (async () => {
 //         try {
 //           // Check connection status first
@@ -179,12 +160,8 @@ const logger = createLogger('useBackgroundCommunication');
 //               return availableToolsRef.current;
 //             }
 //             // If no cached tools, continue with the fetch attempt
-//           }
-
-//           // Get available tools from the server
-//           logMessage('[Background Communication] Fetching tools from server');
-
-//           // Use a new promise to ensure we get a fresh request
+//           } //           // Get available tools from the server
+//           logMessage('[Background Communication] Fetching tools from server'); //           // Use a new promise to ensure we get a fresh request
 //           const tools = await new Promise<Tool[]>((resolve, reject) => {
 //             // Generate a unique request ID
 //             const uniqueRequestId = mcpHandler.getAvailableToolPrimitives((result, error) => {
@@ -214,9 +191,7 @@ const logger = createLogger('useBackgroundCommunication');
 
 //           // Calculate hash of the new tools list
 //           const newToolsHash = calculateToolsHash(tools);
-//           const hashChanged = newToolsHash !== toolFetchRequestRef.current.toolsHash;
-
-//           if (hashChanged) {
+//           const hashChanged = newToolsHash !== toolFetchRequestRef.current.toolsHash; //           if (hashChanged) {
 //             logMessage('[Background Communication] Tool list has changed, updating cache');
 //             // Update the tools hash
 //             toolFetchRequestRef.current.toolsHash = newToolsHash;
@@ -251,9 +226,7 @@ const logger = createLogger('useBackgroundCommunication');
 //       return fetchPromise;
 //     },
 //     [getAvailableTools],
-//   );
-
-//   // Sync ref on each tools update
+//   ); //   // Sync ref on each tools update
 //   useEffect(() => {
 //     availableToolsRef.current = availableTools;
 //   }, [availableTools]);
@@ -325,9 +298,7 @@ const logger = createLogger('useBackgroundCommunication');
 //     }
 
 //     // Record the connection attempt time
-//     lastConnectionAttemptRef.current = Date.now();
-
-//     // Attempt to connect using mcpHandler
+//     lastConnectionAttemptRef.current = Date.now(); //     // Attempt to connect using mcpHandler
 //     mcpHandler.forceReconnect((result: any, error?: string) => {
 //       if (error) {
 //         // Enhanced error messaging for better user feedback
@@ -354,9 +325,7 @@ const logger = createLogger('useBackgroundCommunication');
 //         }
 
 //         // Store the enhanced error message
-//         setLastConnectionError(userFriendlyError);
-
-//         // Connection failed
+//         setLastConnectionError(userFriendlyError); //         // Connection failed
 //         throttledLogMessage(
 //           `[Background Communication] Connection attempt ${retryCount + 1}/${MAX_RECONNECT_ATTEMPTS} failed: ${userFriendlyError}`,
 //           'connection-failed',
@@ -365,9 +334,7 @@ const logger = createLogger('useBackgroundCommunication');
 
 //         // Increment retry count
 //         const newRetryCount = retryCount + 1;
-//         setRetryCount(newRetryCount);
-
-//         // Check if we've reached the maximum retry attempts
+//         setRetryCount(newRetryCount); //         // Check if we've reached the maximum retry attempts
 //         if (newRetryCount >= MAX_RECONNECT_ATTEMPTS) {
 //           // Open the circuit breaker
 //           throttledLogMessage(
@@ -375,9 +342,7 @@ const logger = createLogger('useBackgroundCommunication');
 //             'circuit-breaker-open',
 //             60000,
 //           );
-//           setCircuitBreakerOpen(true);
-
-//           // Schedule circuit breaker reset
+//           setCircuitBreakerOpen(true); //           // Schedule circuit breaker reset
 //           circuitBreakerTimeoutRef.current = window.setTimeout(() => {
 //             throttledLogMessage(
 //               '[Background Communication] Circuit breaker reset after timeout',
@@ -420,9 +385,7 @@ const logger = createLogger('useBackgroundCommunication');
 //   // Enhanced error categorization for better tool vs connection error distinction
 //   const categorizeError = useCallback(
 //     (error: string): { isConnectionError: boolean; isToolError: boolean; category: string } => {
-//       const errorMessage = error.toLowerCase();
-
-//       // Tool-specific errors that definitely don't indicate connection issues
+//       const errorMessage = error.toLowerCase(); //       // Tool-specific errors that definitely don't indicate connection issues
 //       const toolErrorPatterns = [
 //         /tool .* not found/i,
 //         /tool not found/i,
@@ -450,31 +413,21 @@ const logger = createLogger('useBackgroundCommunication');
 //         /connection failed/i,
 //         /transport error/i,
 //         /fetch failed/i,
-//       ];
-
-//       // Check tool errors first (highest priority)
+//       ]; //       // Check tool errors first (highest priority)
 //       if (toolErrorPatterns.some(pattern => pattern.test(errorMessage))) {
 //         return { isConnectionError: false, isToolError: true, category: 'tool_error' };
-//       }
-
-//       // Check connection errors
+//       } //       // Check connection errors
 //       if (connectionErrorPatterns.some(pattern => pattern.test(errorMessage))) {
 //         return { isConnectionError: true, isToolError: false, category: 'connection_error' };
-//       }
-
-//       // Default to tool error for ambiguous cases to prevent unnecessary disconnections
+//       } //       // Default to tool error for ambiguous cases to prevent unnecessary disconnections
 //       return { isConnectionError: false, isToolError: true, category: 'unknown_tool_error' };
 //     },
 //     [],
-//   );
-
-//   // Subscribe to connection status changes
+//   ); //   // Subscribe to connection status changes
 //   useEffect(() => {
 //     const handleConnectionStatus = (isConnected: boolean) => {
 //       const prevStatus = serverStatus;
-//       const newStatus = isConnected ? 'connected' : 'disconnected';
-
-//       // CRITICAL FIX: Always log connection status changes for debugging
+//       const newStatus = isConnected ? 'connected' : 'disconnected'; //       // CRITICAL FIX: Always log connection status changes for debugging
 //       logMessage(
 //         `[Background Communication] Connection status change received: ${isConnected ? 'Connected' : 'Disconnected'}, current UI status: ${prevStatus}`,
 //       );
@@ -484,13 +437,9 @@ const logger = createLogger('useBackgroundCommunication');
 //       logMessage(
 //         `[Background Communication] FORCE UPDATING status from ${prevStatus} to ${newStatus} (isReconnecting: ${isReconnecting})`,
 //       );
-//       setServerStatus(newStatus);
-
-//       // Handle disconnection
+//       setServerStatus(newStatus); //       // Handle disconnection
 //       if (newStatus === 'disconnected') {
-//         logMessage('[Background Communication] Server disconnected. User can manually reconnect via the UI.');
-
-//         // Force a state update to ensure the UI reflects the disconnected state
+//         logMessage('[Background Communication] Server disconnected. User can manually reconnect via the UI.'); //         // Force a state update to ensure the UI reflects the disconnected state
 //         setTimeout(() => {
 //           if (serverStatus !== 'disconnected') {
 //             logMessage('[Background Communication] Forcing disconnected state update after timeout');
@@ -500,9 +449,7 @@ const logger = createLogger('useBackgroundCommunication');
 //       }
 //       // Handle connection
 //       else if (newStatus === 'connected') {
-//         resetConnectionState();
-
-//         // If we have no tools cached, fetch them
+//         resetConnectionState(); //         // If we have no tools cached, fetch them
 //         if (availableToolsRef.current.length === 0) {
 //           logMessage('[Background Communication] Connected with empty tool cache, refreshing tools');
 //           refreshTools(true).catch(err => {
@@ -511,9 +458,7 @@ const logger = createLogger('useBackgroundCommunication');
 //             );
 //           });
 //         }
-//       }
-
-//       // We no longer attempt automatic reconnection for disconnected states
+//       } //       // We no longer attempt automatic reconnection for disconnected states
 //       // This is now handled through the UI's reconnect button
 //     };
 
@@ -544,9 +489,7 @@ const logger = createLogger('useBackgroundCommunication');
 //   useEffect(() => {
 //     // Create a callback function to handle broadcast tool updates
 //     const handleBroadcastToolUpdate = (primitives: Primitive[]) => {
-//       logMessage(`[Background Communication] Received broadcast tool update with ${primitives.length} primitives`);
-
-//       // Transform the primitives into Tool objects
+//       logMessage(`[Background Communication] Received broadcast tool update with ${primitives.length} primitives`); //       // Transform the primitives into Tool objects
 //       const tools: Tool[] = primitives
 //         .filter((primitive: Primitive) => primitive.type === 'tool')
 //         .map((primitive: Primitive) => ({
@@ -568,9 +511,7 @@ const logger = createLogger('useBackgroundCommunication');
 //     return () => {
 //       mcpHandler.offBroadcastToolUpdate(handleBroadcastToolUpdate);
 //     };
-//   }, []);
-
-//   // Function to call an MCP tool
+//   }, []); //   // Function to call an MCP tool
 //   const callTool = useCallback(
 //     async (toolName: string, args: { [key: string]: unknown }): Promise<any> => {
 //       // Check if tool exists in available tools first
@@ -603,9 +544,7 @@ const logger = createLogger('useBackgroundCommunication');
 //         mcpHandler.callTool(toolName, args, (result, error) => {
 //           if (error) {
 //             // Enhanced error categorization to prevent unnecessary connection status changes
-//             const errorCategory = categorizeError(error);
-
-//             // Check for specific tool not found errors and make them user-friendly
+//             const errorCategory = categorizeError(error); //             // Check for specific tool not found errors and make them user-friendly
 //             if (
 //               error.includes('not found in cached primitives') ||
 //               error.includes('Tool not found') ||
@@ -618,9 +557,7 @@ const logger = createLogger('useBackgroundCommunication');
 //                 ),
 //               );
 //               return;
-//             }
-
-//             // Only update connection status for actual connection errors, not tool errors
+//             } //             // Only update connection status for actual connection errors, not tool errors
 //             if (errorCategory.isConnectionError && !errorCategory.isToolError) {
 //               logMessage(`[Background Communication] Connection error detected during tool call: ${error}`);
 //               setServerStatus('disconnected');
@@ -641,9 +578,7 @@ const logger = createLogger('useBackgroundCommunication');
 //     [availableTools, ajv, categorizeError],
 //   );
 
-//   // Function declaration moved up to fix reference error
-
-//   // Function to get server configuration - always fetch fresh from background storage
+//   // Function declaration moved up to fix reference error //   // Function to get server configuration - always fetch fresh from background storage
 //   const getServerConfig = useCallback(async (forceRefresh: boolean = false): Promise<ServerConfig> => {
 //     try {
 //       logMessage('[Background Communication] Fetching fresh server configuration from background storage');
@@ -654,9 +589,7 @@ const logger = createLogger('useBackgroundCommunication');
 //       );
 //       throw error; // Don't fallback to default, let the caller handle the error
 //     }
-//   }, []);
-
-//   // Always fetch fresh from background storage - no caching on UI side
+//   }, []); //   // Always fetch fresh from background storage - no caching on UI side
 //   const fetchServerConfig = useCallback(async (): Promise<ServerConfig> => {
 //     try {
 //       // Set up a timeout promise to ensure we don't wait too long
@@ -664,9 +597,7 @@ const logger = createLogger('useBackgroundCommunication');
 //         setTimeout(() => {
 //           reject(new Error('Timeout waiting for server config from background storage'));
 //         }, 5000); // 5 second timeout - increased to give background more time
-//       });
-
-//       // Actual fetch promise
+//       }); //       // Actual fetch promise
 //       const fetchPromise = new Promise<ServerConfig>((resolve, reject) => {
 //         try {
 //           mcpHandler.getServerConfig((result: any, error?: string) => {
@@ -685,9 +616,7 @@ const logger = createLogger('useBackgroundCommunication');
 //         } catch (innerError) {
 //           reject(innerError);
 //         }
-//       });
-
-//       // Race between the fetch and the timeout
+//       }); //       // Race between the fetch and the timeout
 //       const config = await Promise.race([fetchPromise, timeoutPromise]);
 //       return config;
 //     } catch (error) {
@@ -728,9 +657,7 @@ const logger = createLogger('useBackgroundCommunication');
 //     );
 
 //     // Reset connection state before attempting reconnection
-//     resetConnectionState();
-
-//     // Update UI state
+//     resetConnectionState(); //     // Update UI state
 //     setIsReconnecting(true);
 //     setServerStatus('reconnecting');
 
@@ -739,9 +666,7 @@ const logger = createLogger('useBackgroundCommunication');
 //       lastConnectionAttemptRef.current = Date.now();
 
 //       mcpHandler.forceReconnect((result: any, error?: string) => {
-//         setIsReconnecting(false);
-
-//         if (error) {
+//         setIsReconnecting(false); //         if (error) {
 //           // Enhanced error messaging for better user feedback
 //           let userFriendlyError = error;
 //           if (error.includes('404') || error.includes('not found')) {
@@ -766,9 +691,7 @@ const logger = createLogger('useBackgroundCommunication');
 //           }
 
 //           // Store the enhanced error message
-//           setLastConnectionError(userFriendlyError);
-
-//           throttledLogMessage(
+//           setLastConnectionError(userFriendlyError); //           throttledLogMessage(
 //             `[Background Communication] User-initiated reconnection failed: ${userFriendlyError}`,
 //             'force-reconnect-failed',
 //             1000,
@@ -786,9 +709,7 @@ const logger = createLogger('useBackgroundCommunication');
 //             'force-reconnect-complete',
 //             1000,
 //           );
-//           setServerStatus(isConnected ? 'connected' : 'disconnected');
-
-//           // If connected, refresh the tools list with force refresh to ensure we get fresh data
+//           setServerStatus(isConnected ? 'connected' : 'disconnected'); //           // If connected, refresh the tools list with force refresh to ensure we get fresh data
 //           if (isConnected) {
 //             throttledLogMessage(
 //               '[Background Communication] Connection successful, forcing tools refresh',
@@ -802,9 +723,7 @@ const logger = createLogger('useBackgroundCommunication');
 //                   `[Background Communication] Successfully refreshed ${tools.length} tools after reconnection`,
 //                   'force-reconnect-refresh-success',
 //                   1000,
-//                 );
-
-//                 // Force a second refresh to ensure we have the latest tools from the new server
+//                 ); //                 // Force a second refresh to ensure we have the latest tools from the new server
 //                 return refreshTools(true);
 //               })
 //               .then(tools => {
@@ -841,9 +760,7 @@ const logger = createLogger('useBackgroundCommunication');
 //       try {
 //         // Handle both standard tools and MCPTools
 //         let toolName = tool.name;
-//         let toolArgs = tool.args || {};
-
-//         // If it's an MCPTool (has toolName and rawArguments properties)
+//         let toolArgs = tool.args || {}; //         // If it's an MCPTool (has toolName and rawArguments properties)
 //         if (tool.toolName && tool.rawArguments !== undefined) {
 //           toolName = tool.toolName;
 //           try {
@@ -853,9 +770,7 @@ const logger = createLogger('useBackgroundCommunication');
 //             const errorMessage = e instanceof Error ? e.message : String(e);
 //             return `Error: Invalid JSON arguments: ${errorMessage}`;
 //           }
-//         }
-
-//         const result = await callTool(toolName, toolArgs);
+//         } //         const result = await callTool(toolName, toolArgs);
 //         return typeof result === 'string' ? result : JSON.stringify(result);
 //       } catch (error) {
 //         logger.error('Error executing tool:', error);
@@ -876,17 +791,11 @@ const logger = createLogger('useBackgroundCommunication');
 //   useEffect(() => {
 //     const initializeHook = async () => {
 //       if (initializationAttemptedRef.current) return;
-//       initializationAttemptedRef.current = true;
-
-//       try {
-//         logMessage('[Background Communication] Initializing hook...');
-
-//         // Test if mcpHandler is available and functional
+//       initializationAttemptedRef.current = true; //       try {
+//         logMessage('[Background Communication] Initializing hook...'); //         // Test if mcpHandler is available and functional
 //         if (typeof mcpHandler === 'undefined') {
 //           throw new Error('mcpHandler is not available');
-//         }
-
-//         // Test basic connectivity - but don't fail if this doesn't work
+//         } //         // Test basic connectivity - but don't fail if this doesn't work
 //         try {
 //           const connectionStatus = mcpHandler.getConnectionStatus();
 //           logMessage(`[Background Communication] Initial connection status: ${connectionStatus}`);
@@ -895,9 +804,7 @@ const logger = createLogger('useBackgroundCommunication');
 //             `[Background Communication] Could not get connection status: ${statusError instanceof Error ? statusError.message : String(statusError)}`,
 //           );
 //           // Continue anyway
-//         }
-
-//         // Always mark as initialized - failures are handled gracefully
+//         } //         // Always mark as initialized - failures are handled gracefully
 //         setIsInitialized(true);
 //         setInitializationError(null);
 //         logMessage('[Background Communication] Hook initialized successfully');

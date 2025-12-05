@@ -1,7 +1,15 @@
 import type { PluginContext as PluginContextType, PluginEventBus, PluginUtils } from './plugin-types';
 import { eventBus } from '../events';
 import { useAppStore, useConnectionStore, useToolStore, useUIStore, useAdapterStore, useConfigStore } from '../stores';
-import { getUniqueId, createElement, waitForElement, injectCSS, observeChanges, debounce, throttle } from '../utils/index'; // Explicitly point to index
+import {
+  getUniqueId,
+  createElement,
+  waitForElement,
+  injectCSS,
+  observeChanges,
+  debounce,
+  throttle,
+} from '../utils/index'; // Explicitly point to index
 import { createLogger } from '@extension/shared/lib/logger';
 
 // Plugin Utilities Implementation
@@ -48,7 +56,7 @@ export function createPluginContext(pluginName: string): PluginContextType {
     getConfig: <T extends Record<string, any>>() => {
       const adapterStoreState = useAdapterStore.getState();
       return adapterStoreState.registeredPlugins[pluginName]?.config.settings as T | undefined;
-    }
+    },
   };
   return context;
 }

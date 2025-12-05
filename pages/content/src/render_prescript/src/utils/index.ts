@@ -1,13 +1,9 @@
 // Re-export all utility functions
 import { createLogger } from '@extension/shared/lib/logger';
-
 const logger = createLogger('RenderPrescriptUtils');
-
 export * from './dom';
 export * from './performance';
-export * from './themeDetector';
-
-// Add a global utility for theme control that can be accessed from the console
+export * from './themeDetector'; // Add a global utility for theme control that can be accessed from the console
 if (typeof window !== 'undefined') {
   (window as any).themeControl = {
     forceLight: () => {
@@ -39,6 +35,5 @@ if (typeof window !== 'undefined') {
       return { theme, isDark };
     },
   };
-
   logger.debug('[Theme Detector] Global theme control available via window.themeControl');
 }

@@ -9,8 +9,7 @@ import { containsJSONFunctionCalls, extractJSONFunctionInfo } from './jsonFuncti
  * @param block The HTML element containing potential function call content
  * @returns Information about the detected function calls
  */
-export const containsFunctionCalls = (block: HTMLElement): FunctionInfo => {
-  const content = block.textContent?.trim() || '';
+export const containsFunctionCalls = (block: HTMLElement): FunctionInfo => { const content = block.textContent?.trim() || '';
   const result: FunctionInfo = {
     hasFunctionCalls: false,
     isComplete: false,
@@ -34,12 +33,7 @@ export const containsFunctionCalls = (block: HTMLElement): FunctionInfo => {
   }
 
   // Check for XML function call content
-  if (
-    !content.includes('<') &&
-    !content.includes('<function_calls>') &&
-    !content.includes('<invoke') &&
-    !content.includes('</invoke>') &&
-    !content.includes('<parameter')
+  if ( !content.includes('<') && !content.includes('<function_calls>') && !content.includes('<invoke') && !content.includes('</invoke>') && !content.includes('<parameter')
   ) {
     return result;
   }
@@ -53,13 +47,9 @@ export const containsFunctionCalls = (block: HTMLElement): FunctionInfo => {
   // The content to analyze (with or without language tag)
   const contentToExamine = langTagResult.content || content;
 
-  // Check for Claude Opus style function calls (XML)
-  if (contentToExamine.includes('<function_calls>') || contentToExamine.includes('<invoke')) {
-    result.hasFunctionCalls = true;
-    result.detectedBlockType = 'antml';
-
-    result.hasInvoke = contentToExamine.includes('<invoke');
-    result.hasParameters = contentToExamine.includes('<parameter');
+  // Check for Claude Opus style function calls (XML) if (contentToExamine.includes('<function_calls>') || contentToExamine.includes('<invoke')) {
+    result.hasFunctionCalls = true; result.detectedBlockType = 'antml';
+ result.hasInvoke = contentToExamine.includes('<invoke'); result.hasParameters = contentToExamine.includes('<parameter');
 
     // Extract function name from invoke tag if present
     if (result.hasInvoke) {
@@ -69,11 +59,9 @@ export const containsFunctionCalls = (block: HTMLElement): FunctionInfo => {
       }
     }
 
-    // Check for complete structure
-    const hasOpeningTag = contentToExamine.includes('<function_calls>');
-    const hasClosingTag = contentToExamine.includes('</function_calls>');
-
-    result.hasClosingTags = hasOpeningTag && hasClosingTag;
+    // Check for complete structure const hasOpeningTag = contentToExamine.includes('<function_calls>'); const hasClosingTag = contentToExamine.includes('</function_calls>');
+  
+      result.hasClosingTags = hasOpeningTag && hasClosingTag;
     result.isComplete = result.hasClosingTags;
   }
 

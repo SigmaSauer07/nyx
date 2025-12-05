@@ -15,17 +15,13 @@ import { cn } from '@src/lib/utils';
 import { Card, CardContent } from '@src/components/ui/card';
 import type { UserPreferences } from '@src/types/stores';
 import { createLogger } from '@extension/shared/lib/logger';
-// Debug helper function to check if activeSidebarManager is available
-
-const logger = createLogger('Sidebar');
-
-const checkActiveSidebarManager = (): boolean => {
+// Debug helper function to check if activeSidebarManager is available const logger = createLogger('Sidebar');
+  
+  const checkActiveSidebarManager = (): boolean => {
   const available = !!(window as any).activeSidebarManager;
   logMessage(`[Sidebar] checkActiveSidebarManager: ${available}`);
   return available;
-};
-
-// Define Theme type
+}; // Define Theme type
 type Theme = 'light' | 'dark' | 'system';
 const THEME_CYCLE: Theme[] = ['light', 'dark', 'system']; // Define the cycle order
 
@@ -40,8 +36,7 @@ interface SidebarProps {
 const Sidebar: React.FC<SidebarProps> = ({ initialPreferences }) => {
   // Add unique ID to track component instances
   const componentId = useRef(`sidebar-${Date.now()}-${Math.random().toString(36).substring(2, 11)}`);
-  logMessage(
-    `[Sidebar] Component initializing with preferences: ${initialPreferences ? 'loaded' : 'null'} (ID: ${componentId.current})`,
+  logMessage( `[Sidebar] Component initializing with preferences: ${initialPreferences ? 'loaded' : 'null'} (ID: ${componentId.current})`,
   );
 
   const currentAdapter = useCurrentAdapter();
@@ -50,11 +45,9 @@ const Sidebar: React.FC<SidebarProps> = ({ initialPreferences }) => {
   const adapter = useMemo(() => ({
     // Legacy methods for backward compatibility
     insertTextIntoInput: (text: string) => currentAdapter.insertText(text),
-    triggerSubmission: () => currentAdapter.submitForm(),
-    supportsFileUpload: () => currentAdapter.hasCapability('file-attachment'),
+    triggerSubmission: () => currentAdapter.submitForm(), supportsFileUpload: () => currentAdapter.hasCapability('file-attachment'),
     attachFile: (file: File) => currentAdapter.attachFile(file),
-    // Pass through other properties that might be needed
-    name: currentAdapter.activeAdapterName || 'Unknown',
+    // Pass through other properties that might be needed name: currentAdapter.activeAdapterName || 'Unknown',
     isReady: currentAdapter.isReady,
     status: currentAdapter.status,
     capabilities: currentAdapter.capabilities
@@ -86,10 +79,7 @@ const Sidebar: React.FC<SidebarProps> = ({ initialPreferences }) => {
   try {
     communicationMethods = useMcpCommunication();
   } catch (error) {
-    // Handle extension context invalidation gracefully
-    if (error instanceof Error && error.message.includes('Extension context invalidated')) {
-      logMessage('[Sidebar] Extension context invalidated during hook initialization');
-      // Don't set state during render - use useEffect instead
+    // Handle extension context invalidation gracefully if (error instanceof Error && error.message.includes('Extension context invalidated')) { logMessage('[Sidebar] Extension context invalidated during hook initialization'); // Don't set state during render - use useEffect instead
       React.useEffect(() => {
         setExtensionContextInvalid(true);
         setInitializationError('Extension was reloaded. Please refresh the page to restore functionality.');
@@ -97,33 +87,25 @@ const Sidebar: React.FC<SidebarProps> = ({ initialPreferences }) => {
       
       // Provide fallback methods
       communicationMethods = {
-        availableTools: [],
-        sendMessage: async () => 'Extension context invalidated',
+        availableTools: [], sendMessage: async () => 'Extension context invalidated',
         refreshTools: async () => [],
-        forceReconnect: async () => false,
-        serverStatus: 'disconnected' as const,
-        updateServerConfig: async () => false,
-        getServerConfig: async () => ({ uri: '' })
+        forceReconnect: async () => false, serverStatus: 'disconnected' as const,
+        updateServerConfig: async () => false, getServerConfig: async () => ({ uri: '' })
       };
     } else {
       logMessage(`[Sidebar] Unexpected error in useMcpCommunication: ${error instanceof Error ? error.message : String(error)}`);
       // Provide safe fallback methods for any other error
       communicationMethods = {
-        availableTools: [],
-        sendMessage: async () => 'Communication error',
+        availableTools: [], sendMessage: async () => 'Communication error',
         refreshTools: async () => [],
-        forceReconnect: async () => false,
-        serverStatus: 'disconnected' as const,
-        updateServerConfig: async () => false,
-        getServerConfig: async () => ({ uri: '' })
+        forceReconnect: async () => false, serverStatus: 'disconnected' as const,
+        updateServerConfig: async () => false, getServerConfig: async () => ({ uri: '' })
       };
     }
   }
 
-  // Always render immediately - use safe defaults for all communication methods
-  const serverStatus = connectionStatus || communicationMethods?.serverStatus || 'disconnected';
-  const availableTools = communicationMethods?.availableTools || [];
-  const sendMessage = communicationMethods?.sendMessage || (async () => 'Communication not available');
+  // Always render immediately - use safe defaults for all communication methods const serverStatus = connectionStatus || communicationMethods?.serverStatus || 'disconnected';
+  const availableTools = communicationMethods?.availableTools || []; const sendMessage = communicationMethods?.sendMessage || (async () => 'Communication not available');
   const refreshTools = communicationMethods?.refreshTools || (async () => []);
   const forceReconnect = communicationMethods?.forceReconnect || (async () => false);
 
@@ -163,12 +145,11 @@ const Sidebar: React.FC<SidebarProps> = ({ initialPreferences }) => {
     // Periodic monitoring to detect if reference gets lost
     const monitorInterval = setInterval(() => {
       const available = checkActiveSidebarManager();
-      if (!available) {
-        logMessage('[Sidebar] WARNING: activeSidebarManager reference lost - this may cause push mode issues');
+      if (!available) { logMessage('[Sidebar] WARNING: activeSidebarManager reference lost - this may cause push mode issues');
       }
     }, 2000); // Check every 2 seconds
-
-    return () => {
+  
+      return () => {
       clearInterval(monitorInterval);
     };
   }, []);
@@ -177,15 +158,11 @@ const Sidebar: React.FC<SidebarProps> = ({ initialPreferences }) => {
   useEffect(() => {
     const unsubscribeCallbacks: (() => void)[] = [];
 
-    // Listen for connection status changes
-    const unsubscribeConnection = eventBus.on('connection:status-changed', (data) => {
-      logMessage(`[Sidebar] Connection status event received: ${data.status}${data.error ? ` (${data.error})` : ''}`);
+    // Listen for connection status changes const unsubscribeConnection = eventBus.on('connection:status-changed', (data) => { logMessage(`[Sidebar] Connection status event received: ${data.status}${data.error ? ` (${data.error})` : ''}`);
 
       // The connection store will be updated by the MCP client,
-      // but we can add additional UI feedback here if needed
-      if (data.status === 'connected') {
-        // Automatically refresh tools when connection is established
-        logMessage('[Sidebar] Connection established, refreshing tools...');
+      // but we can add additional UI feedback here if needed if (data.status === 'connected') {
+        // Automatically refresh tools when connection is established logMessage('[Sidebar] Connection established, refreshing tools...');
         refreshTools(true).catch(error => {
           logMessage(`[Sidebar] Failed to refresh tools after connection: ${error}`);
         });
@@ -193,39 +170,31 @@ const Sidebar: React.FC<SidebarProps> = ({ initialPreferences }) => {
     });
     unsubscribeCallbacks.push(unsubscribeConnection);
 
-    // Listen for tool updates
-    const unsubscribeTools = eventBus.on('tool:list-updated', (data) => {
+    // Listen for tool updates const unsubscribeTools = eventBus.on('tool:list-updated', (data) => {
       logMessage(`[Sidebar] Tool list updated event received: ${data.tools.length} tools`);
       // Tools are already updated in the store by the MCP client
       // We can add UI feedback here if needed
     });
     unsubscribeCallbacks.push(unsubscribeTools);
 
-    // Listen for tool execution events for better user feedback
-    const unsubscribeToolExecution = eventBus.on('tool:execution-completed', (data) => {
+    // Listen for tool execution events for better user feedback const unsubscribeToolExecution = eventBus.on('tool:execution-completed', (data) => {
       logMessage(`[Sidebar] Tool execution completed: ${data.execution.toolName} (ID: ${data.execution.id})`);
       // Could show success notifications or update UI state
     });
     unsubscribeCallbacks.push(unsubscribeToolExecution);
-
-    const unsubscribeToolError = eventBus.on('tool:execution-failed', (data) => {
+ const unsubscribeToolError = eventBus.on('tool:execution-failed', (data) => {
       logMessage(`[Sidebar] Tool execution failed: ${data.toolName} - ${data.error}`);
       // Could show error notifications
     });
     unsubscribeCallbacks.push(unsubscribeToolError);
 
-    // Listen for context bridge events to handle extension lifecycle
-    const unsubscribeBridgeInvalidated = eventBus.on('context:bridge-invalidated', (data) => {
+    // Listen for context bridge events to handle extension lifecycle const unsubscribeBridgeInvalidated = eventBus.on('context:bridge-invalidated', (data) => {
       logMessage(`[Sidebar] Context bridge invalidated: ${data.error}`);
-      setExtensionContextInvalid(true);
-      setInitializationError('Extension was reloaded. Please refresh the page to restore functionality.');
+      setExtensionContextInvalid(true); setInitializationError('Extension was reloaded. Please refresh the page to restore functionality.');
     });
     unsubscribeCallbacks.push(unsubscribeBridgeInvalidated);
-
-    const unsubscribeBridgeRestored = eventBus.on('context:bridge-restored', () => {
-      logMessage('[Sidebar] Context bridge restored');
-      setExtensionContextInvalid(false);
-      if (initializationError?.includes('Extension was reloaded')) {
+ const unsubscribeBridgeRestored = eventBus.on('context:bridge-restored', () => { logMessage('[Sidebar] Context bridge restored');
+      setExtensionContextInvalid(false); if (initializationError?.includes('Extension was reloaded')) {
         setInitializationError(null);
       }
       // Try to reconnect when context is restored
@@ -243,9 +212,7 @@ const Sidebar: React.FC<SidebarProps> = ({ initialPreferences }) => {
 
   // Initial tool loading when component mounts and connection is available
   useEffect(() => {
-    const loadInitialTools = async () => {
-      if (serverStatus === 'connected' && availableTools.length === 0) {
-        logMessage('[Sidebar] Component mounted with connection, loading initial tools...');
+    const loadInitialTools = async () => { if (serverStatus === 'connected' && availableTools.length === 0) { logMessage('[Sidebar] Component mounted with connection, loading initial tools...');
         try {
           await refreshTools(true);
         } catch (error) {
@@ -269,8 +236,7 @@ const Sidebar: React.FC<SidebarProps> = ({ initialPreferences }) => {
   useEffect(() => {
     logMessage(`[Sidebar] State update - visible: ${sidebarVisible}, minimized: ${isMinimized}, pushMode: ${isPushMode}, width: ${sidebarWidth}`);
   }, [sidebarVisible, isMinimized, isPushMode, sidebarWidth]);
-
-  // Local UI state that doesn't need to be in the store
+ // Local UI state that doesn't need to be in the store
   const [activeTab, setActiveTab] = useState<'availableTools' | 'instructions' | 'settings'>('availableTools');
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [isTransitioning, setIsTransitioning] = useState(false);
@@ -307,13 +273,11 @@ const Sidebar: React.FC<SidebarProps> = ({ initialPreferences }) => {
     try {
       // Use retry mechanism to wait for SidebarManager
       const sidebarManager = await waitForSidebarManager(5, 50); // Shorter retry for theme application
-      
-      if (!sidebarManager) {
-        logMessage('[Sidebar] Sidebar manager not available for theme application - will apply when ready.');
+        
+        if (!sidebarManager) { logMessage('[Sidebar] Sidebar manager not available for theme application - will apply when ready.');
         return;
       }
-
-      // OPTIMIZATION: Theme application is now CSS-only and doesn't trigger re-renders
+ // OPTIMIZATION: Theme application is now CSS-only and doesn't trigger re-renders
       try {
         const success = sidebarManager.applyThemeClass(selectedTheme);
         if (!success) {
@@ -347,30 +311,24 @@ const Sidebar: React.FC<SidebarProps> = ({ initialPreferences }) => {
         `[Sidebar] Theme application error during useEffect: ${error instanceof Error ? error.message : String(error)}`,
       );
     }
-
-    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-    const handleChange = () => {
-      if (theme === 'system') {
+ const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+    const handleChange = () => { if (theme === 'system') {
         const changeNow = Date.now();
         if (changeNow - lastThemeChangeRef.current < 100) {
           return; // Throttle system theme changes
         }
         lastThemeChangeRef.current = changeNow;
 
-        try {
-          applyTheme('system'); // Re-apply system theme on change
+        try { applyTheme('system'); // Re-apply system theme on change
         } catch (error) {
           logMessage(`[Sidebar] Theme reapplication error: ${error instanceof Error ? error.message : String(error)}`);
         }
       }
     };
-
-    // Add listener regardless of theme, but only re-apply if theme is 'system'
-    mediaQuery.addEventListener('change', handleChange);
+ // Add listener regardless of theme, but only re-apply if theme is 'system' mediaQuery.addEventListener('change', handleChange);
 
     // Cleanup listener
-    return () => {
-      mediaQuery.removeEventListener('change', handleChange);
+    return () => { mediaQuery.removeEventListener('change', handleChange);
     };
   }, [theme, applyTheme]);
   // --- End Theme Application Logic ---
@@ -425,8 +383,7 @@ const Sidebar: React.FC<SidebarProps> = ({ initialPreferences }) => {
                 isMinimized,
               );
             } else {
-              // Ensure push mode is disabled when sidebar is hidden
-              logMessage('[Sidebar] Disabling push mode - sidebar not visible');
+              // Ensure push mode is disabled when sidebar is hidden logMessage('[Sidebar] Disabling push mode - sidebar not visible');
               sidebarManager.setPushContentMode(false);
             }
           } catch (error) {
@@ -434,8 +391,7 @@ const Sidebar: React.FC<SidebarProps> = ({ initialPreferences }) => {
               `[Sidebar] Error applying push mode settings: ${error instanceof Error ? error.message : String(error)}`,
             );
           }
-        } else {
-          logMessage('[Sidebar] activeSidebarManager not available after retries - cannot apply push mode');
+        } else { logMessage('[Sidebar] activeSidebarManager not available after retries - cannot apply push mode');
         }
       } catch (error) {
         logMessage(
@@ -455,11 +411,9 @@ const Sidebar: React.FC<SidebarProps> = ({ initialPreferences }) => {
       const cleanupPushMode = async () => {
         try {
           const sidebarManager = await waitForSidebarManager(5, 50); // Shorter retry for cleanup
-          if (sidebarManager) {
-            logMessage('[Sidebar] Component unmounting - disabling push mode');
+          if (sidebarManager) { logMessage('[Sidebar] Component unmounting - disabling push mode');
             sidebarManager.setPushContentMode(false);
-          } else {
-            logMessage('[Sidebar] Component unmounting - could not access SidebarManager for cleanup');
+          } else { logMessage('[Sidebar] Component unmounting - could not access SidebarManager for cleanup');
           }
         } catch (error) {
           logMessage(`[Sidebar] Error during push mode cleanup: ${error instanceof Error ? error.message : String(error)}`);
@@ -480,15 +434,13 @@ const Sidebar: React.FC<SidebarProps> = ({ initialPreferences }) => {
     setIsTransitioning(true);
 
     // Add visual feedback to sidebar during transition
-    if (sidebarRef.current) {
-      sidebarRef.current.classList.add('sidebar-transitioning');
+    if (sidebarRef.current) { sidebarRef.current.classList.add('sidebar-transitioning');
     }
 
     // Set timeout to end transition
     transitionTimerRef.current = window.setTimeout(() => {
       setIsTransitioning(false);
-      if (sidebarRef.current) {
-        sidebarRef.current.classList.remove('sidebar-transitioning');
+      if (sidebarRef.current) { sidebarRef.current.classList.remove('sidebar-transitioning');
       }
       transitionTimerRef.current = null;
     }, 500) as unknown as number;
@@ -498,16 +450,13 @@ const Sidebar: React.FC<SidebarProps> = ({ initialPreferences }) => {
     startTransition();
 
     // Add a subtle bounce effect to the toggle
-    if (sidebarRef.current) {
-      sidebarRef.current.style.transform = 'scale(0.98)';
+    if (sidebarRef.current) { sidebarRef.current.style.transform = 'scale(0.98)';
       setTimeout(() => {
-        if (sidebarRef.current) {
-          sidebarRef.current.style.transform = '';
+        if (sidebarRef.current) { sidebarRef.current.style.transform = '';
         }
       }, 100);
     }
-
-    toggleMinimize('user action');
+ toggleMinimize('user action');
   };
 
   const toggleInputMinimize = () => setIsInputMinimized(prev => !prev);
@@ -518,8 +467,7 @@ const Sidebar: React.FC<SidebarProps> = ({ initialPreferences }) => {
       if (!isResizingRef.current) {
         isResizingRef.current = true;
 
-        if (sidebarRef.current) {
-          sidebarRef.current.classList.add('resizing');
+        if (sidebarRef.current) { sidebarRef.current.classList.add('resizing');
         }
       }
 
@@ -529,8 +477,7 @@ const Sidebar: React.FC<SidebarProps> = ({ initialPreferences }) => {
       // Update push mode styles if enabled
       if (isPushMode) {
         try {
-          const sidebarManager = (window as any).activeSidebarManager;
-          if (sidebarManager && typeof sidebarManager.updatePushModeStyles === 'function') {
+          const sidebarManager = (window as any).activeSidebarManager; if (sidebarManager && typeof sidebarManager.updatePushModeStyles === 'function') {
             sidebarManager.updatePushModeStyles(constrainedWidth);
           }
         } catch (error) {
@@ -551,8 +498,7 @@ const Sidebar: React.FC<SidebarProps> = ({ initialPreferences }) => {
           }
 
           transitionTimerRef.current = window.setTimeout(() => {
-            if (sidebarRef.current) {
-              sidebarRef.current.classList.remove('resizing');
+            if (sidebarRef.current) { sidebarRef.current.classList.remove('resizing');
             }
 
             // Store current width for future reference
@@ -569,32 +515,26 @@ const Sidebar: React.FC<SidebarProps> = ({ initialPreferences }) => {
   );
 
   const handlePushModeToggle = (checked: boolean) => {
-    updatePreferences({ isPushMode: checked });
-    logMessage(`[Sidebar] Push mode ${checked ? 'enabled' : 'disabled'}`);
+    updatePreferences({ isPushMode: checked }); logMessage(`[Sidebar] Push mode ${checked ? 'enabled' : 'disabled'}`);
   };
 
   const handleAutoSubmitToggle = (checked: boolean) => {
-    updatePreferences({ autoSubmit: checked });
-    logMessage(`[Sidebar] Auto submit ${checked ? 'enabled' : 'disabled'}`);
+    updatePreferences({ autoSubmit: checked }); logMessage(`[Sidebar] Auto submit ${checked ? 'enabled' : 'disabled'}`);
   };
 
-  const handleClearTools = () => {
-    logMessage('[Sidebar] Clear tools requested - functionality deprecated');
-    // Note: Tool clearing is now handled by the store/MCP client
-    // This is kept for UI compatibility but doesn't clear anything
+  const handleClearTools = () => { logMessage('[Sidebar] Clear tools requested - functionality deprecated');
+    // Note: Tool clearing is now handled by the store/MCP client // This is kept for UI compatibility but doesn't clear anything
   };
 
   const handleRefreshTools = async () => {
     logMessage('[Sidebar] Refreshing tools');
     setIsRefreshing(true);
     try {
-      await refreshTools(true);
-      logMessage('[Sidebar] Tools refreshed successfully');
+      await refreshTools(true); logMessage('[Sidebar] Tools refreshed successfully');
     } catch (error) {
       logMessage(
         `[Sidebar] Error refreshing tools (non-blocking): ${error instanceof Error ? error.message : String(error)}`,
-      );
-      // Don't show error to user - this is a background operation
+      ); // Don't show error to user - this is a background operation
     } finally {
       setIsRefreshing(false);
     }
@@ -615,34 +555,20 @@ const Sidebar: React.FC<SidebarProps> = ({ initialPreferences }) => {
     description: tool.description || '', // Ensure description is always a string
   }));
 
-  // Expose availableTools globally for popover access
-  if (typeof window !== 'undefined') {
+  // Expose availableTools globally for popover access if (typeof window !== 'undefined') {
     (window as any).availableTools = availableTools;
   }
 
-  // Helper to get the current theme icon name
-  const getCurrentThemeIcon = (): 'sun' | 'moon' | 'laptop' => {
-    switch (theme) {
-      case 'light':
-        return 'sun';
-      case 'dark':
-        return 'moon';
-      case 'system':
-        return 'laptop';
-      default:
-        return 'laptop'; // Default to system
+  // Helper to get the current theme icon name const getCurrentThemeIcon = (): 'sun' | 'moon' | 'laptop' => {
+    switch (theme) { case 'light': return 'sun'; case 'dark': return 'moon'; case 'system': return 'laptop';
+      default: return 'laptop'; // Default to system
     }
   };
 
   return (
     <div
       ref={sidebarRef}
-      className={cn(
-        'fixed top-0 right-0 h-screen bg-white dark:bg-slate-900 shadow-lg z-50 flex flex-col border-l border-slate-200 dark:border-slate-700 sidebar',
-        isPushMode ? 'push-mode' : '',
-        isResizingRef.current ? 'resizing' : '',
-        isMinimized ? 'collapsed' : '',
-        isTransitioning ? 'sidebar-transitioning' : '',
+      className={cn( 'fixed top-0 right-0 h-screen bg-white dark:bg-slate-900 shadow-lg z-50 flex flex-col border-l border-slate-200 dark:border-slate-700 sidebar', isPushMode ? 'push-mode' : '', isResizingRef.current ? 'resizing' : '', isMinimized ? 'collapsed' : '', isTransitioning ? 'sidebar-transitioning' : '',
       )}
       style={{ width: isMinimized ? `${SIDEBAR_MINIMIZED_WIDTH}px` : `${sidebarWidth}px` }}>
       {/* Resize Handle - only visible when not minimized */}
@@ -662,15 +588,13 @@ const Sidebar: React.FC<SidebarProps> = ({ initialPreferences }) => {
             <div className="flex items-center space-x-2">
               {/* Always show the header content immediately */}
               <a
-                href="https://mcpsuperassistant.ai/"
+                href="https://alsania-io.com/utils/nyx/"
                 target="_blank"
                 rel="noopener noreferrer"
-                aria-label="Visit MCP Super Assistant Website"
-                className="block">
-                {' '}
+                aria-label="Visit Nyx Website"
+                className="block"> {' '}
                 {/* Make link block for sizing */}
-                <img
-                  src={chrome.runtime.getURL('icon-34.png')}
+                <img src={chrome.runtime.getURL('icon-34.png')}
                   alt="MCP Logo"
                   className="w-8 h-8 rounded-md " // Increase size & add rounded corners
                 />
@@ -678,22 +602,22 @@ const Sidebar: React.FC<SidebarProps> = ({ initialPreferences }) => {
               <>
                 {/* Wrap title in link */}
                 <a
-                  href="https://mcpsuperassistant.ai/"
+                  href="https://alsania-io.com/utils/nyx/"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-slate-800 dark:text-slate-100 hover:text-slate-600 dark:hover:text-slate-300 transition-colors duration-150 no-underline"
-                  aria-label="Visit MCP Super Assistant Website">
+                  aria-label="Visit Nyx Website">
                   <Typography variant="h4" className="font-semibold">
-                    MCP SuperAssistant
+                    Nyx
                   </Typography>
                 </a>
                 {/* Existing icon link */}
                 <a
-                  href="https://mcpsuperassistant.ai/"
+                  href="https://alsania-io.com/utils/nyx/"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="ml-1 text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-300 transition-colors duration-150"
-                  aria-label="Visit MCP Super Assistant Website">
+                  aria-label="Visit Nyx Website">
                   <Icon name="arrow-up-right" size="xs" className="inline-block align-baseline" />
                 </a>
               </>
@@ -742,10 +666,7 @@ const Sidebar: React.FC<SidebarProps> = ({ initialPreferences }) => {
         {/* Virtual slide - content always at full width */}
         <div
           ref={contentRef}
-          className={cn(
-            'absolute top-0 bottom-0 right-0 transition-transform duration-200 ease-in-out',
-            isMinimized ? 'translate-x-full' : 'translate-x-0',
-            isTransitioning ? 'will-change-transform' : '',
+          className={cn( 'absolute top-0 bottom-0 right-0 transition-transform duration-200 ease-in-out', isMinimized ? 'translate-x-full' : 'translate-x-0', isTransitioning ? 'will-change-transform' : '',
           )}
           style={{ width: `${sidebarWidth}px` }}>
           <div className="flex flex-col h-full">
@@ -756,12 +677,10 @@ const Sidebar: React.FC<SidebarProps> = ({ initialPreferences }) => {
                   <div className="flex items-start space-x-2">
                     <Icon name="alert-triangle" size="sm" className="text-red-600 dark:text-red-400 mt-0.5" />
                     <div className="flex-1">
-                      <Typography variant="subtitle" className="text-red-800 dark:text-red-200 font-medium">
-                        {extensionContextInvalid ? 'Extension Reloaded' : 'Warning'}
+                      <Typography variant="subtitle" className="text-red-800 dark:text-red-200 font-medium"> {extensionContextInvalid ? 'Extension Reloaded' : 'Warning'}
                       </Typography>
                       <Typography variant="caption" className="text-red-700 dark:text-red-300">
-                        {extensionContextInvalid
-                          ? 'The extension was reloaded. Please refresh this page to restore full functionality.'
+                        {extensionContextInvalid ? 'The extension was reloaded. Please refresh this page to restore full functionality.'
                           : `Some features may be limited: ${initializationError}`
                         }
                       </Typography>
@@ -819,19 +738,16 @@ const Sidebar: React.FC<SidebarProps> = ({ initialPreferences }) => {
                     />
                   </div> */}
 
-                  {/* DEBUG BUTTON - ONLY FOR DEVELOPMENT - REMOVE IN PRODUCTION */}
-                  {process.env.NODE_ENV === 'development' && (
+                  {/* DEBUG BUTTON - ONLY FOR DEVELOPMENT - REMOVE IN PRODUCTION */} {process.env.NODE_ENV === 'development' && (
                     <Button
                       variant="outline"
                       size="sm"
                       className="w-full mt-2 border-slate-200 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-700"
                       onClick={() => {
                         const shadowHost = (window as any).activeSidebarManager?.getShadowHost();
-                        if (shadowHost && shadowHost.shadowRoot) {
-                          logMessage('Shadow DOM debug requested');
+                        if (shadowHost && shadowHost.shadowRoot) { logMessage('Shadow DOM debug requested');
                           // Debug functionality removed - use browser dev tools instead
-                        } else {
-                          logMessage('Cannot debug: Shadow DOM not found');
+                        } else { logMessage('Cannot debug: Shadow DOM not found');
                         }
                       }}>
                       Debug Styles
@@ -844,33 +760,18 @@ const Sidebar: React.FC<SidebarProps> = ({ initialPreferences }) => {
               <div className="border-b border-slate-200 dark:border-slate-700 mb-2">
                 <div className="flex">
                   <button
-                    className={cn(
-                      'py-2 px-4 font-medium text-sm transition-all duration-200',
-                      activeTab === 'availableTools'
-                        ? 'border-b-2 border-indigo-600 text-indigo-600 dark:border-indigo-400 dark:text-indigo-400'
-                        : 'text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-t-lg',
-                    )}
-                    onClick={() => setActiveTab('availableTools')}>
+                    className={cn( 'py-2 px-4 font-medium text-sm transition-all duration-200', activeTab === 'availableTools' ? 'border-b-2 border-indigo-600 text-indigo-600 dark:border-indigo-400 dark:text-indigo-400' : 'text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-t-lg',
+                    )} onClick={() => setActiveTab('availableTools')}>
                     Available Tools
                   </button>
                   <button
-                    className={cn(
-                      'py-2 px-4 font-medium text-sm transition-all duration-200',
-                      activeTab === 'instructions'
-                        ? 'border-b-2 border-indigo-600 text-indigo-600 dark:border-indigo-400 dark:text-indigo-400'
-                        : 'text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-t-lg',
-                    )}
-                    onClick={() => setActiveTab('instructions')}>
+                    className={cn( 'py-2 px-4 font-medium text-sm transition-all duration-200', activeTab === 'instructions' ? 'border-b-2 border-indigo-600 text-indigo-600 dark:border-indigo-400 dark:text-indigo-400' : 'text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-t-lg',
+                    )} onClick={() => setActiveTab('instructions')}>
                     Instructions
                   </button>
                   <button
-                    className={cn(
-                      'py-2 px-4 font-medium text-sm transition-all duration-200',
-                      activeTab === 'settings'
-                        ? 'border-b-2 border-indigo-600 text-indigo-600 dark:border-indigo-400 dark:text-indigo-400'
-                        : 'text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-t-lg',
-                    )}
-                    onClick={() => setActiveTab('settings')}>
+                    className={cn( 'py-2 px-4 font-medium text-sm transition-all duration-200', activeTab === 'settings' ? 'border-b-2 border-indigo-600 text-indigo-600 dark:border-indigo-400 dark:text-indigo-400' : 'text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-t-lg',
+                    )} onClick={() => setActiveTab('settings')}>
                     Settings
                   </button>
                 </div>
@@ -881,9 +782,7 @@ const Sidebar: React.FC<SidebarProps> = ({ initialPreferences }) => {
             <div className="flex-1 min-h-0 px-4 pb-4 overflow-hidden">
               {/* AvailableTools */}
               <div
-                className={cn(
-                  'h-full overflow-y-auto scrollbar-thin scrollbar-thumb-slate-300 dark:scrollbar-thumb-slate-600 scrollbar-track-transparent',
-                  { hidden: activeTab !== 'availableTools' },
+                className={cn( 'h-full overflow-y-auto scrollbar-thin scrollbar-thumb-slate-300 dark:scrollbar-thumb-slate-600 scrollbar-track-transparent', { hidden: activeTab !== 'availableTools' },
                 )}>
                 <Card className="border-slate-200 dark:border-slate-700 dark:bg-slate-800 rounded-lg shadow-sm overflow-hidden hover:shadow-md transition-shadow duration-300">
                   <CardContent className="p-0">
@@ -899,9 +798,7 @@ const Sidebar: React.FC<SidebarProps> = ({ initialPreferences }) => {
 
               {/* Instructions */}
               <div
-                className={cn(
-                  'h-full overflow-y-auto scrollbar-thin scrollbar-thumb-slate-300 dark:scrollbar-thumb-slate-600 scrollbar-track-transparent',
-                  { hidden: activeTab !== 'instructions' },
+                className={cn( 'h-full overflow-y-auto scrollbar-thin scrollbar-thumb-slate-300 dark:scrollbar-thumb-slate-600 scrollbar-track-transparent', { hidden: activeTab !== 'instructions' },
                 )}>
                 <Card className="border-slate-200 dark:border-slate-700 dark:bg-slate-800 rounded-lg shadow-sm overflow-hidden hover:shadow-md transition-shadow duration-300">
                   <CardContent className="p-0">
@@ -912,9 +809,7 @@ const Sidebar: React.FC<SidebarProps> = ({ initialPreferences }) => {
 
               {/* Settings */}
               <div
-                className={cn(
-                  'h-full overflow-y-auto scrollbar-thin scrollbar-thumb-slate-300 dark:scrollbar-thumb-slate-600 scrollbar-track-transparent',
-                  { hidden: activeTab !== 'settings' },
+                className={cn( 'h-full overflow-y-auto scrollbar-thin scrollbar-thumb-slate-300 dark:scrollbar-thumb-slate-600 scrollbar-track-transparent', { hidden: activeTab !== 'settings' },
                 )}>
                 <Settings />
               </div>

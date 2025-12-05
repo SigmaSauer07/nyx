@@ -7,7 +7,6 @@ export interface GlobalSettings {
   language: string;
   notifications: boolean;
 }
-
 export type ConnectionType = 'sse' | 'websocket' | 'streamable-http';
 
 export interface ServerConfig {
@@ -17,7 +16,6 @@ export interface ServerConfig {
   retryAttempts: number;
   retryDelay: number;
 }
-
 export type ConnectionStatus = 'connected' | 'disconnected' | 'connecting' | 'error' | 'reconnecting';
 
 export interface Tool {
@@ -25,8 +23,7 @@ export interface Tool {
   description: string;
   // Legacy field used in some UI components
   schema?: any;
-  // Newer field preferred going forward
-  input_schema: any; // Keeping 'any' as per original spec, can be refined later
+  // Newer field preferred going forward input_schema: any; // Keeping 'any' as per original spec, can be refined later
 }
 
 export interface DetectedTool {
@@ -55,10 +52,10 @@ export interface SidebarState {
 
 export interface UserPreferences {
   autoSubmit: boolean;
-  autoInsert: boolean;  // New automation field
+  autoInsert: boolean; // New automation field
   autoExecute: boolean; // New automation field
-  autoInsertDelay: number;  // Delay in seconds for auto insert
-  autoSubmitDelay: number;  // Delay in seconds for auto submit
+  autoInsertDelay: number; // Delay in seconds for auto insert
+  autoSubmitDelay: number; // Delay in seconds for auto submit
   autoExecuteDelay: number; // Delay in seconds for auto execute
   notifications: boolean;
   theme: 'light' | 'dark' | 'system';

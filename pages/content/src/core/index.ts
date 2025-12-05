@@ -1,28 +1,25 @@
 /**
  * Core Architecture Components
- * 
- * Exports all core architectural components for the MCP SuperAssistant.
+ *
+ * Exports all core architectural components for the Nyx.
  */
 
 export { circuitBreaker, CircuitBreaker } from './circuit-breaker';
 export type { CircuitBreakerConfig, CircuitBreakerState, CircuitBreakerStats } from './circuit-breaker';
-
 export { contextBridge, ContextBridge } from './context-bridge';
 export type { ContextMessage, ContextBridgeConfig } from './context-bridge';
-
 export { globalErrorHandler, GlobalErrorHandler } from './error-handler';
 export type { ErrorContext, ErrorReport } from './error-handler';
-
 export { performanceMonitor, PerformanceMonitor } from './performance';
 export type { PerformanceMeasurement, MemoryUsage, PerformanceStats } from './performance';
 
 // Main initialization system (Session 10)
-export { 
-  applicationInit, 
-  applicationCleanup, 
+export {
+  applicationInit,
+  applicationCleanup,
   getInitializationStatus,
   forceReinitialization,
-  initializationUtils
+  initializationUtils,
 } from './main-initializer';
 
 // UI initialization utilities
@@ -32,10 +29,8 @@ export {
   initializeOptionsApp,
   setupUICleanup,
   setupPopupApp,
-  setupOptionsApp
-} from './ui-initializer';
-
-// Import for default export
+  setupOptionsApp,
+} from './ui-initializer'; // Import for default export
 import { circuitBreaker } from './circuit-breaker';
 import { contextBridge } from './context-bridge';
 import { globalErrorHandler } from './error-handler';

@@ -1,8 +1,6 @@
 import { Client } from '@modelcontextprotocol/sdk/client/index.js';
 import type { Transport } from '@modelcontextprotocol/sdk/shared/transport.js';
-import { LoggingMessageNotificationSchema } from '@modelcontextprotocol/sdk/types.js';
-
-import { EventEmitter } from './EventEmitter.js';
+import { LoggingMessageNotificationSchema } from '@modelcontextprotocol/sdk/types.js'; import { EventEmitter } from './EventEmitter.js';
 import { PluginRegistry } from './PluginRegistry.js';
 import { SSEPlugin } from '../plugins/sse/SSEPlugin.js';
 import { WebSocketPlugin } from '../plugins/websocket/WebSocketPlugin.js';
@@ -14,9 +12,7 @@ import type { Primitive, NormalizedTool, PrimitivesResponse } from '../types/pri
 import type { AllEvents } from '../types/events.js';
 import { createLogger } from '@extension/shared/lib/logger';
 import { analyticsService } from '../../../utils/analytics-service.js';
-
-
-const logger = createLogger('McpClient');
+ const logger = createLogger('McpClient');
 
 export class McpClient extends EventEmitter<AllEvents> {
   private registry: PluginRegistry;
@@ -30,8 +26,8 @@ export class McpClient extends EventEmitter<AllEvents> {
   private primitivesCache: PrimitivesResponse | null = null;
   private primitivesCacheTime: number = 0;
   private readonly CACHE_TTL = 300000; // 5 minutes
-
-  constructor(config: Partial<ClientConfig> = {}) {
+  
+    constructor(config: Partial<ClientConfig> = {}) {
     super();
 
     this.config = {
@@ -49,34 +45,24 @@ export class McpClient extends EventEmitter<AllEvents> {
 
     this.registry = new PluginRegistry();
 
-    // Forward registry events
-    this.registry.on('registry:plugin-registered', data => {
-      this.emit('registry:plugin-registered', data);
+    // Forward registry events this.registry.on('registry:plugin-registered', data => { this.emit('registry:plugin-registered', data);
     });
-
-    this.registry.on('registry:plugins-loaded', data => {
-      this.emit('registry:plugins-loaded', data);
+ this.registry.on('registry:plugins-loaded', data => { this.emit('registry:plugins-loaded', data);
     });
-
-    logger.debug('[McpClient] Initialized with config:', this.config);
-    this.emit('client:initialized', { config: this.config });
+ logger.debug('[McpClient] Initialized with config:', this.config); this.emit('client:initialized', { config: this.config });
   }
 
   async initialize(): Promise<void> {
-    try {
-      logger.debug('[McpClient] Loading default plugins...');
-      await this.registry.loadDefaultPlugins();
-      logger.debug('[McpClient] Initialization complete');
+    try { logger.debug('[McpClient] Loading default plugins...');
+      await this.registry.loadDefaultPlugins(); logger.debug('[McpClient] Initialization complete');
     } catch (error) {
-      logger.error('[McpClient] Initialization failed:', error);
-      logger.debug('[McpClient] Attempting manual plugin registration as fallback...');
+       logger.error('[McpClient] Initialization failed:', error); logger.debug('[McpClient] Attempting manual plugin registration as fallback...');
 
       try {
         // Try manual registration as fallback for Service Worker environments
-        await this.manualPluginRegistration();
-        logger.debug('[McpClient] Manual plugin registration successful');
+        await this.manualPluginRegistration(); logger.debug('[McpClient] Manual plugin registration successful');
       } catch (fallbackError) {
-        logger.error('[McpClient] Manual plugin registration also failed:', fallbackError);
+       logger.error('[McpClient] Manual plugin registration also failed:', fallbackError);
         throw error; // Throw original error
       }
     }
@@ -87,8 +73,7 @@ export class McpClient extends EventEmitter<AllEvents> {
     await this.registry.register(new SSEPlugin());
     await this.registry.register(new WebSocketPlugin());
     await this.registry.register(new StreamableHttpPlugin());
-
-    logger.debug('[McpClient] Manual plugin registration completed');
+ logger.debug('[McpClient] Manual plugin registration completed');
   }
 
   async connect(request: ConnectionRequest): Promise<void> {
@@ -97,19 +82,16 @@ export class McpClient extends EventEmitter<AllEvents> {
       logger.debug(`Already connected via ${request.type}, skipping`);
       return;
     }
-
-    // If there's a connection in progress, wait for it but check if it's for the same URI
-    if (this.connectionPromise) {
-      logger.debug('[McpClient] Connection already in progress, waiting...');
+ // If there's a connection in progress, wait for it but check if it's for the same URI
+    if (this.connectionPromise) { logger.debug('[McpClient] Connection already in progress, waiting...');
       try {
         await this.connectionPromise;
         // Check if the completed connection is what we wanted
-        if (this.isConnectedFlag && this.activePlugin?.metadata.transportType === request.type) {
-          logger.debug('[McpClient] Existing connection matches request');
+        if (this.isConnectedFlag && this.activePlugin?.metadata.transportType === request.type) { logger.debug('[McpClient] Existing connection matches request');
           return;
         }
       } catch (error) {
-        logger.debug('[McpClient] Previous connection failed, starting new one');
+       logger.debug('[McpClient] Previous connection failed, starting new one');
         // Clear the failed promise to allow new connection
         this.connectionPromise = null;
       }
@@ -134,8 +116,7 @@ export class McpClient extends EventEmitter<AllEvents> {
     const { uri, type, config: pluginConfig } = request;
 
     try {
-      logger.debug(`Connecting to ${uri} via ${type}`);
-      this.emit('client:connecting', { uri, type });
+      logger.debug(`Connecting to ${uri} via ${type}`); this.emit('client:connecting', { uri, type });
 
       // Disconnect from current connection if exists
       if (this.isConnectedFlag) {
@@ -154,8 +135,7 @@ export class McpClient extends EventEmitter<AllEvents> {
       if (!plugin.isSupported(uri)) {
         throw new Error(`Plugin ${type} does not support URI: ${uri}`);
       }
-
-      // Get transport from plugin (plugin creates but doesn't connect)
+ // Get transport from plugin (plugin creates but doesn't connect)
       const transport = await plugin.connect(uri);
 
       // Set up disconnection callback for WebSocket plugin
@@ -166,16 +146,12 @@ export class McpClient extends EventEmitter<AllEvents> {
           // Mark as disconnected immediately
           this.isConnectedFlag = false;
           
-          // Emit disconnection event with details
-          this.emit('connection:status-changed', {
-            isConnected: false,
-            type: 'websocket',
-            error: `WebSocket disconnected: ${reason}${code ? ` (code: ${code})` : ''}${details ? ` - ${details}` : ''}`
+          // Emit disconnection event with details this.emit('connection:status-changed', {
+            isConnected: false, type: 'websocket', error: `WebSocket disconnected: ${reason}${code ? ` (code: ${code})` : ''}${details ? ` - ${details}` : ''}`
           });
 
           // Clean up connection state
-          this.cleanup().catch(error => {
-            logger.error('[McpClient] Error during cleanup after WebSocket disconnection:', error);
+          this.cleanup().catch(error => { logger.error('[McpClient] Error during cleanup after WebSocket disconnection:', error);
           });
         });
       }
@@ -183,8 +159,7 @@ export class McpClient extends EventEmitter<AllEvents> {
       // Create MCP client
       this.client = new Client(
         {
-          name: `mcp-client-${type}`,
-          version: '1.0.0',
+          name: `mcp-client-${type}`, version: '1.0.0',
         },
         { capabilities: {} },
       );
@@ -220,21 +195,17 @@ export class McpClient extends EventEmitter<AllEvents> {
       // Start health monitoring
       this.startHealthMonitoring();
 
-      logger.debug(`Successfully connected via ${type}`);
-      this.emit('client:connected', { uri, type });
-      this.emit('connection:status-changed', {
+      logger.debug(`Successfully connected via ${type}`); this.emit('client:connected', { uri, type }); this.emit('connection:status-changed', {
         isConnected: true,
         type,
         error: undefined,
       });
 
       // Track successful connection
-      analyticsService.trackConnectionChange({
-        connection_status: 'connected',
+      analyticsService.trackConnectionChange({ connection_status: 'connected',
         transport_type: type,
         tools_discovered: 0, // Will be updated after getPrimitives
-      }).catch((error: unknown) => {
-        logger.warn('[McpClient] Analytics tracking failed:', error);
+      }).catch((error: unknown) => { logger.warn('[McpClient] Analytics tracking failed:', error);
       });
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : String(error);
@@ -242,24 +213,18 @@ export class McpClient extends EventEmitter<AllEvents> {
 
       // Clean up partial connection state
       await this.cleanup();
-
-      this.emit('client:error', {
-        error: error instanceof Error ? error : new Error(errorMessage),
-        context: 'connection',
-      });
-      this.emit('connection:status-changed', {
+ this.emit('client:error', {
+        error: error instanceof Error ? error : new Error(errorMessage), context: 'connection',
+      }); this.emit('connection:status-changed', {
         isConnected: false,
         type,
         error: errorMessage,
       });
 
       // Track connection failure
-      analyticsService.trackConnectionChange({
-        connection_status: 'error',
-        transport_type: type,
-        error_type: error instanceof Error ? error.name : 'UnknownError',
-      }).catch((analyticsError: unknown) => {
-        logger.warn('[McpClient] Analytics tracking failed:', analyticsError);
+      analyticsService.trackConnectionChange({ connection_status: 'error',
+        transport_type: type, error_type: error instanceof Error ? error.name : 'UnknownError',
+      }).catch((analyticsError: unknown) => { logger.warn('[McpClient] Analytics tracking failed:', analyticsError);
       });
 
       throw error;
@@ -267,34 +232,26 @@ export class McpClient extends EventEmitter<AllEvents> {
   }
 
   async disconnect(): Promise<void> {
-    if (!this.isConnectedFlag) {
-      logger.debug('[McpClient] Already disconnected');
+    if (!this.isConnectedFlag) { logger.debug('[McpClient] Already disconnected');
       return;
     }
 
-    const currentType = this.activePlugin?.metadata.transportType;
-    logger.debug(`Disconnecting from ${currentType || 'unknown'}`);
+    const currentType = this.activePlugin?.metadata.transportType; logger.debug(`Disconnecting from ${currentType || 'unknown'}`);
 
-    if (currentType) {
-      this.emit('client:disconnecting', { type: currentType });
+    if (currentType) { this.emit('client:disconnecting', { type: currentType });
     }
 
     try {
-      await this.cleanup();
-      logger.debug('[McpClient] Disconnected successfully');
+      await this.cleanup(); logger.debug('[McpClient] Disconnected successfully');
 
-      if (currentType) {
-        this.emit('client:disconnected', { type: currentType });
-      }
-      this.emit('connection:status-changed', {
+      if (currentType) { this.emit('client:disconnected', { type: currentType });
+      } this.emit('connection:status-changed', {
         isConnected: false,
         type: currentType || null,
       });
     } catch (error) {
-      logger.error('[McpClient] Error during disconnect:', error);
-      this.emit('client:error', {
-        error: error instanceof Error ? error : new Error(String(error)),
-        context: 'disconnect',
+       logger.error('[McpClient] Error during disconnect:', error); this.emit('client:error', {
+        error: error instanceof Error ? error : new Error(String(error)), context: 'disconnect',
       });
     }
   }
@@ -308,7 +265,7 @@ export class McpClient extends EventEmitter<AllEvents> {
       try {
         await this.client.close();
       } catch (error) {
-        logger.warn('[McpClient] Error closing client:', error);
+       logger.warn('[McpClient] Error closing client:', error);
       }
       this.client = null;
     }
@@ -318,7 +275,7 @@ export class McpClient extends EventEmitter<AllEvents> {
       try {
         await this.activePlugin.disconnect();
       } catch (error) {
-        logger.warn('[McpClient] Error disconnecting plugin:', error);
+       logger.warn('[McpClient] Error disconnecting plugin:', error);
       }
       this.activePlugin = null;
     }
@@ -329,29 +286,23 @@ export class McpClient extends EventEmitter<AllEvents> {
   }
 
   async callTool(toolName: string, args: Record<string, any>, adapterName?: string): Promise<any> {
-    if (!this.isConnectedFlag || !this.activePlugin || !this.client) {
-      throw new Error('Not connected to any MCP server');
+    if (!this.isConnectedFlag || !this.activePlugin || !this.client) { throw new Error('Not connected to any MCP server');
     }
 
-    const startTime = Date.now();
-    this.emit('tool:call-started', { toolName, args });
+    const startTime = Date.now(); this.emit('tool:call-started', { toolName, args });
 
     try {
       logger.debug(`Calling tool: ${toolName}`);
       const result = await this.activePlugin.callTool(this.client, toolName, args);
 
-      const duration = Date.now() - startTime;
-      this.emit('tool:call-completed', { toolName, result, duration });
+      const duration = Date.now() - startTime; this.emit('tool:call-completed', { toolName, result, duration });
 
       // Track tool execution analytics with enhanced context
       analyticsService.trackToolExecution({
-        tool_name: toolName,
-        execution_status: 'success',
-        execution_duration_ms: duration,
-        transport_type: this.activePlugin?.metadata.transportType || 'unknown',
+        tool_name: toolName, execution_status: 'success',
+        execution_duration_ms: duration, transport_type: this.activePlugin?.metadata.transportType || 'unknown',
         adapter_name: adapterName, // Pass adapter name from content script
-      }).catch((error: unknown) => {
-        // Don't fail tool execution if analytics fails
+      }).catch((error: unknown) => { // Don't fail tool execution if analytics fails
         logger.warn('[McpClient] Analytics tracking failed:', error);
       });
 
@@ -359,29 +310,22 @@ export class McpClient extends EventEmitter<AllEvents> {
     } catch (error) {
       const duration = Date.now() - startTime;
       const toolError = error instanceof Error ? error : new Error(String(error));
-
-      this.emit('tool:call-failed', { toolName, error: toolError, duration });
+ this.emit('tool:call-failed', { toolName, error: toolError, duration });
 
       // Track failed tool execution analytics with enhanced context
       analyticsService.trackToolExecution({
-        tool_name: toolName,
-        execution_status: 'error',
-        execution_duration_ms: duration,
-        transport_type: this.activePlugin?.metadata.transportType || 'unknown',
-        error_type: toolError.name || 'UnknownError',
+        tool_name: toolName, execution_status: 'error',
+        execution_duration_ms: duration, transport_type: this.activePlugin?.metadata.transportType || 'unknown', error_type: toolError.name || 'UnknownError',
         adapter_name: adapterName, // Pass adapter name from content script
-      }).catch((analyticsError: unknown) => {
-        // Don't fail tool execution if analytics fails
+      }).catch((analyticsError: unknown) => { // Don't fail tool execution if analytics fails
         logger.warn('[McpClient] Analytics tracking failed:', analyticsError);
       });
 
       // Check if connection is still healthy after error
       if (!(await this.isHealthy())) {
-        this.isConnectedFlag = false;
-        this.emit('connection:status-changed', {
+        this.isConnectedFlag = false; this.emit('connection:status-changed', {
           isConnected: false,
-          type: this.activePlugin?.metadata.transportType || null,
-          error: 'Connection lost during tool call',
+          type: this.activePlugin?.metadata.transportType || null, error: 'Connection lost during tool call',
         });
       }
 
@@ -390,26 +334,20 @@ export class McpClient extends EventEmitter<AllEvents> {
   }
 
   async getPrimitives(forceRefresh: boolean = false): Promise<PrimitivesResponse> {
-    if (!this.isConnectedFlag || !this.activePlugin || !this.client) {
-      throw new Error('Not connected to any MCP server');
+    if (!this.isConnectedFlag || !this.activePlugin || !this.client) { throw new Error('Not connected to any MCP server');
     }
 
     // Check cache first
-    if (!forceRefresh && this.primitivesCache && this.isCacheValid()) {
-      logger.debug('[McpClient] Returning cached primitives');
+    if (!forceRefresh && this.primitivesCache && this.isCacheValid()) { logger.debug('[McpClient] Returning cached primitives');
       return this.primitivesCache;
     }
 
-    try {
-      logger.debug('[McpClient] Fetching primitives from server...');
+    try { logger.debug('[McpClient] Fetching primitives from server...');
       const primitives = await this.activePlugin.getPrimitives(this.client);
 
-      // Normalize tools
-      const tools = this.normalizeTools(primitives.filter(p => p.type === 'tool'));
-      const resources = primitives.filter(p => p.type === 'resource').map(p => p.value);
-      const prompts = primitives.filter(p => p.type === 'prompt').map(p => p.value);
-
-      const response: PrimitivesResponse = {
+      // Normalize tools const tools = this.normalizeTools(primitives.filter(p => p.type === 'tool')); const resources = primitives.filter(p => p.type === 'resource').map(p => p.value); const prompts = primitives.filter(p => p.type === 'prompt').map(p => p.value);
+  
+        const response: PrimitivesResponse = {
         tools,
         resources,
         prompts,
@@ -420,8 +358,7 @@ export class McpClient extends EventEmitter<AllEvents> {
       this.primitivesCache = response;
       this.primitivesCacheTime = Date.now();
 
-      // Emit tools update event
-      this.emit('tools:list-updated', {
+      // Emit tools update event this.emit('tools:list-updated', {
         tools,
         type: this.activePlugin.metadata.transportType,
       });
@@ -429,12 +366,10 @@ export class McpClient extends EventEmitter<AllEvents> {
       // Update connection tracking with tools count (only if this is the first time discovering tools)
       // This prevents duplicate connection events when tools are refreshed
       if (this.primitivesCache === null || this.primitivesCache.tools.length === 0) {
-        analyticsService.trackConnectionChange({
-          connection_status: 'connected',
+        analyticsService.trackConnectionChange({ connection_status: 'connected',
           transport_type: this.activePlugin.metadata.transportType,
           tools_discovered: tools.length,
-        }).catch((error: unknown) => {
-          logger.warn('[McpClient] Analytics tracking failed:', error);
+        }).catch((error: unknown) => { logger.warn('[McpClient] Analytics tracking failed:', error);
         });
       }
 
@@ -442,15 +377,13 @@ export class McpClient extends EventEmitter<AllEvents> {
       );
       return response;
     } catch (error) {
-      logger.error('[McpClient] Failed to get primitives:', error);
+       logger.error('[McpClient] Failed to get primitives:', error);
 
       // Check if connection is still healthy after error
       if (!(await this.isHealthy())) {
-        this.isConnectedFlag = false;
-        this.emit('connection:status-changed', {
+        this.isConnectedFlag = false; this.emit('connection:status-changed', {
           isConnected: false,
-          type: this.activePlugin?.metadata.transportType || null,
-          error: 'Connection lost while getting primitives',
+          type: this.activePlugin?.metadata.transportType || null, error: 'Connection lost while getting primitives',
         });
       }
 
@@ -462,14 +395,12 @@ export class McpClient extends EventEmitter<AllEvents> {
     return toolPrimitives.map(p => {
       const tool = p.value;
       return {
-        name: tool.name,
-        description: tool.description || '',
+        name: tool.name, description: tool.description || '',
         input_schema: tool.inputSchema || tool.input_schema || {},
         schema: tool.inputSchema
           ? JSON.stringify(tool.inputSchema)
           : tool.input_schema
-            ? JSON.stringify(tool.input_schema)
-            : '{}',
+            ? JSON.stringify(tool.input_schema) : '{}',
         ...(tool.uri && { uri: tool.uri }),
         ...(tool.arguments && { arguments: tool.arguments }),
       };
@@ -493,7 +424,7 @@ export class McpClient extends EventEmitter<AllEvents> {
     try {
       return await this.activePlugin.isHealthy();
     } catch (error) {
-      logger.warn('[McpClient] Health check failed:', error);
+       logger.warn('[McpClient] Health check failed:', error);
       return false;
     }
   }
@@ -526,8 +457,7 @@ export class McpClient extends EventEmitter<AllEvents> {
     if (currentType === request.type) {
       logger.debug(`Already using ${request.type}, reconnecting...`);
     } else {
-      logger.debug(`Switching from ${currentType} to ${request.type}`);
-      this.emit('client:plugin-switched', { from: currentType, to: request.type });
+      logger.debug(`Switching from ${currentType} to ${request.type}`); this.emit('client:plugin-switched', { from: currentType, to: request.type });
     }
 
     await this.connect(request);
@@ -547,8 +477,7 @@ export class McpClient extends EventEmitter<AllEvents> {
         const healthy = await this.isHealthy();
         const type = this.activePlugin?.metadata.transportType || null;
 
-        if (type) {
-          this.emit('connection:health-check', {
+        if (type) { this.emit('connection:health-check', {
             healthy,
             type,
             timestamp: Date.now(),
@@ -557,15 +486,13 @@ export class McpClient extends EventEmitter<AllEvents> {
 
         if (!healthy) {
           logger.warn(`Health check failed for ${type}`);
-          this.isConnectedFlag = false;
-          this.emit('connection:status-changed', {
+          this.isConnectedFlag = false; this.emit('connection:status-changed', {
             isConnected: false,
-            type,
-            error: 'Health check failed',
+            type, error: 'Health check failed',
           });
         }
       } catch (error) {
-        logger.error('[McpClient] Health check error:', error);
+       logger.error('[McpClient] Health check error:', error);
       }
     }, interval);
   }
@@ -594,7 +521,6 @@ export class McpClient extends EventEmitter<AllEvents> {
         ...newConfig.plugins,
       },
     };
-
-    logger.debug('[McpClient] Configuration updated');
+ logger.debug('[McpClient] Configuration updated');
   }
 }

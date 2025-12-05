@@ -8,13 +8,12 @@
  * @returns The created HTML element.
  */
 import { createLogger } from '@extension/shared/lib/logger';
-
 const logger = createLogger('DOMUtils');
 
 export function createElement<K extends keyof HTMLElementTagNameMap>(
   tag: K,
   attrs: Record<string, any> = {},
-  children: (Node | string)[] = []
+  children: (Node | string)[] = [],
 ): HTMLElementTagNameMap[K] {
   const element = document.createElement(tag);
   for (const key in attrs) {
@@ -43,10 +42,10 @@ export function createElement<K extends keyof HTMLElementTagNameMap>(
 export function waitForElement(
   selector: string,
   timeout = 5000,
-  root: Document | Element = document
+  root: Document | Element = document,
 ): Promise<HTMLElement | null> {
   logger.debug(`Waiting for selector: "${selector}" with timeout ${timeout}ms.`);
-  return new Promise((resolve) => {
+  return new Promise(resolve => {
     const startTime = Date.now();
     const observer = new MutationObserver((mutationsList, obs) => {
       const element = root.querySelector(selector) as HTMLElement | null;
@@ -78,8 +77,7 @@ export function waitForElement(
   });
 }
 
-/**
- * Injects a CSS string into the document's head.
+/** * Injects a CSS string into the document's head.
  * @param css - The CSS string to inject.
  * @param id - An optional ID for the style tag.
  * @returns The created style element.
@@ -105,7 +103,7 @@ export function injectCSS(css: string, id?: string): HTMLStyleElement {
 export function observeChanges(
   targetNode: Node,
   callback: MutationCallback,
-  options: MutationObserverInit
+  options: MutationObserverInit,
 ): MutationObserver {
   const observer = new MutationObserver(callback);
   observer.observe(targetNode, options);

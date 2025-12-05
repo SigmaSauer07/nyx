@@ -1,22 +1,20 @@
 export interface PerformanceMetric {
   name: string; // e.g., 'tti', 'fcp', 'function_execution_time'
-  value: number; // Duration in milliseconds or other relevant metric value
-  unit?: 'ms' | 'bytes' | 'count'; // Unit of the metric value
+  value: number; // Duration in milliseconds or other relevant metric value unit?: 'ms' | 'bytes' | 'count'; // Unit of the metric value
   timestamp: number; // Unix timestamp (ms) when the metric was recorded
   startTime?: number; // Optional: Start time for duration metrics
-  memory?: { // Detailed memory information from performance.memory API
+  memory?: {
+    // Detailed memory information from performance.memory API
     jsHeapSizeLimit: number;
     totalJSHeapSize: number;
     usedJSHeapSize: number;
   };
-  context?: Record<string, string | number | boolean>; // Additional structured context
-  type?: 'measure' | 'navigation' | 'resource' | 'custom'; // Type of performance metric
+  context?: Record<string, string | number | boolean>; // Additional structured context type?: 'measure' | 'navigation' | 'resource' | 'custom'; // Type of performance metric
   tags?: string[]; // Tags for filtering/categorization
 }
 
 export interface CircuitBreakerState {
-  id: string; // Unique identifier for the circuit breaker (e.g., service name or API endpoint)
-  status: 'closed' | 'open' | 'half-open';
+  id: string; // Unique identifier for the circuit breaker (e.g., service name or API endpoint) status: 'closed' | 'open' | 'half-open';
   failureCount: number;
   successCount: number;
   lastFailureTime?: number; // Timestamp of the last recorded failure
@@ -54,8 +52,7 @@ export interface ErrorContext {
 }
 
 export interface HealthCheckResult {
-  service: string; // Name of the service being checked
-  status: 'healthy' | 'degraded' | 'unhealthy' | 'unknown';
+  service: string; // Name of the service being checked status: 'healthy' | 'degraded' | 'unhealthy' | 'unknown';
   lastCheckTime: number; // Unix timestamp (ms) of the check
   responseTimeMs?: number; // Response time in milliseconds, if applicable
   errorRate?: number; // Error rate as a percentage (0-100), if applicable
@@ -64,12 +61,10 @@ export interface HealthCheckResult {
 }
 
 export interface InitializationPhase {
-  name: string; // Name of the initialization step/module
-  status: 'pending' | 'running' | 'completed' | 'failed' | 'skipped' | 'deferred';
+  name: string; // Name of the initialization step/module status: 'pending' | 'running' | 'completed' | 'failed' | 'skipped' | 'deferred';
   startTime?: number; // Unix timestamp (ms)
   endTime?: number; // Unix timestamp (ms)
-  durationMs?: number; // Calculated duration
-  error?: ErrorContext['error']; // Structured error information
+  durationMs?: number; // Calculated duration error?: ErrorContext['error']; // Structured error information
   dependencies?: string[]; // Names of other phases this one depends on
   isCritical?: boolean; // If true, failure of this phase might halt app initialization
   retriesAttempted?: number;
@@ -81,22 +76,20 @@ export interface BaseStoreState {
   isInitialized: boolean;
   isLoading: boolean;
   error?: ErrorContext['error'] | null;
-  lastUpdated: number; // Timestamp of the last state change
-  version?: string; // Version of the store's data structure or schema
+  lastUpdated: number; // Timestamp of the last state change version?: string; // Version of the store's data structure or schema
 }
 
-export interface ContextBridgeMessage<P = any, R = any> { // Generic for payload (P) and response (R)
+export interface ContextBridgeMessage<P = any, R = any> {
+  // Generic for payload (P) and response (R)
   messageId: string; // Unique ID for this message, for tracking and replies
   type: string; // Defines the action or event type
   payload?: P;
   timestamp: number; // Unix timestamp (ms)
-  source: 'content-script' | 'background' | 'popup' | 'options' | 'dev-tools' | string; // Originator
-  destination?: 'content-script' | 'background' | 'popup' | 'options' | 'dev-tools' | string; // Intended recipient
+  source: 'content-script' | 'background' | 'popup' | 'options' | 'dev-tools' | string; // Originator destination?: 'content-script' | 'background' | 'popup' | 'options' | 'dev-tools' | string; // Intended recipient
   contextId?: string; // ID for a specific operation or conversation
   requiresAck?: boolean; // If true, sender expects an acknowledgement message
   isAck?: boolean; // If true, this message is an acknowledgement to a previous message
-  ackMessageId?: string; // messageId of the message being acknowledged
-  error?: ErrorContext['error']; // If the message represents an error or failed response
+  ackMessageId?: string; // messageId of the message being acknowledged error?: ErrorContext['error']; // If the message represents an error or failed response
   response?: R; // For messages that are direct responses to a request
 }
 
@@ -106,7 +99,8 @@ export interface MigrationBridgeConfig {
   fallbackToOldArchitecture: boolean; // If new system fails, attempt to use old one
   trackUsageStats: boolean; // Collect anonymous usage data for migrated features
   featureFlags?: Record<string, boolean>; // Granular control over specific migrated features or components
-  apiEndpoints?: { // Configuration for any new API endpoints used by the new architecture
+  apiEndpoints?: {
+    // Configuration for any new API endpoints used by the new architecture
     [serviceName: string]: string;
   };
   performanceMonitoring?: {

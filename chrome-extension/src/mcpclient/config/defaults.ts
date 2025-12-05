@@ -1,6 +1,6 @@
-export const DEFAULT_WEBSOCKET_URI = 'ws://localhost:3006/message';
-export const DEFAULT_SSE_URI = 'http://localhost:3006/sse';
-export const DEFAULT_STREAMABLE_HTTP_URI = 'http://localhost:3006';
+export const DEFAULT_WEBSOCKET_URI = 'ws: //localhost:3055/message';
+export const DEFAULT_SSE_URI = 'http: //localhost:3055/sse';
+export const DEFAULT_STREAMABLE_HTTP_URI = 'http: //localhost:3055';
 
 export const CONNECTION_DEFAULTS = {
   websocket: {
@@ -9,13 +9,13 @@ export const CONNECTION_DEFAULTS = {
     pingInterval: 30000,
     pongTimeout: 5000,
     maxReconnectAttempts: 3,
-    binaryType: 'arraybuffer' as const
+    binaryType: 'arraybuffer' as const,
   },
   sse: {
     uri: DEFAULT_SSE_URI,
     keepAlive: true,
     connectionTimeout: 5000,
-    readTimeout: 30000
+    readTimeout: 30000,
   },
   'streamable-http': {
     uri: DEFAULT_STREAMABLE_HTTP_URI,
@@ -23,8 +23,8 @@ export const CONNECTION_DEFAULTS = {
     connectionTimeout: 5000,
     readTimeout: 30000,
     fallbackToSSE: false,
-    maxRetries: 2
-  }
+    maxRetries: 2,
+  },
 };
 
 export const GLOBAL_DEFAULTS = {
@@ -32,12 +32,11 @@ export const GLOBAL_DEFAULTS = {
   maxRetries: 3,
   healthCheckInterval: 60000,
   reconnectDelay: 2000,
-  logLevel: 'info' as const
+  logLevel: 'info' as const,
 };
-
 export function getDefaultUri(type: 'websocket' | 'sse' | 'streamable-http'): string {
-  return type === 'websocket' 
-    ? DEFAULT_WEBSOCKET_URI 
+  return type === 'websocket'
+    ? DEFAULT_WEBSOCKET_URI
     : type === 'streamable-http'
       ? DEFAULT_STREAMABLE_HTTP_URI
       : DEFAULT_SSE_URI;

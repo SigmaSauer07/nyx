@@ -25,7 +25,7 @@ export interface FunctionCallRendererConfig {
   enableStalledStreamDetection: boolean;
   stalledStreamTimeout: number;
   stalledStreamCheckInterval: number;
-    // CodeMirror content extraction
+  // CodeMirror content extraction
   useCodeMirrorExtraction: boolean;
 }
 

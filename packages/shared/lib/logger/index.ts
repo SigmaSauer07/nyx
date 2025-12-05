@@ -1,5 +1,5 @@
 /**
- * Centralized logging system for MCP SuperAssistant
+ * Centralized logging system for Nyx
  *
  * Features:
  * - Granular log level control (DEBUG, INFO, WARN, ERROR, NONE)
@@ -12,28 +12,18 @@
  * Usage:
  * ```typescript
  * import { createLogger } from '@/shared/logger';
- *
- * const logger = createLogger('MyComponent');
- * logger.debug('Debug message');
- * logger.info('Info message');
- * logger.warn('Warning message');
- * logger.error('Error message');
+ * * const logger = createLogger('MyComponent'); * logger.debug('Debug message'); * logger.info('Info message'); * logger.warn('Warning message'); * logger.error('Error message');
  * ```
  *
  * Runtime control (via browser console):
- * ```javascript
- * window.setLogLevel('DEBUG')
- * window.getLogLevel()
- * window.setComponentLogLevel('PluginRegistry', 'DEBUG')
+ * ```javascript * window.setLogLevel('DEBUG')
+ * window.getLogLevel() * window.setComponentLogLevel('PluginRegistry', 'DEBUG')
  * window.resetLogLevel()
  * ```
- */
-
-export { Logger } from './Logger.js';
+ */ export { Logger } from './Logger.js';
 export { LoggerStorage } from './storage.js';
 export { LogLevel } from './types.js';
 export type { ILogger, ILoggerStorage, LoggerConfig, LogLevelString } from './types.js';
-
 import { Logger } from './Logger.js';
 import type { LoggerConfig } from './types.js';
 
@@ -51,7 +41,6 @@ export function getGlobalLogger(config?: Partial<LoggerConfig>): Logger {
   }
   return globalLogger;
 }
-
 /**
  * Create a namespaced logger instance
  *
@@ -64,11 +53,9 @@ export function createLogger(namespace: string, config?: Partial<LoggerConfig>):
   if (!globalLogger) {
     globalLogger = new Logger('', config);
   }
-
   // Create a child logger with the namespace
   return globalLogger.child(namespace);
 }
-
 /**
  * Initialize the global logger
  * Call this once during application initialization
@@ -78,19 +65,16 @@ export function createLogger(namespace: string, config?: Partial<LoggerConfig>):
  * - Production (import.meta.env.PROD): ERROR level (only errors enabled)
  *
  * To change log level in code:
- * ```typescript
- * import { getGlobalLogger, LogLevel } from '@extension/shared/lib/logger';
+ * ```typescript * import { getGlobalLogger, LogLevel } from '@extension/shared/lib/logger';
  *
  * const logger = getGlobalLogger();
- * logger.setLevel(LogLevel.DEBUG); // Enable all logs
- * logger.setComponentLevel('ComponentName', LogLevel.WARN); // Component-specific
+ * logger.setLevel(LogLevel.DEBUG); // Enable all logs * logger.setComponentLevel('ComponentName', LogLevel.WARN); // Component-specific
  * ```
  */
 export function initializeLogger(config?: Partial<LoggerConfig>): Logger {
   const logger = getGlobalLogger(config);
   return logger;
 }
-
 /**
  * Default export for convenience
  */

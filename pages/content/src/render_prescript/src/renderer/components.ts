@@ -7,11 +7,9 @@ import { checkAndDisplayFunctionHistory, createHistoryPanel, updateHistoryPanel 
 import { extractJSONParameters, stripLanguageTags } from '../parser/jsonFunctionParser';
 import { createLogger } from '@extension/shared/lib/logger';
 
-// Add type declarations for the global adapter and mcpClient access
-
-const logger = createLogger('AdapterAccess');
-
-declare global {
+// Add type declarations for the global adapter and mcpClient access const logger = createLogger('AdapterAccess');
+  
+  declare global {
   interface Window {
     mcpAdapter?: any;
     getCurrentAdapter?: () => any;
@@ -27,36 +25,31 @@ declare global {
 function getCurrentAdapter(): any {
   try {
     // First try to get adapter through the new plugin registry system
-    const pluginRegistry = (window as any).pluginRegistry;
-    if (pluginRegistry && typeof pluginRegistry.getActivePlugin === 'function') {
+    const pluginRegistry = (window as any).pluginRegistry; if (pluginRegistry && typeof pluginRegistry.getActivePlugin === 'function') {
       const activePlugin = pluginRegistry.getActivePlugin();
-      if (activePlugin && activePlugin.capabilities && activePlugin.capabilities.length > 0) {
-        logger.debug('[AdapterAccess] Using active plugin adapter:', activePlugin.name);
+      if (activePlugin && activePlugin.capabilities && activePlugin.capabilities.length > 0) { logger.debug('[AdapterAccess] Using active plugin adapter:', activePlugin.name);
         return activePlugin;
       }
     }
 
     // Fallback to legacy global adapter access for backward compatibility
     const legacyAdapter = window.mcpAdapter || window.getCurrentAdapter?.();
-    if (legacyAdapter) {
-      logger.debug('[AdapterAccess] Using legacy adapter access');
+    if (legacyAdapter) { logger.debug('[AdapterAccess] Using legacy adapter access');
       return legacyAdapter;
     }
-
-    logger.warn('[AdapterAccess] No adapter found through plugin registry or legacy access');
+ logger.warn('[AdapterAccess] No adapter found through plugin registry or legacy access');
     return null;
   } catch (error) {
-    logger.error('[AdapterAccess] Error getting current adapter:', error);
+       logger.error('[AdapterAccess] Error getting current adapter:', error);
     
     // Final fallback to legacy system
     try {
       const legacyAdapter = window.mcpAdapter || window.getCurrentAdapter?.();
-      if (legacyAdapter) {
-        logger.debug('[AdapterAccess] Using legacy adapter as fallback');
+      if (legacyAdapter) { logger.debug('[AdapterAccess] Using legacy adapter as fallback');
         return legacyAdapter;
       }
     } catch (fallbackError) {
-      logger.error('[AdapterAccess] Fallback adapter access also failed:', fallbackError);
+       logger.error('[AdapterAccess] Fallback adapter access also failed:', fallbackError);
     }
     
     return null;
@@ -77,31 +70,19 @@ function adapterSupportsCapability(capability: string): boolean {
     }
 
     // Fallback to method existence check (legacy system)
-    switch (capability) {
-      case 'text-insertion':
-        return typeof adapter.insertText === 'function';
-      case 'form-submission':
-        return typeof adapter.submitForm === 'function';
-      case 'file-attachment':
-        return typeof adapter.attachFile === 'function' && adapter.supportsFileUpload?.() === true;
-      case 'dom-manipulation':
-        return typeof adapter.insertText === 'function'; // Basic DOM manipulation
+    switch (capability) { case 'text-insertion': return typeof adapter.insertText === 'function'; case 'form-submission': return typeof adapter.submitForm === 'function'; case 'file-attachment': return typeof adapter.attachFile === 'function' && adapter.supportsFileUpload?.() === true; case 'dom-manipulation': return typeof adapter.insertText === 'function'; // Basic DOM manipulation
       default:
         return false;
     }
   } catch (error) {
-    logger.error('[AdapterAccess] Error checking capability:', error);
+       logger.error('[AdapterAccess] Error checking capability:', error);
     return false;
   }
-}
-
-// Performance optimizations: Cache constants and pre-compile regexes
+} // Performance optimizations: Cache constants and pre-compile regexes
 const MAX_INSERT_LENGTH = 39000;
 const WEBSITE_NAME_FOR_MAX_INSERT_LENGTH_CHECK = ['perplexity'];
 const websiteName = window.location.hostname
-  .toLowerCase()
-  .replace(/^www\./i, '')
-  .split('.')[0];
+  .toLowerCase() .replace(/^www\./i, '') .split('.')[0];
 
 // Pre-compiled regexes for better performance
 const INVOKE_REGEX = /<invoke name="([^"]+)"(?:\s+call_id="([^"]+)")?>/;
@@ -111,31 +92,22 @@ const NUMBER_REGEX = /^-?\d+(\.\d+)?$/;
 const BOOLEAN_REGEX = /^(true|false)$/i;
 
 // SVG icons as constants for reuse
-const ICONS = {
-  CODE: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9.4 16.6L4.8 12l4.6-4.6L8 6l-6 6 6 6 1.4-1.4zm5.2 0l4.6-4.6-4.6-4.6L16 6l6 6-6 6-1.4-1.4z" fill="currentColor"/></svg>',
-  PLAY: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 5v14l11-7z" fill="currentColor"/></svg>',
-  INSERT:
-    '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M16 12l-7-7v4H2v6h7v4l7-7z" fill="currentColor"/></svg>',
-  ATTACH:
-    '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="4" y="2" width="16" height="20" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><path d="M8 6h8M8 10h8M8 14h4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>',
-  SPINNER:
-    '<svg width="16" height="16" viewBox="0 0 50 50"><circle cx="25" cy="25" r="20" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round" stroke-dasharray="31.4 31.4" transform="rotate(-90 25 25)"><animateTransform attributeName="transform" type="rotate" from="0 25 25" to="360 25 25" dur="0.8s" repeatCount="indefinite"/></circle></svg>',
+const ICONS = { CODE: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9.4 16.6L4.8 12l4.6-4.6L8 6l-6 6 6 6 1.4-1.4zm5.2 0l4.6-4.6-4.6-4.6L16 6l6 6-6 6-1.4-1.4z" fill="currentColor"/></svg>', PLAY: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 5v14l11-7z" fill="currentColor"/></svg>',
+  INSERT: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M16 12l-7-7v4H2v6h7v4l7-7z" fill="currentColor"/></svg>',
+  ATTACH: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="4" y="2" width="16" height="20" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><path d="M8 6h8M8 10h8M8 14h4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>',
+  SPINNER: '<svg width="16" height="16" viewBox="0 0 50 50"><circle cx="25" cy="25" r="20" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round" stroke-dasharray="31.4 31.4" transform="rotate(-90 25 25)"><animateTransform attributeName="transform" type="rotate" from="0 25 25" to="360 25 25" dur="0.8s" repeatCount="indefinite"/></circle></svg>',
 };
 
 // Performance utility: Object pooling for DOM elements
 class ElementPool {
   private static pools = new Map<string, HTMLElement[]>();
 
-  static get(tagName: string, className?: string): HTMLElement {
-    const key = `${tagName}:${className || ''}`;
+  static get(tagName: string, className?: string): HTMLElement { const key = `${tagName}:${className || ''}`;
     const pool = this.pools.get(key) || [];
 
     if (pool.length > 0) {
       const element = pool.pop()!;
-      // Reset element state
-      element.innerHTML = '';
-      element.className = className || '';
-      element.removeAttribute('style');
+      // Reset element state element.innerHTML = ''; element.className = className || ''; element.removeAttribute('style');
       return element;
     }
 
@@ -193,15 +165,13 @@ const createOptimizedElement = (
  * @param rawContent Raw XML content to display when toggled
  */
 export const addRawXmlToggle = (blockDiv: HTMLDivElement, rawContent: string): void => {
-  // Check for existing toggle to avoid duplicates
-  if (blockDiv.querySelector('.raw-toggle')) {
+  // Check for existing toggle to avoid duplicates if (blockDiv.querySelector('.raw-toggle')) {
     return;
   }
 
-  // Get the original pre element that contains the function call
-  const blockId = blockDiv.getAttribute('data-block-id');
-
-  if (blockId) {
+  // Get the original pre element that contains the function call const blockId = blockDiv.getAttribute('data-block-id');
+  
+    if (blockId) {
     // Try to find the original element with the complete XML
     const originalPre = document.querySelector(`div[data-block-id="${blockId}"]`);
     if (originalPre) {
@@ -213,43 +183,24 @@ export const addRawXmlToggle = (blockDiv: HTMLDivElement, rawContent: string): v
   // Use DocumentFragment for efficient DOM construction
   const fragment = document.createDocumentFragment();
 
-  // Create container for raw XML content using optimized element creation
-  const rawXmlContainer = createOptimizedElement('div', {
-    className: 'function-results-panel xml-results-panel',
-    styles: {
-      display: 'none',
-      marginTop: '12px',
-      marginBottom: '4px',
+  // Create container for raw XML content using optimized element creation const rawXmlContainer = createOptimizedElement('div', { className: 'function-results-panel xml-results-panel',
+    styles: { display: 'none', marginTop: '12px', marginBottom: '4px',
     },
   });
 
-  // Create the pre element for displaying raw XML with batch style assignment
-  const rawXmlPre = createOptimizedElement('pre', {
+  // Create the pre element for displaying raw XML with batch style assignment const rawXmlPre = createOptimizedElement('pre', {
     textContent: rawContent,
-    styles: {
-      whiteSpace: 'pre-wrap',
-      margin: '0',
-      padding: '12px',
-      fontFamily: 'inherit',
-      fontSize: '13px',
-      lineHeight: '1.5',
+    styles: { whiteSpace: 'pre-wrap', margin: '0', padding: '12px', fontFamily: 'inherit', fontSize: '13px', lineHeight: '1.5',
     },
   });
 
-  // Create toggle button with optimized element creation
-  const toggleBtn = createOptimizedElement('button', {
-    className: 'raw-toggle',
+  // Create toggle button with optimized element creation const toggleBtn = createOptimizedElement('button', { className: 'raw-toggle',
     innerHTML: `${ICONS.CODE}<span>Show Raw Info</span>`,
-    styles: {
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      gap: '6px',
+    styles: { display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px',
     },
   });
 
-  // Cache references for performance
-  const textSpan = toggleBtn.querySelector('span')!;
+  // Cache references for performance const textSpan = toggleBtn.querySelector('span')!;
   let isVisible = false;
 
   // Optimized toggle handler with requestAnimationFrame for smooth transitions
@@ -257,9 +208,7 @@ export const addRawXmlToggle = (blockDiv: HTMLDivElement, rawContent: string): v
     isVisible = !isVisible;
 
     // Use requestAnimationFrame for smooth visual updates
-    requestAnimationFrame(() => {
-      rawXmlContainer.style.display = isVisible ? 'block' : 'none';
-      textSpan.textContent = isVisible ? 'Hide Raw Info' : 'Show Raw Info';
+    requestAnimationFrame(() => { rawXmlContainer.style.display = isVisible ? 'block' : 'none'; textSpan.textContent = isVisible ? 'Hide Raw Info' : 'Show Raw Info';
     });
   };
 
@@ -267,9 +216,7 @@ export const addRawXmlToggle = (blockDiv: HTMLDivElement, rawContent: string): v
   rawXmlContainer.appendChild(rawXmlPre);
   fragment.appendChild(toggleBtn);
 
-  // Efficiently determine parent and append
-  const targetParent = blockDiv.classList.contains('function-buttons')
-    ? blockDiv.closest('.function-block') || blockDiv
+  // Efficiently determine parent and append const targetParent = blockDiv.classList.contains('function-buttons') ? blockDiv.closest('.function-block') || blockDiv
     : blockDiv;
 
   // Single batch DOM update
@@ -291,11 +238,9 @@ export const setupAutoScroll = (paramValueDiv: ParamValueElement): void => {
  *
  * @param block The block element
  */
-export const stabilizeBlock = (block: HTMLElement): void => {
-  if (block.style.height === '') {
+export const stabilizeBlock = (block: HTMLElement): void => { if (block.style.height === '') {
     const rect = block.getBoundingClientRect();
-    block.style.height = `${rect.height}px`;
-    block.style.overflow = 'hidden'; // Optional: prevent content overflow during transition
+    block.style.height = `${rect.height}px`; block.style.overflow = 'hidden'; // Optional: prevent content overflow during transition
     if (CONFIG.debug) logger.debug(`Stabilized block height: ${rect.height}px`);
   }
 };
@@ -305,11 +250,7 @@ export const stabilizeBlock = (block: HTMLElement): void => {
  *
  * @param block The block element
  */
-export const unstabilizeBlock = (block: HTMLElement): void => {
-  if (block.style.height !== '') {
-    block.style.height = '';
-    block.style.overflow = ''; // Reset overflow
-    if (CONFIG.debug) logger.debug('Unstabilized block height');
+export const unstabilizeBlock = (block: HTMLElement): void => { if (block.style.height !== '') { block.style.height = ''; block.style.overflow = ''; // Reset overflow if (CONFIG.debug) logger.debug('Unstabilized block height');
   }
 };
 
@@ -328,11 +269,9 @@ export const smoothlyUpdateBlockContent = (
 ): void => {
   if (!block) return;
 
-  // Performance: Check update lock more efficiently
-  if (!isStreaming && block.hasAttribute('data-smooth-updating')) return;
+  // Performance: Check update lock more efficiently if (!isStreaming && block.hasAttribute('data-smooth-updating')) return;
 
-  // Skip updates for completed blocks to prevent jitter
-  const blockId = block.getAttribute('data-block-id');
+  // Skip updates for completed blocks to prevent jitter const blockId = block.getAttribute('data-block-id');
   if (blockId && (window as any).completedStreams?.has(blockId)) {
     if (CONFIG.debug) logger.debug(`Skipping update for completed block ${blockId}`);
     return;
@@ -348,8 +287,7 @@ export const smoothlyUpdateBlockContent = (
   const originalClasses = Array.from(block.classList);
   const originalParent = block.parentNode;
 
-  // Mark block as updating
-  block.setAttribute('data-smooth-updating', 'true');
+  // Mark block as updating block.setAttribute('data-smooth-updating', 'true');
 
   // Performance: Cache dimensions and scroll state
   const originalRect = block.getBoundingClientRect();
@@ -360,12 +298,8 @@ export const smoothlyUpdateBlockContent = (
     wasScrollable: block.scrollHeight > block.clientHeight,
   };
 
-  // Optimized shadow tracker creation
-  const shadowTracker = createOptimizedElement('div', {
-    styles: { display: 'none' },
-    attributes: {
-      'data-shadow-for': blockId || 'unknown-block',
-      'data-update-in-progress': 'true',
+  // Optimized shadow tracker creation const shadowTracker = createOptimizedElement('div', { styles: { display: 'none' },
+    attributes: { 'data-shadow-for': blockId || 'unknown-block', 'data-update-in-progress': 'true',
     },
   });
 
@@ -376,16 +310,13 @@ export const smoothlyUpdateBlockContent = (
   // Performance: Use more efficient content parsing
   const parseNewContent = (content: string | HTMLElement): DocumentFragment => {
     const fragment = document.createDocumentFragment();
-
-    if (typeof content === 'string') {
+ if (typeof content === 'string') {
       // Optimized parsing with better error handling
-      try {
-        const template = document.createElement('template');
+      try { const template = document.createElement('template');
         template.innerHTML = content;
         fragment.appendChild(template.content);
       } catch (e) {
-        // Fallback for CSP-restricted environments
-        const div = document.createElement('div');
+        // Fallback for CSP-restricted environments const div = document.createElement('div');
         div.textContent = content;
         fragment.appendChild(div);
       }
@@ -397,13 +328,9 @@ export const smoothlyUpdateBlockContent = (
   };
 
   // Pre-calculate new content dimensions efficiently
-  const measureNewContent = (fragment: DocumentFragment): number => {
-    const tempContainer = createOptimizedElement('div', {
-      styles: {
-        position: 'absolute',
-        visibility: 'hidden',
-        width: `${originalRect.width}px`,
-        left: '-9999px',
+  const measureNewContent = (fragment: DocumentFragment): number => { const tempContainer = createOptimizedElement('div', {
+      styles: { position: 'absolute', visibility: 'hidden',
+        width: `${originalRect.width}px`, left: '-9999px',
       },
     });
 
@@ -422,31 +349,25 @@ export const smoothlyUpdateBlockContent = (
   // Optimized transition setup with batch style assignment
   const transitionDuration = isStreaming ? 150 : 250;
   Object.assign(block.style, {
-    height: `${originalRect.height}px`,
-    overflow: 'hidden',
+    height: `${originalRect.height}px`, overflow: 'hidden',
     transition: `height ${transitionDuration}ms ease-in-out`,
   });
 
-  // Efficient content wrapper management
-  const createContentWrapper = (className: string, opacity: string = '1'): HTMLElement => {
-    return createOptimizedElement('div', {
+  // Efficient content wrapper management const createContentWrapper = (className: string, opacity: string = '1'): HTMLElement => { return createOptimizedElement('div', {
       className: `function-content-wrapper ${className}`,
       styles: {
-        opacity,
-        transform: opacity === '0' ? 'translateY(10px)' : 'translateY(0)',
+        opacity, transform: opacity === '0' ? 'translateY(10px)' : 'translateY(0)',
         transition: `opacity ${transitionDuration * 0.6}ms ease-out, transform ${transitionDuration * 0.6}ms ease-out`,
       },
     });
   };
 
-  // Move existing content to wrapper
-  const oldWrapper = createContentWrapper('function-content-old');
+  // Move existing content to wrapper const oldWrapper = createContentWrapper('function-content-old');
   while (block.firstChild) {
     oldWrapper.appendChild(block.firstChild);
   }
 
-  // Create new content wrapper
-  const newWrapper = createContentWrapper('function-content-new', '0');
+  // Create new content wrapper const newWrapper = createContentWrapper('function-content-new', '0');
   newWrapper.appendChild(newContentFragment);
 
   // Batch DOM operations
@@ -461,18 +382,14 @@ export const smoothlyUpdateBlockContent = (
     block.style.height = `${newHeight}px`;
 
     // Fade out old content
-    Object.assign(oldWrapper.style, {
-      opacity: '0',
-      transform: 'translateY(-10px)',
+    Object.assign(oldWrapper.style, { opacity: '0', transform: 'translateY(-10px)',
     });
 
     // Delayed fade in of new content
     setTimeout(
       () => {
         requestAnimationFrame(() => {
-          Object.assign(newWrapper.style, {
-            opacity: '1',
-            transform: 'translateY(0)',
+          Object.assign(newWrapper.style, { opacity: '1', transform: 'translateY(0)',
           });
         });
       },
@@ -485,16 +402,13 @@ export const smoothlyUpdateBlockContent = (
   let replacementBlock: HTMLElement | null = null;
 
   const observer = new MutationObserver(mutations => {
-    for (const mutation of mutations) {
-      if (mutation.type === 'childList' && Array.from(mutation.removedNodes).includes(block)) {
+    for (const mutation of mutations) { if (mutation.type === 'childList' && Array.from(mutation.removedNodes).includes(block)) {
         blockRemoved = true;
 
         // Efficiently find replacement block
         const addedElement = Array.from(mutation.addedNodes).find(
           (node): node is HTMLElement =>
-            node.nodeType === Node.ELEMENT_NODE &&
-            (node as HTMLElement).classList.contains('function-block') &&
-            (node as HTMLElement).getAttribute('data-block-id') === blockId,
+            node.nodeType === Node.ELEMENT_NODE && (node as HTMLElement).classList.contains('function-block') && (node as HTMLElement).getAttribute('data-block-id') === blockId,
         ) as HTMLElement | undefined;
 
         if (addedElement) {
@@ -522,13 +436,9 @@ export const smoothlyUpdateBlockContent = (
       });
 
       // Batch style cleanup
-      Object.assign(replacementBlock.style, {
-        transition: '',
-        height: '',
-        overflow: '',
+      Object.assign(replacementBlock.style, { transition: '', height: '', overflow: '',
       });
-
-      replacementBlock.removeAttribute('data-smooth-updating');
+ replacementBlock.removeAttribute('data-smooth-updating');
 
       if (scrollState.wasScrollable) {
         replacementBlock.scrollTop = scrollState.top;
@@ -548,17 +458,13 @@ export const smoothlyUpdateBlockContent = (
       });
 
       // Batch style reset
-      Object.assign(block.style, {
-        height: '',
-        overflow: '',
-        transition: '',
+      Object.assign(block.style, { height: '', overflow: '', transition: '',
       });
 
       if (scrollState.wasScrollable) {
         block.scrollTop = scrollState.top;
       }
-
-      block.removeAttribute('data-smooth-updating');
+ block.removeAttribute('data-smooth-updating');
     }
 
     // Cleanup shadow tracker
@@ -577,13 +483,11 @@ export const smoothlyUpdateBlockContent = (
  * @param rawContent Raw XML content containing the function call
  */
 export const addExecuteButton = (blockDiv: HTMLDivElement, rawContent: string): void => {
-  // Check for existing execute button to avoid duplicates
-  if (blockDiv.querySelector('.execute-button')) {
+  // Check for existing execute button to avoid duplicates if (blockDiv.querySelector('.execute-button')) {
     return;
   }
 
-  // Detect format and extract function name and parameters
-  const isJSON = rawContent.includes('"type"') && rawContent.includes('function_call');
+  // Detect format and extract function name and parameters const isJSON = rawContent.includes('"type"') && rawContent.includes('function_call');
   const functionName = extractFunctionName(rawContent);
 
   let parameters: Record<string, any>;
@@ -593,20 +497,17 @@ export const addExecuteButton = (blockDiv: HTMLDivElement, rawContent: string): 
     // Extract JSON parameters
     parameters = extractJSONParameters(rawContent);
 
-    if (CONFIG.debug) {
-      logger.debug('[Execute Button] Extracted JSON parameters:', parameters);
+    if (CONFIG.debug) { logger.debug('[Execute Button] Extracted JSON parameters:', parameters);
     }
 
-    // Extract call_id from JSON
-    const lines = rawContent.split('\n');
+    // Extract call_id from JSON const lines = rawContent.split('\n');
     let extractedCallId: string | null = null;
     for (const line of lines) {
       try {
         const trimmed = stripLanguageTags(line);
         if (!trimmed) continue;
 
-        const parsed = JSON.parse(trimmed);
-        if (parsed.type === 'function_call_start' && parsed.call_id) {
+        const parsed = JSON.parse(trimmed); if (parsed.type === 'function_call_start' && parsed.call_id) {
           extractedCallId = parsed.call_id.toString();
           break;
         }
@@ -619,25 +520,21 @@ export const addExecuteButton = (blockDiv: HTMLDivElement, rawContent: string): 
     // XML format
     parameters = extractFunctionParameters(rawContent);
 
-    if (CONFIG.debug) {
-      logger.debug('[Execute Button] Extracted XML parameters:', parameters);
+    if (CONFIG.debug) { logger.debug('[Execute Button] Extracted XML parameters:', parameters);
     }
 
     // Extract call_id from XML using pre-compiled regex
     const callIdMatch = INVOKE_REGEX.exec(rawContent);
     callId = callIdMatch?.[2] || `call-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`;
   }
-
-  // If we couldn't extract a function name, don't add the button
+ // If we couldn't extract a function name, don't add the button
   if (!functionName) {
-    if (CONFIG.debug) {
-      logger.debug('[Execute Button] No function name found, skipping button');
+    if (CONFIG.debug) { logger.debug('[Execute Button] No function name found, skipping button');
     }
     return;
   }
 
-  if (CONFIG.debug) {
-    logger.debug('[Execute Button] Creating button for:', functionName, 'with params:', Object.keys(parameters));
+  if (CONFIG.debug) { logger.debug('[Execute Button] Creating button for:', functionName, 'with params:', Object.keys(parameters));
   }
 
   // Generate content signature for this function call
@@ -646,75 +543,44 @@ export const addExecuteButton = (blockDiv: HTMLDivElement, rawContent: string): 
   // Use DocumentFragment for efficient DOM construction
   const fragment = document.createDocumentFragment();
 
-  // Create optimized execute button
-  const executeButton = createOptimizedElement('button', {
-    className: 'execute-button',
+  // Create optimized execute button const executeButton = createOptimizedElement('button', { className: 'execute-button',
     innerHTML: `${ICONS.PLAY}<span>Run</span>`,
-    styles: {
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      gap: '6px',
-      marginLeft: '0',
+    styles: { display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px', marginLeft: '0',
     },
   }) as HTMLButtonElement;
 
-  // Create optimized results panel
-  const resultsPanel = createOptimizedElement('div', {
-    className: 'function-results-panel',
-    styles: {
-      display: 'none',
-      maxHeight: '200px',
-      overflow: 'auto',
+  // Create optimized results panel const resultsPanel = createOptimizedElement('div', { className: 'function-results-panel',
+    styles: { display: 'none', maxHeight: '200px', overflow: 'auto',
     },
-    attributes: {
-      'data-call-id': callId,
-      'data-function-name': functionName,
+    attributes: { 'data-call-id': callId, 'data-function-name': functionName,
     },
   }) as HTMLDivElement;
 
-  // Create optimized loading indicator
-  const loadingIndicator = createOptimizedElement('div', {
-    className: 'function-loading',
-    styles: {
-      display: 'none',
-      marginTop: '12px',
-      padding: '10px',
-      borderRadius: '8px',
-      backgroundColor: 'rgba(0, 0, 0, 0.03)',
-      border: '1px solid rgba(0, 0, 0, 0.06)',
+  // Create optimized loading indicator const loadingIndicator = createOptimizedElement('div', { className: 'function-loading',
+    styles: { display: 'none', marginTop: '12px', padding: '10px', borderRadius: '8px', backgroundColor: 'rgba(0, 0, 0, 0.03)', border: '1px solid rgba(0, 0, 0, 0.06)',
     },
   }) as HTMLDivElement;
 
-  // Cache DOM references for performance
-  const buttonText = executeButton.querySelector('span')!;
+  // Cache DOM references for performance const buttonText = executeButton.querySelector('span')!;
 
   // Optimized click handler with better performance and mcpClient integration
   executeButton.onclick = async () => {
     // Batch button state changes
-    executeButton.disabled = true;
-    buttonText.style.display = 'none';
+    executeButton.disabled = true; buttonText.style.display = 'none';
 
-    // Add spinner efficiently
-    const spinner = createOptimizedElement('span', {
-      className: 'execute-spinner',
+    // Add spinner efficiently const spinner = createOptimizedElement('span', { className: 'execute-spinner',
       innerHTML: ICONS.SPINNER,
-      styles: {
-        display: 'inline-flex',
-        marginLeft: '8px',
+      styles: { display: 'inline-flex', marginLeft: '8px',
       },
     });
 
     executeButton.appendChild(spinner);
 
-    // Reset results panel state efficiently
-    resultsPanel.style.display = 'none';
-    resultsPanel.innerHTML = '';
+    // Reset results panel state efficiently resultsPanel.style.display = 'none'; resultsPanel.innerHTML = '';
 
     // Function to reset button state
     const resetButtonState = () => {
-      executeButton.disabled = false;
-      buttonText.style.display = '';
+      executeButton.disabled = false; buttonText.style.display = '';
 
       if (executeButton.contains(spinner)) {
         executeButton.removeChild(spinner);
@@ -727,25 +593,19 @@ export const addExecuteButton = (blockDiv: HTMLDivElement, rawContent: string): 
       const mcpClient = (window as any).mcpClient;
 
       if (!mcpClient) {
-        resetButtonState();
-        displayResult(resultsPanel, loadingIndicator, false, 'Error: mcpClient not found');
-        resultsPanel.style.display = 'block';
+        resetButtonState(); displayResult(resultsPanel, loadingIndicator, false, 'Error: mcpClient not found'); resultsPanel.style.display = 'block';
         return;
       }
 
       // Check if mcpClient is ready
       if (!mcpClient.isReady || !mcpClient.isReady()) {
-        resetButtonState();
-        displayResult(resultsPanel, loadingIndicator, false, 'Error: MCP client not ready');
-        resultsPanel.style.display = 'block';
+        resetButtonState(); displayResult(resultsPanel, loadingIndicator, false, 'Error: MCP client not ready'); resultsPanel.style.display = 'block';
         return;
       }
 
       logger.debug(`Executing function ${functionName}, call_id: ${callId} with arguments:`, parameters);
 
-      // Show results panel and loading indicator
-      resultsPanel.style.display = 'block';
-      resultsPanel.innerHTML = '';
+      // Show results panel and loading indicator resultsPanel.style.display = 'block'; resultsPanel.innerHTML = '';
       resultsPanel.appendChild(loadingIndicator);
 
       // Call tool using the new mcpClient async API
@@ -756,8 +616,7 @@ export const addExecuteButton = (blockDiv: HTMLDivElement, rawContent: string): 
         displayResult(resultsPanel, loadingIndicator, true, result);
 
         // Store execution and update history efficiently
-        const executionData = storeExecutedFunction(functionName, callId, parameters, contentSignature);
-        const historyPanel = (blockDiv.querySelector('.function-history-panel') ||
+        const executionData = storeExecutedFunction(functionName, callId, parameters, contentSignature); const historyPanel = (blockDiv.querySelector('.function-history-panel') ||
           createHistoryPanel(blockDiv, callId, contentSignature)) as HTMLDivElement;
         
         // Update history panel with mcpClient reference
@@ -769,24 +628,16 @@ export const addExecuteButton = (blockDiv: HTMLDivElement, rawContent: string): 
         // Enhanced error handling for connection issues
         let errorMessage = toolError instanceof Error ? toolError.message : String(toolError);
         
-        // Check for connection-related errors and provide better user feedback
-        if (errorMessage.includes('not connected') || errorMessage.includes('connection')) {
-          errorMessage = 'Connection lost. Please check your MCP server connection.';
-        } else if (errorMessage.includes('timeout')) {
-          errorMessage = 'Request timed out. Please try again.';
-        } else if (errorMessage.includes('server unavailable') || errorMessage.includes('SERVER_UNAVAILABLE')) {
-          errorMessage = 'MCP server is unavailable. Please check the server status.';
+        // Check for connection-related errors and provide better user feedback if (errorMessage.includes('not connected') || errorMessage.includes('connection')) { errorMessage = 'Connection lost. Please check your MCP server connection.'; } else if (errorMessage.includes('timeout')) { errorMessage = 'Request timed out. Please try again.'; } else if (errorMessage.includes('server unavailable') || errorMessage.includes('SERVER_UNAVAILABLE')) { errorMessage = 'MCP server is unavailable. Please check the server status.';
         }
         
         displayResult(resultsPanel, loadingIndicator, false, errorMessage);
       }
 
     } catch (error: any) {
-      resetButtonState();
-      resultsPanel.style.display = 'block';
+      resetButtonState(); resultsPanel.style.display = 'block';
       
-      const errorMessage = error instanceof Error ? error.message : String(error);
-      logger.error('Execute button error:', error);
+      const errorMessage = error instanceof Error ? error.message : String(error); logger.error('Execute button error:', error);
       
       displayResult(
         resultsPanel,
@@ -801,9 +652,7 @@ export const addExecuteButton = (blockDiv: HTMLDivElement, rawContent: string): 
   fragment.appendChild(executeButton);
   blockDiv.appendChild(fragment);
 
-  // Efficiently determine target parent
-  const targetParent = blockDiv.classList.contains('function-buttons')
-    ? blockDiv.closest('.function-block') || blockDiv
+  // Efficiently determine target parent const targetParent = blockDiv.classList.contains('function-buttons') ? blockDiv.closest('.function-block') || blockDiv
     : blockDiv;
 
   targetParent.appendChild(resultsPanel);
@@ -819,19 +668,16 @@ export const addExecuteButton = (blockDiv: HTMLDivElement, rawContent: string): 
  * @returns The function name or null if not found
  */
 const extractFunctionName = (rawContent: string): string | null => {
-  // Check for JSON format first
-  const isJSON = rawContent.includes('"type"') && rawContent.includes('function_call_start');
-
-  if (isJSON) {
-    // Extract from JSON format
-    const lines = rawContent.split('\n');
+  // Check for JSON format first const isJSON = rawContent.includes('"type"') && rawContent.includes('function_call_start');
+  
+    if (isJSON) {
+    // Extract from JSON format const lines = rawContent.split('\n');
     for (const line of lines) {
       try {
         const trimmed = stripLanguageTags(line);
         if (!trimmed) continue;
 
-        const parsed = JSON.parse(trimmed);
-        if (parsed.type === 'function_call_start' && parsed.name) {
+        const parsed = JSON.parse(trimmed); if (parsed.type === 'function_call_start' && parsed.name) {
           return parsed.name;
         }
       } catch (e) {
@@ -859,8 +705,7 @@ export const extractFunctionParameters = (rawContent: string): Record<string, an
   // Use pre-compiled regex for better performance
   let match;
   while ((match = PARAM_REGEX.exec(rawContent)) !== null) {
-    const name = match[1];
-    const type = match[2] || 'string';
+    const name = match[1]; const type = match[2] || 'string';
     let value: any = match[3].trim();
 
     // Check for CDATA using pre-compiled regex
@@ -876,35 +721,28 @@ export const extractFunctionParameters = (rawContent: string): Record<string, an
     }
 
     // Optimized type parsing with pre-compiled regexes
-    switch (type) {
-      case 'json':
+    switch (type) { case 'json':
         try {
           value = JSON.parse(value);
         } catch (e) {
-          logger.warn(`Failed to parse JSON for parameter '${name}'.`, e);
+       logger.warn(`Failed to parse JSON for parameter '${name}'.`, e);
         }
         break;
-
-      case 'number':
+ case 'number':
         const num = parseFloat(value);
         if (!isNaN(num)) value = num;
         break;
-
-      case 'boolean':
-        value = value.toLowerCase() === 'true';
+ case 'boolean': value = value.toLowerCase() === 'true';
         break;
 
       default:
         // Auto-detect numeric, boolean, and JSON-like values
         if (NUMBER_REGEX.test(value)) {
           value = parseFloat(value);
-        } else if (BOOLEAN_REGEX.test(value)) {
-          value = value.toLowerCase() === 'true';
+        } else if (BOOLEAN_REGEX.test(value)) { value = value.toLowerCase() === 'true';
         } else {
           // Try to parse as JSON if it looks like JSON (starts with { or [)
-          const trimmedValue = value.trim();
-          if ((trimmedValue.startsWith('{') && trimmedValue.endsWith('}')) || 
-              (trimmedValue.startsWith('[') && trimmedValue.endsWith(']'))) {
+          const trimmedValue = value.trim(); if ((trimmedValue.startsWith('{') && trimmedValue.endsWith('}')) ||  (trimmedValue.startsWith('[') && trimmedValue.endsWith(']'))) {
             try {
               value = JSON.parse(trimmedValue);
               if (CONFIG.debug) logger.debug(`Auto-parsed JSON for parameter ${name}:`, value);
@@ -941,17 +779,13 @@ const attachResultAsFile = async (
   skipAutoInsertCheck: boolean = false,
 ): Promise<{ success: boolean; message: string | null }> => {
   // Early validation for better performance
-  if (!adapter) {
-    logger.error('No adapter provided for file attachment.');
+  if (!adapter) { logger.error('No adapter provided for file attachment.');
     
-    const handleUnsupported = () => {
-      const originalText = button.classList.contains('insert-result-button') ? 'Insert' : 'Attach File';
-      button.innerHTML = `${ICONS.ATTACH}<span>No Adapter</span>`;
-      button.classList.add('attach-error');
+    const handleUnsupported = () => { const originalText = button.classList.contains('insert-result-button') ? 'Insert' : 'Attach File';
+      button.innerHTML = `${ICONS.ATTACH}<span>No Adapter</span>`; button.classList.add('attach-error');
 
       setTimeout(() => {
-        button.innerHTML = `${ICONS.ATTACH}<span>${originalText}</span>`;
-        button.classList.remove('attach-error');
+        button.innerHTML = `${ICONS.ATTACH}<span>${originalText}</span>`; button.classList.remove('attach-error');
       }, 2000);
     };
 
@@ -959,18 +793,13 @@ const attachResultAsFile = async (
     return { success: false, message: null };
   }
 
-  // Check if adapter supports file attachment using the new capability system
-  if (!adapterSupportsCapability('file-attachment')) {
-    logger.error('Current adapter does not support file attachment.');
-    
-    const handleUnsupported = () => {
-      const originalText = button.classList.contains('insert-result-button') ? 'Insert' : 'Attach File';
-      button.innerHTML = `${ICONS.ATTACH}<span>Attach Not Supported</span>`;
-      button.classList.add('attach-error');
+  // Check if adapter supports file attachment using the new capability system if (!adapterSupportsCapability('file-attachment')) { logger.error('Current adapter does not support file attachment.');
+      
+      const handleUnsupported = () => { const originalText = button.classList.contains('insert-result-button') ? 'Insert' : 'Attach File';
+      button.innerHTML = `${ICONS.ATTACH}<span>Attach Not Supported</span>`; button.classList.add('attach-error');
 
       setTimeout(() => {
-        button.innerHTML = `${ICONS.ATTACH}<span>${originalText}</span>`;
-        button.classList.remove('attach-error');
+        button.innerHTML = `${ICONS.ATTACH}<span>${originalText}</span>`; button.classList.remove('attach-error');
       }, 2000);
     };
 
@@ -978,26 +807,19 @@ const attachResultAsFile = async (
     return { success: false, message: null };
   }
 
-  const fileName = `${functionName}_result_call_id_${callId}.txt`;
-  const file = new File([rawResultText], fileName, { type: 'text/plain' });
-  const originalButtonText = button.textContent || 'Attach File';
+  const fileName = `${functionName}_result_call_id_${callId}.txt`; const file = new File([rawResultText], fileName, { type: 'text/plain' }); const originalButtonText = button.textContent || 'Attach File';
   let confirmationText: string | null = null;
 
   // Optimized button state management
   const setButtonState = (text: string, className?: string, disabled: boolean = true) => {
-    // Clear button content and rebuild properly
-    button.innerHTML = '';
+    // Clear button content and rebuild properly button.innerHTML = '';
     
-    // Create new icon element to avoid DOM reference issues
-    const iconElement = createOptimizedElement('span', {
+    // Create new icon element to avoid DOM reference issues const iconElement = createOptimizedElement('span', {
       innerHTML: ICONS.ATTACH,
-      styles: {
-        display: 'inline-flex',
-        marginRight: '6px',
+      styles: { display: 'inline-flex', marginRight: '6px',
       },
     });
-    
-    const textElement = createOptimizedElement('span', {
+     const textElement = createOptimizedElement('span', {
       textContent: text,
     });
     
@@ -1013,69 +835,57 @@ const attachResultAsFile = async (
   const resetButtonState = (delay: number = 2000) => {
     setTimeout(() => {
       // Reset to original button structure
-      button.innerHTML = `${ICONS.ATTACH}<span>Attach File</span>`;
-      button.classList.remove('attach-success', 'attach-error');
+      button.innerHTML = `${ICONS.ATTACH}<span>Attach File</span>`; button.classList.remove('attach-success', 'attach-error');
       button.disabled = false;
     }, delay);
   };
 
-  try {
-    setButtonState('Attaching...', undefined, true);
+  try { setButtonState('Attaching...', undefined, true);
 
-    // Try the new plugin system attachFile method first
-    if (typeof adapter.attachFile === 'function') {
+    // Try the new plugin system attachFile method first if (typeof adapter.attachFile === 'function') {
       try {
         const success = await adapter.attachFile(file);
         
         if (success) {
-          confirmationText = `File attached successfully: ${fileName}`;
-          setButtonState('Attached!', 'attach-success', true);
+          confirmationText = `File attached successfully: ${fileName}`; setButtonState('Attached!', 'attach-success', true);
 
-          // Insert the confirmation text into the input field
-          if (typeof adapter.insertText === 'function') {
+          // Insert the confirmation text into the input field if (typeof adapter.insertText === 'function') {
             try {
-              await adapter.insertText(confirmationText);
-              logger.debug('Confirmation text inserted successfully');
+              await adapter.insertText(confirmationText); logger.debug('Confirmation text inserted successfully');
             } catch (insertError) {
-              logger.warn('Failed to insert confirmation text:', insertError);
-              // Fallback to legacy method if available
-              if (typeof adapter.insertTextIntoInput === 'function') {
+       logger.warn('Failed to insert confirmation text:', insertError);
+              // Fallback to legacy method if available if (typeof adapter.insertTextIntoInput === 'function') {
                 try {
                   // Dispatch event for legacy insertion
                   requestAnimationFrame(() => {
-                    document.dispatchEvent(
-                      new CustomEvent('mcp:tool-execution-complete', {
+                    document.dispatchEvent( new CustomEvent('mcp:tool-execution-complete', {
                         detail: {
                           result: confirmationText,
-                          isFileAttachment: false,
-                          fileName: '',
+                          isFileAttachment: false, fileName: '',
                           skipAutoInsertCheck: true,
                         },
                       }),
                     );
                   });
                 } catch (legacyError) {
-                  logger.warn('Legacy insertion also failed:', legacyError);
+       logger.warn('Legacy insertion also failed:', legacyError);
                 }
               }
-            }
-          } else if (typeof adapter.insertTextIntoInput === 'function') {
+            } } else if (typeof adapter.insertTextIntoInput === 'function') {
             // Use legacy method directly
             try {
               requestAnimationFrame(() => {
-                document.dispatchEvent(
-                  new CustomEvent('mcp:tool-execution-complete', {
+                document.dispatchEvent( new CustomEvent('mcp:tool-execution-complete', {
                     detail: {
                       result: confirmationText,
-                      isFileAttachment: false,
-                      fileName: '',
+                      isFileAttachment: false, fileName: '',
                       skipAutoInsertCheck: true,
                     },
                   }),
                 );
               });
             } catch (legacyError) {
-              logger.warn('Legacy insertion failed:', legacyError);
+       logger.warn('Legacy insertion failed:', legacyError);
             }
           }
 
@@ -1090,68 +900,56 @@ const attachResultAsFile = async (
           };
 
           // Use requestAnimationFrame for better performance
-          requestAnimationFrame(() => {
-            document.dispatchEvent(new CustomEvent('mcp:tool-execution-complete', { detail: eventDetail }));
+          requestAnimationFrame(() => { document.dispatchEvent(new CustomEvent('mcp:tool-execution-complete', { detail: eventDetail }));
           });
 
           resetButtonState();
           return { success: true, message: confirmationText };
-        } else {
-          throw new Error('Adapter attachFile method returned false');
+        } else { throw new Error('Adapter attachFile method returned false');
         }
       } catch (error) {
-        logger.error('New adapter attachFile method failed:', error);
-        
-        // For now, we'll consider it successful since it's a complex operation
+       logger.error('New adapter attachFile method failed:', error);
+         // For now, we'll consider it successful since it's a complex operation
         // This is optimistic handling for better UX
-        confirmationText = `File attachment initiated: ${fileName}`;
-        setButtonState('Attached!', 'attach-success', true);
+        confirmationText = `File attachment initiated: ${fileName}`; setButtonState('Attached!', 'attach-success', true);
 
-        // Insert the confirmation text into the input field
-        if (typeof adapter.insertText === 'function') {
+        // Insert the confirmation text into the input field if (typeof adapter.insertText === 'function') {
           try {
-            await adapter.insertText(confirmationText);
-            logger.debug('Confirmation text inserted successfully');
+            await adapter.insertText(confirmationText); logger.debug('Confirmation text inserted successfully');
           } catch (insertError) {
-            logger.warn('Failed to insert confirmation text:', insertError);
-            // Fallback to legacy method if available
-            if (typeof adapter.insertTextIntoInput === 'function') {
+       logger.warn('Failed to insert confirmation text:', insertError);
+            // Fallback to legacy method if available if (typeof adapter.insertTextIntoInput === 'function') {
               try {
                 // Dispatch event for legacy insertion
                 requestAnimationFrame(() => {
-                  document.dispatchEvent(
-                    new CustomEvent('mcp:tool-execution-complete', {
+                  document.dispatchEvent( new CustomEvent('mcp:tool-execution-complete', {
                       detail: {
                         result: confirmationText,
-                        isFileAttachment: false,
-                        fileName: '',
+                        isFileAttachment: false, fileName: '',
                         skipAutoInsertCheck: true,
                       },
                     }),
                   );
                 });
               } catch (legacyError) {
-                logger.warn('Legacy insertion also failed:', legacyError);
+       logger.warn('Legacy insertion also failed:', legacyError);
               }
             }
-          }
-        } else if (typeof adapter.insertTextIntoInput === 'function') {
+          } } else if (typeof adapter.insertTextIntoInput === 'function') {
           // Use legacy method directly
           try {
             requestAnimationFrame(() => {
-              document.dispatchEvent(
-                new CustomEvent('mcp:tool-execution-complete', {
+              document.dispatchEvent( new CustomEvent('mcp:tool-execution-complete', {
                   detail: {
                     result: confirmationText,
-                    isFileAttachment: false,
-                    fileName: '',
+                    isFileAttachment: false, fileName: '',
                     skipAutoInsertCheck: true,
                   },
                 }),
               );
             });
           } catch (legacyError) {
-            logger.warn('Legacy insertion failed:', legacyError);
+       logger.warn('Legacy insertion failed:', legacyError);
           }
         }
 
@@ -1164,8 +962,7 @@ const attachResultAsFile = async (
           skipAutoInsertCheck,
         };
 
-        requestAnimationFrame(() => {
-          document.dispatchEvent(new CustomEvent('mcp:tool-execution-complete', { detail: eventDetail }));
+        requestAnimationFrame(() => { document.dispatchEvent(new CustomEvent('mcp:tool-execution-complete', { detail: eventDetail }));
         });
 
         resetButtonState();
@@ -1173,57 +970,47 @@ const attachResultAsFile = async (
       }
     } else {
       // Fallback: Optimistic success for adapters without explicit attachFile method
-      // This maintains compatibility while providing user feedback
-      logger.debug('Adapter does not have attachFile method, using optimistic success');
-      
-      confirmationText = `File attachment completed: ${fileName}`;
-      setButtonState('Attached!', 'attach-success', true);
+      // This maintains compatibility while providing user feedback logger.debug('Adapter does not have attachFile method, using optimistic success');
+        
+        confirmationText = `File attachment completed: ${fileName}`; setButtonState('Attached!', 'attach-success', true);
 
-      // Insert the confirmation text into the input field
-      if (typeof adapter.insertText === 'function') {
+      // Insert the confirmation text into the input field if (typeof adapter.insertText === 'function') {
         try {
-          await adapter.insertText(confirmationText);
-          logger.debug('Confirmation text inserted successfully');
+          await adapter.insertText(confirmationText); logger.debug('Confirmation text inserted successfully');
         } catch (insertError) {
-          logger.warn('Failed to insert confirmation text:', insertError);
-          // Fallback to legacy method if available
-          if (typeof adapter.insertTextIntoInput === 'function') {
+       logger.warn('Failed to insert confirmation text:', insertError);
+          // Fallback to legacy method if available if (typeof adapter.insertTextIntoInput === 'function') {
             try {
               // Dispatch event for legacy insertion
               requestAnimationFrame(() => {
-                document.dispatchEvent(
-                  new CustomEvent('mcp:tool-execution-complete', {
+                document.dispatchEvent( new CustomEvent('mcp:tool-execution-complete', {
                     detail: {
                       result: confirmationText,
-                      isFileAttachment: false,
-                      fileName: '',
+                      isFileAttachment: false, fileName: '',
                       skipAutoInsertCheck: true,
                     },
                   }),
                 );
               });
             } catch (legacyError) {
-              logger.warn('Legacy insertion also failed:', legacyError);
+       logger.warn('Legacy insertion also failed:', legacyError);
             }
           }
-        }
-      } else if (typeof adapter.insertTextIntoInput === 'function') {
+        } } else if (typeof adapter.insertTextIntoInput === 'function') {
         // Use legacy method directly
         try {
           requestAnimationFrame(() => {
-            document.dispatchEvent(
-              new CustomEvent('mcp:tool-execution-complete', {
+            document.dispatchEvent( new CustomEvent('mcp:tool-execution-complete', {
                 detail: {
                   result: confirmationText,
-                  isFileAttachment: false,
-                  fileName: '',
+                  isFileAttachment: false, fileName: '',
                   skipAutoInsertCheck: true,
                 },
               }),
             );
           });
         } catch (legacyError) {
-          logger.warn('Legacy insertion failed:', legacyError);
+       logger.warn('Legacy insertion failed:', legacyError);
         }
       }
 
@@ -1236,16 +1023,14 @@ const attachResultAsFile = async (
         skipAutoInsertCheck,
       };
 
-      requestAnimationFrame(() => {
-        document.dispatchEvent(new CustomEvent('mcp:tool-execution-complete', { detail: eventDetail }));
+      requestAnimationFrame(() => { document.dispatchEvent(new CustomEvent('mcp:tool-execution-complete', { detail: eventDetail }));
       });
 
       resetButtonState();
       return { success: true, message: confirmationText };
     }
   } catch (e) {
-    logger.error('File attachment error:', e);
-    setButtonState('Failed', 'attach-error', true);
+       logger.error('File attachment error:', e); setButtonState('Failed', 'attach-error', true);
     resetButtonState();
   }
 
@@ -1267,9 +1052,7 @@ export const displayResult = (
   success: boolean,
   result: any,
 ): void => {
-  // Cache attributes for performance
-  const callId = resultsPanel.getAttribute('data-call-id') || '';
-  const functionName = resultsPanel.getAttribute('data-function-name') || '';
+  // Cache attributes for performance const callId = resultsPanel.getAttribute('data-call-id') || ''; const functionName = resultsPanel.getAttribute('data-function-name') || '';
 
   // Efficient cleanup of previous results
   const cleanupPreviousResults = () => {
@@ -1278,36 +1061,24 @@ export const displayResult = (
       resultsPanel.removeChild(loadingIndicator);
     }
 
-    // Batch remove existing result content
-    const existingResults = resultsPanel.querySelectorAll('.function-result-success, .function-result-error');
+    // Batch remove existing result content const existingResults = resultsPanel.querySelectorAll('.function-result-success, .function-result-error');
     existingResults.forEach(el => resultsPanel.removeChild(el));
 
     // Remove previous button container
-    const existingButtonContainer = resultsPanel.nextElementSibling;
-    if (existingButtonContainer?.classList.contains('insert-button-container')) {
+    const existingButtonContainer = resultsPanel.nextElementSibling; if (existingButtonContainer?.classList.contains('insert-button-container')) {
       existingButtonContainer.parentNode?.removeChild(existingButtonContainer);
     }
   };
 
   // Optimized error message processing
-  const processErrorMessage = (errorResult: any): string => {
-    let errorMessage = '';
-
-    if (typeof errorResult === 'string') {
-      errorMessage = errorResult;
-    } else if (errorResult && typeof errorResult === 'object') {
-      errorMessage = errorResult.message || 'An unknown error occurred';
-    } else {
-      errorMessage = 'An unknown error occurred';
+  const processErrorMessage = (errorResult: any): string => { let errorMessage = '';
+ if (typeof errorResult === 'string') {
+      errorMessage = errorResult; } else if (errorResult && typeof errorResult === 'object') { errorMessage = errorResult.message || 'An unknown error occurred';
+    } else { errorMessage = 'An unknown error occurred';
     }
 
-    // Optimize server error message handling
-    if (typeof errorMessage === 'string') {
-      const errorMap = {
-        SERVER_UNAVAILABLE: 'Server is disconnected. Please check your connection settings.',
-        CONNECTION_ERROR: 'Connection to server failed. Please try reconnecting.',
-        RECONNECT_ERROR: 'Connection to server failed. Please try reconnecting.',
-        SERVER_ERROR: 'Server error occurred. Please check server status.',
+    // Optimize server error message handling if (typeof errorMessage === 'string') {
+      const errorMap = { SERVER_UNAVAILABLE: 'Server is disconnected. Please check your connection settings.', CONNECTION_ERROR: 'Connection to server failed. Please try reconnecting.', RECONNECT_ERROR: 'Connection to server failed. Please try reconnecting.', SERVER_ERROR: 'Server error occurred. Please check server status.',
       };
 
       for (const [key, message] of Object.entries(errorMap)) {
@@ -1321,57 +1092,38 @@ export const displayResult = (
   };
 
   // Clean up previous results
-  cleanupPreviousResults();
-  loadingIndicator.style.display = 'none';
+  cleanupPreviousResults(); loadingIndicator.style.display = 'none';
 
   if (success) {
-    // Optimized success result processing
-    let rawResultText = '';
+    // Optimized success result processing let rawResultText = '';
 
-    // Create result content efficiently
-    const resultContent = createOptimizedElement('div', {
-      className: 'function-result-success',
+    // Create result content efficiently const resultContent = createOptimizedElement('div', { className: 'function-result-success',
     });
 
-    // Process result data efficiently
-    if (typeof result === 'object') {
+    // Process result data efficiently if (typeof result === 'object') {
       try {
         // Check if result has the new format with content array
         if (result && result.content && Array.isArray(result.content)) {
           // Extract text from content array
-          const textParts = result.content
-            .filter((item: any) => item.type === 'text' && item.text)
+          const textParts = result.content .filter((item: any) => item.type === 'text' && item.text)
             .map((item: any) => item.text);
           
-          if (textParts.length > 0) {
-            rawResultText = textParts.join('\n');
+          if (textParts.length > 0) { rawResultText = textParts.join('\n');
             resultContent.textContent = rawResultText;
           } else {
             // Fallback to full JSON if no text content found
-            rawResultText = JSON.stringify(result, null, 2);
-            const pre = createOptimizedElement('pre', {
+            rawResultText = JSON.stringify(result, null, 2); const pre = createOptimizedElement('pre', {
               textContent: rawResultText,
-              styles: {
-                fontFamily: 'inherit',
-                fontSize: '13px',
-                lineHeight: '1.5',
-                padding: '0',
-                margin: '0',
+              styles: { fontFamily: 'inherit', fontSize: '13px', lineHeight: '1.5', padding: '0', margin: '0',
               },
             });
             resultContent.appendChild(pre);
           }
         } else {
           // Original object handling for backward compatibility
-          rawResultText = JSON.stringify(result, null, 2);
-          const pre = createOptimizedElement('pre', {
+          rawResultText = JSON.stringify(result, null, 2); const pre = createOptimizedElement('pre', {
             textContent: rawResultText,
-            styles: {
-              fontFamily: 'inherit',
-              fontSize: '13px',
-              lineHeight: '1.5',
-              padding: '0',
-              margin: '0',
+            styles: { fontFamily: 'inherit', fontSize: '13px', lineHeight: '1.5', padding: '0', margin: '0',
             },
           });
           resultContent.appendChild(pre);
@@ -1389,67 +1141,44 @@ export const displayResult = (
     resultsPanel.appendChild(resultContent);
 
     // Create button container efficiently using DocumentFragment
-    const fragment = document.createDocumentFragment();
-    const buttonContainer = createOptimizedElement('div', {
-      className: 'function-buttons insert-button-container',
-      styles: {
-        display: 'flex',
-        justifyContent: 'flex-end',
-        marginTop: '10px',
-        marginBottom: '10px',
+    const fragment = document.createDocumentFragment(); const buttonContainer = createOptimizedElement('div', { className: 'function-buttons insert-button-container',
+      styles: { display: 'flex', justifyContent: 'flex-end', marginTop: '10px', marginBottom: '10px',
       },
     });
 
-    // Create optimized insert button
-    const insertButton = createOptimizedElement('button', {
-      className: 'insert-result-button',
+    // Create optimized insert button const insertButton = createOptimizedElement('button', { className: 'insert-result-button',
       innerHTML: `${ICONS.INSERT}<span>Insert</span>`,
-      styles: {
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        gap: '6px',
+      styles: { display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px',
       },
-      attributes: {
-        'data-result-id': `result-${callId}-${Date.now()}`,
+      attributes: { 'data-result-id': `result-${callId}-${Date.now()}`,
       },
     }) as HTMLButtonElement;
 
-    // Cache button text element
-    const insertButtonText = insertButton.querySelector('span')!;
+    // Cache button text element const insertButtonText = insertButton.querySelector('span')!;
 
     // Optimized insert button click handler
     insertButton.onclick = async () => {
       const adapter = getCurrentAdapter();
 
       if (!adapter) {
-        const setErrorState = () => {
-          insertButton.textContent = 'Failed (No Adapter)';
-          insertButton.classList.add('insert-error');
+        const setErrorState = () => { insertButton.textContent = 'Failed (No Adapter)'; insertButton.classList.add('insert-error');
           setTimeout(() => {
-            insertButton.innerHTML = `${ICONS.INSERT}<span>Insert</span>`;
-            insertButton.classList.remove('insert-error');
+            insertButton.innerHTML = `${ICONS.INSERT}<span>Insert</span>`; insertButton.classList.remove('insert-error');
           }, 2000);
         };
 
-        setErrorState();
-        logger.error('No adapter available for text insertion.');
+        setErrorState(); logger.error('No adapter available for text insertion.');
         return;
       }
 
-      // Check if adapter supports text insertion
-      if (!adapterSupportsCapability('text-insertion')) {
-        const setErrorState = () => {
-          insertButton.textContent = 'Not Supported';
-          insertButton.classList.add('insert-error');
+      // Check if adapter supports text insertion if (!adapterSupportsCapability('text-insertion')) {
+        const setErrorState = () => { insertButton.textContent = 'Not Supported'; insertButton.classList.add('insert-error');
           setTimeout(() => {
-            insertButton.innerHTML = `${ICONS.INSERT}<span>Insert</span>`;
-            insertButton.classList.remove('insert-error');
+            insertButton.innerHTML = `${ICONS.INSERT}<span>Insert</span>`; insertButton.classList.remove('insert-error');
           }, 2000);
         };
 
-        setErrorState();
-        logger.error('Current adapter does not support text insertion.');
+        setErrorState(); logger.error('Current adapter does not support text insertion.');
         return;
       }
 
@@ -1463,141 +1192,104 @@ export const displayResult = (
           functionName,
           callId,
           wrapperText,
-          insertButton,
-          insertButton.querySelector('span') as HTMLElement,
+          insertButton, insertButton.querySelector('span') as HTMLElement,
           true,
         );
       } else {
-        // Try the new plugin system insertText method first
-        if (typeof adapter.insertText === 'function') {
+        // Try the new plugin system insertText method first if (typeof adapter.insertText === 'function') {
           try {
             const success = await adapter.insertText(wrapperText);
             
             if (success) {
-              // Optimized success state handling
-              insertButton.textContent = 'Inserted!';
-              insertButton.classList.add('insert-success');
+              // Optimized success state handling insertButton.textContent = 'Inserted!'; insertButton.classList.add('insert-success');
               insertButton.disabled = true;
 
               setTimeout(() => {
-                insertButton.innerHTML = `${ICONS.INSERT}<span>Insert</span>`;
-                insertButton.classList.remove('insert-success');
+                insertButton.innerHTML = `${ICONS.INSERT}<span>Insert</span>`; insertButton.classList.remove('insert-success');
                 insertButton.disabled = false;
               }, 2000);
 
               // Efficient event dispatch with requestAnimationFrame
               requestAnimationFrame(() => {
-                document.dispatchEvent(
-                  new CustomEvent('mcp:tool-execution-complete', {
+                document.dispatchEvent( new CustomEvent('mcp:tool-execution-complete', {
                     detail: {
                       result: wrapperText,
-                      isFileAttachment: false,
-                      fileName: '',
+                      isFileAttachment: false, fileName: '',
                       skipAutoInsertCheck: true,
                     },
                   }),
                 );
               });
-            } else {
-              throw new Error('Adapter insertText method returned false');
+            } else { throw new Error('Adapter insertText method returned false');
             }
           } catch (error) {
-            logger.error('New adapter insertText method failed:', error);
+       logger.error('New adapter insertText method failed:', error);
             
-            // Fallback to legacy method if available
-            if (typeof adapter.insertTextIntoInput === 'function') {
-              logger.debug('Falling back to legacy insertTextIntoInput method');
+            // Fallback to legacy method if available if (typeof adapter.insertTextIntoInput === 'function') { logger.debug('Falling back to legacy insertTextIntoInput method');
               
               // Efficient event dispatch with requestAnimationFrame
               requestAnimationFrame(() => {
-                document.dispatchEvent(
-                  new CustomEvent('mcp:tool-execution-complete', {
+                document.dispatchEvent( new CustomEvent('mcp:tool-execution-complete', {
                     detail: {
                       result: wrapperText,
-                      isFileAttachment: false,
-                      fileName: '',
+                      isFileAttachment: false, fileName: '',
                       skipAutoInsertCheck: true,
                     },
                   }),
                 );
               });
 
-              // Optimized success state handling
-              insertButton.textContent = 'Inserted!';
-              insertButton.classList.add('insert-success');
+              // Optimized success state handling insertButton.textContent = 'Inserted!'; insertButton.classList.add('insert-success');
               insertButton.disabled = true;
 
               setTimeout(() => {
-                insertButton.innerHTML = `${ICONS.INSERT}<span>Insert</span>`;
-                insertButton.classList.remove('insert-success');
+                insertButton.innerHTML = `${ICONS.INSERT}<span>Insert</span>`; insertButton.classList.remove('insert-success');
                 insertButton.disabled = false;
               }, 2000);
             } else {
-              // Optimized error state
-              logger.error('No valid insert method found on adapter');
-              insertButton.textContent = 'Failed (No Insert Method)';
-              insertButton.classList.add('insert-error');
-
-              setTimeout(() => {
-                insertButton.innerHTML = `${ICONS.INSERT}<span>Insert</span>`;
-                insertButton.classList.remove('insert-error');
+              // Optimized error state logger.error('No valid insert method found on adapter'); insertButton.textContent = 'Failed (No Insert Method)'; insertButton.classList.add('insert-error');
+  
+                setTimeout(() => {
+                insertButton.innerHTML = `${ICONS.INSERT}<span>Insert</span>`; insertButton.classList.remove('insert-error');
               }, 2000);
             }
-          }
-        } else if (typeof adapter.insertTextIntoInput === 'function') {
-          // Legacy method fallback
-          logger.debug('Using legacy insertTextIntoInput method');
+          } } else if (typeof adapter.insertTextIntoInput === 'function') {
+          // Legacy method fallback logger.debug('Using legacy insertTextIntoInput method');
           
           // Efficient event dispatch with requestAnimationFrame
           requestAnimationFrame(() => {
-            document.dispatchEvent(
-              new CustomEvent('mcp:tool-execution-complete', {
+            document.dispatchEvent( new CustomEvent('mcp:tool-execution-complete', {
                 detail: {
                   result: wrapperText,
-                  isFileAttachment: false,
-                  fileName: '',
+                  isFileAttachment: false, fileName: '',
                   skipAutoInsertCheck: true,
                 },
               }),
             );
           });
 
-          // Optimized success state handling
-          insertButton.textContent = 'Inserted!';
-          insertButton.classList.add('insert-success');
+          // Optimized success state handling insertButton.textContent = 'Inserted!'; insertButton.classList.add('insert-success');
           insertButton.disabled = true;
 
           setTimeout(() => {
-            insertButton.innerHTML = `${ICONS.INSERT}<span>Insert</span>`;
-            insertButton.classList.remove('insert-success');
+            insertButton.innerHTML = `${ICONS.INSERT}<span>Insert</span>`; insertButton.classList.remove('insert-success');
             insertButton.disabled = false;
           }, 2000);
         } else {
-          // Optimized error state
-          logger.error('Adapter has no insert method available');
-          insertButton.textContent = 'Failed (No Insert Method)';
-          insertButton.classList.add('insert-error');
-
-          setTimeout(() => {
-            insertButton.innerHTML = `${ICONS.INSERT}<span>Insert</span>`;
-            insertButton.classList.remove('insert-error');
+          // Optimized error state logger.error('Adapter has no insert method available'); insertButton.textContent = 'Failed (No Insert Method)'; insertButton.classList.add('insert-error');
+  
+            setTimeout(() => {
+            insertButton.innerHTML = `${ICONS.INSERT}<span>Insert</span>`; insertButton.classList.remove('insert-error');
           }, 2000);
         }
       }
     };
 
-    // Create attach button efficiently
-    const attachButton = createOptimizedElement('button', {
-      className: 'attach-file-button',
+    // Create attach button efficiently const attachButton = createOptimizedElement('button', { className: 'attach-file-button',
       innerHTML: `${ICONS.ATTACH}<span>Attach File</span>`,
-      styles: {
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        gap: '6px',
+      styles: { display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px',
       },
-      attributes: {
-        'data-result-id': `attach-${callId}-${Date.now()}`,
+      attributes: { 'data-result-id': `attach-${callId}-${Date.now()}`,
       },
     }) as HTMLButtonElement;
 
@@ -1619,8 +1311,7 @@ export const displayResult = (
     buttonContainer.appendChild(insertButton);
 
     // Only add attach button if supported
-    const adapter = getCurrentAdapter();
-    if (adapter && adapterSupportsCapability('file-attachment')) {
+    const adapter = getCurrentAdapter(); if (adapter && adapterSupportsCapability('file-attachment')) {
       buttonContainer.appendChild(attachButton);
     }
 
@@ -1630,17 +1321,13 @@ export const displayResult = (
 
     // Handle auto-attachment for large results
     if (
-      rawResultText.length > MAX_INSERT_LENGTH &&
-      adapter && adapterSupportsCapability('file-attachment') &&
+      rawResultText.length > MAX_INSERT_LENGTH && adapter && adapterSupportsCapability('file-attachment') &&
       WEBSITE_NAME_FOR_MAX_INSERT_LENGTH_CHECK.includes(websiteName)
     ) {
       logger.debug(`Auto-attaching file: Result length (${rawResultText.length}) exceeds ${MAX_INSERT_LENGTH}`);
 
       // Create efficient fake button for auto-attachment
-      const fakeElements = {
-        button: createOptimizedElement('button', {
-          className: 'insert-result-button',
-          styles: { display: 'none' },
+      const fakeElements = { button: createOptimizedElement('button', { className: 'insert-result-button', styles: { display: 'none' },
         }) as HTMLButtonElement,
       };
 
@@ -1649,55 +1336,46 @@ export const displayResult = (
           if (success && message) {
             logger.debug(`Auto-attached file successfully: ${message}`);
             
-            // Insert the auto-attachment confirmation text
-            if (typeof adapter.insertText === 'function') {
+            // Insert the auto-attachment confirmation text if (typeof adapter.insertText === 'function') {
               try {
-                await adapter.insertText(message);
-                logger.debug('Auto-attachment confirmation text inserted successfully');
+                await adapter.insertText(message); logger.debug('Auto-attachment confirmation text inserted successfully');
               } catch (insertError) {
-                logger.warn('Failed to insert auto-attachment confirmation text:', insertError);
-                // Fallback to legacy method if available
-                if (typeof adapter.insertTextIntoInput === 'function') {
+       logger.warn('Failed to insert auto-attachment confirmation text:', insertError);
+                // Fallback to legacy method if available if (typeof adapter.insertTextIntoInput === 'function') {
                   try {
                     // Dispatch event for legacy insertion
                     requestAnimationFrame(() => {
-                      document.dispatchEvent(
-                        new CustomEvent('mcp:tool-execution-complete', {
+                      document.dispatchEvent( new CustomEvent('mcp:tool-execution-complete', {
                           detail: {
                             result: message,
-                            isFileAttachment: false,
-                            fileName: '',
+                            isFileAttachment: false, fileName: '',
                             skipAutoInsertCheck: true,
                           },
                         }),
                       );
                     });
                   } catch (legacyError) {
-                    logger.warn('Legacy insertion for auto-attachment also failed:', legacyError);
+       logger.warn('Legacy insertion for auto-attachment also failed:', legacyError);
                   }
                 }
-              }
-            } else if (typeof adapter.insertTextIntoInput === 'function') {
+              } } else if (typeof adapter.insertTextIntoInput === 'function') {
               // Use legacy method directly
               try {
                 requestAnimationFrame(() => {
-                  document.dispatchEvent(
-                    new CustomEvent('mcp:tool-execution-complete', {
+                  document.dispatchEvent( new CustomEvent('mcp:tool-execution-complete', {
                       detail: {
                         result: message,
-                        isFileAttachment: false,
-                        fileName: '',
+                        isFileAttachment: false, fileName: '',
                         skipAutoInsertCheck: true,
                       },
                     }),
                   );
                 });
               } catch (legacyError) {
-                logger.warn('Legacy insertion for auto-attachment failed:', legacyError);
+       logger.warn('Legacy insertion for auto-attachment failed:', legacyError);
               }
             }
-          } else {
-            logger.error('Failed to auto-attach file.');
+          } else { logger.error('Failed to auto-attach file.');
             // Fallback to manual attach button
             setTimeout(() => attachButton.click(), 100);
           }
@@ -1705,8 +1383,7 @@ export const displayResult = (
           // Cleanup fake elements
           ElementPool.release(fakeElements.button);
         })
-        .catch(err => {
-          logger.error('Error auto-attaching file:', err);
+        .catch(err => { logger.error('Error auto-attaching file:', err);
           ElementPool.release(fakeElements.button);
         });
     } else {
@@ -1715,8 +1392,7 @@ export const displayResult = (
       
       // Dispatch event - delays are handled by automation service
       requestAnimationFrame(() => {
-        document.dispatchEvent(
-          new CustomEvent('mcp:tool-execution-complete', {
+        document.dispatchEvent( new CustomEvent('mcp:tool-execution-complete', {
             detail: { 
               result: wrappedResult, 
               skipAutoInsertCheck: false
@@ -1728,9 +1404,7 @@ export const displayResult = (
   } else {
     // Optimized error result handling
     const errorMessage = processErrorMessage(result);
-
-    const resultContent = createOptimizedElement('div', {
-      className: 'function-result-error',
+ const resultContent = createOptimizedElement('div', { className: 'function-result-error',
       textContent: errorMessage,
     });
 

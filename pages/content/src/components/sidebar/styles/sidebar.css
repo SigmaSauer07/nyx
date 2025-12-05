@@ -24,8 +24,9 @@
 
 /* Enhanced shadow host transitions with smooth appearing/disappearing */
 #mcp-sidebar-shadow-host {
-  transition: opacity 0.5s cubic-bezier(0.25, 0.8, 0.25, 1), 
-              transform 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
+  transition:
+    opacity 0.5s cubic-bezier(0.25, 0.8, 0.25, 1),
+    transform 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
   transform-origin: right center;
   will-change: opacity, transform;
 }
@@ -98,7 +99,7 @@
   }
 }
 
-/* Base sidebar container */
+/* Base sidebar container - Glassmorphic Design */
 .sidebar {
   position: fixed;
   top: 0;
@@ -108,16 +109,50 @@
   display: flex;
   flex-direction: column;
   /* Smooth, natural width transitions with subtle elastic feel */
-  transition: width 0.4s cubic-bezier(0.4, 0.0, 0.2, 1), 
-              box-shadow 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
+  transition:
+    width 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+    box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+    background 0.3s ease;
   overflow-y: auto;
-  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08), 
-              0 1px 6px rgba(0, 0, 0, 0.04);
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-  will-change: width, transform; 
+  font-family:
+    'Inter',
+    -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    Roboto,
+    Helvetica,
+    Arial,
+    sans-serif;
+  will-change: width, transform;
   transform: translateZ(0); /* Force GPU acceleration */
   contain: layout style;
-  backdrop-filter: blur(20px);
+
+  /* Glassmorphic effect */
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(40px) saturate(180%);
+  -webkit-backdrop-filter: blur(40px) saturate(180%);
+
+  /* Enhanced shadow for depth */
+  box-shadow:
+    -8px 0 32px rgba(0, 0, 0, 0.08),
+    -4px 0 16px rgba(0, 0, 0, 0.04),
+    inset 1px 0 0 rgba(255, 255, 255, 0.5);
+
+  /* Subtle border */
+  border-left: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Dark mode glassmorphic effect */
+.dark .sidebar {
+  background: rgba(30, 30, 30, 0.8);
+  backdrop-filter: blur(40px) saturate(180%);
+  -webkit-backdrop-filter: blur(40px) saturate(180%);
+
+  box-shadow:
+    -8px 0 32px rgba(0, 0, 0, 0.4),
+    -4px 0 16px rgba(0, 0, 0, 0.2),
+    inset 1px 0 0 rgba(255, 255, 255, 0.05);
+
   border-left: 1px solid rgba(255, 255, 255, 0.1);
 }
 
@@ -141,8 +176,9 @@
 
 /* Push mode */
 .sidebar.push-mode {
-  box-shadow: -5px 0 20px rgba(0, 0, 0, 0.08), 
-              0 0 40px rgba(0, 0, 0, 0.04);
+  box-shadow:
+    -5px 0 20px rgba(0, 0, 0, 0.08),
+    0 0 40px rgba(0, 0, 0, 0.04);
 }
 
 /* Resizing state - disable transitions during active resize */
@@ -156,8 +192,9 @@
   width: 100%;
   height: 100%;
   contain: layout;
-  transition: opacity 0.4s cubic-bezier(0.25, 0.8, 0.25, 1), 
-              transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+  transition:
+    opacity 0.4s cubic-bezier(0.25, 0.8, 0.25, 1),
+    transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
   overflow: hidden;
   transform: translateX(0);
   opacity: 1;
@@ -178,19 +215,19 @@
 }
 
 /* Prevent flash on initial load when sidebar should start minimized */
-[data-initial-minimized="true"] {
+[data-initial-minimized='true'] {
   /* Apply to the shadow host itself */
   width: 56px !important;
   max-width: 56px !important;
 }
 
-[data-initial-minimized="true"] .sidebar {
+[data-initial-minimized='true'] .sidebar {
   width: 56px !important;
   max-width: 56px !important;
   transition: none !important; /* Disable transitions during initial load */
 }
 
-[data-initial-minimized="true"] .sidebar .sidebar-inner-content {
+[data-initial-minimized='true'] .sidebar .sidebar-inner-content {
   opacity: 0 !important;
   transform: translateX(100%) !important;
   transition: none !important; /* Disable transitions during initial load */
@@ -250,8 +287,12 @@
 
 /* Spring animation for expanding content */
 @keyframes expandIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 .sidebar-expand-animation {
@@ -260,11 +301,11 @@
 
 /* Push mode transition */
 .content-wrapper {
-  transition: padding-right 0.5s cubic-bezier(0.25, 1.0, 0.5, 1);
+  transition: padding-right 0.5s cubic-bezier(0.25, 1, 0.5, 1);
 }
 
 .content-wrapper.pushed {
-  transition: padding-right 0.5s cubic-bezier(0.25, 1.0, 0.5, 1);
+  transition: padding-right 0.5s cubic-bezier(0.25, 1, 0.5, 1);
 }
 
 /* Focus styles */
@@ -272,7 +313,7 @@
 .sidebar input:focus-visible {
   outline: 2px solid #4f46e5;
   outline-offset: 2px;
-  transition: outline-color 0.3s cubic-bezier(0.25, 1.0, 0.5, 1);
+  transition: outline-color 0.3s cubic-bezier(0.25, 1, 0.5, 1);
 }
 
 .dark .sidebar button:focus-visible,
@@ -307,7 +348,7 @@
 .sidebar-content-container {
   transition-property: opacity, transform !important;
   transition-duration: 0.5s !important;
-  transition-timing-function: cubic-bezier(0.25, 1.0, 0.5, 1) !important;
+  transition-timing-function: cubic-bezier(0.25, 1, 0.5, 1) !important;
   will-change: opacity, transform !important;
   transform-origin: center right !important;
   backface-visibility: hidden !important;
@@ -316,40 +357,56 @@
 
 /* Enhanced spring-like animation utilities - reduced springiness */
 .sidebar .fade-in {
-  animation: fadeIn 0.4s cubic-bezier(0.25, 1.0, 0.5, 1);
+  animation: fadeIn 0.4s cubic-bezier(0.25, 1, 0.5, 1);
 }
 
 .sidebar .slide-in-right {
-  animation: slideInRight 0.5s cubic-bezier(0.25, 1.0, 0.5, 1);
+  animation: slideInRight 0.5s cubic-bezier(0.25, 1, 0.5, 1);
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 @keyframes slideInRight {
-  from { transform: translateX(30px); opacity: 0; }
-  to { transform: translateX(0); opacity: 1; }
+  from {
+    transform: translateX(30px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
 }
 
 /* Utility classes for transitions - reduced springiness */
 .sidebar .transition-all {
-  transition: all 0.4s cubic-bezier(0.25, 1.0, 0.5, 1);
+  transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
 }
 
 .sidebar .transition-opacity {
-  transition: opacity 0.4s cubic-bezier(0.25, 1.0, 0.5, 1);
+  transition: opacity 0.4s cubic-bezier(0.25, 1, 0.5, 1);
 }
 
 .sidebar .transition-transform {
-  transition: transform 0.4s cubic-bezier(0.25, 1.0, 0.5, 1);
+  transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
 }
 
 /* Ghost element animation - reduced springiness */
 @keyframes ghostAppear {
-  from { opacity: 0; transform: translateX(10px); }
-  to { opacity: 1; transform: translateX(0); }
+  from {
+    opacity: 0;
+    transform: translateX(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
 }
 
 .sidebar .ghost-content {
@@ -360,7 +417,7 @@
   bottom: 0;
   opacity: 0;
   pointer-events: none;
-  animation: ghostAppear 0.4s cubic-bezier(0.25, 1.0, 0.5, 1) forwards;
+  animation: ghostAppear 0.4s cubic-bezier(0.25, 1, 0.5, 1) forwards;
   animation-delay: 0.15s;
 }
 
@@ -371,9 +428,10 @@
   padding: 0.5rem 1rem;
   font-weight: 500;
   cursor: pointer;
-  transition: background-color 0.2s cubic-bezier(0.25, 0.8, 0.25, 1), 
-              transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1),
-              box-shadow 0.2s cubic-bezier(0.25, 0.8, 0.25, 1);
+  transition:
+    background-color 0.2s cubic-bezier(0.25, 0.8, 0.25, 1),
+    transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1),
+    box-shadow 0.2s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
 
 .sidebar .input-submit:hover {
@@ -530,30 +588,63 @@
   transition: all 0.2s ease-out;
 }
 
-/* Simple card animations */
+/* Simple card animations - Enhanced glassmorphic */
 .sidebar-card {
-  transition: all 0.2s ease-out;
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 .sidebar-card:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  transform: translateY(-2px) scale(1.01);
+  box-shadow:
+    0 8px 24px rgba(0, 0, 0, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  background: rgba(255, 255, 255, 0.8);
+  border-color: rgba(255, 255, 255, 0.5);
 }
 
 .dark .sidebar-card:hover {
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  box-shadow:
+    0 8px 24px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  background: rgba(55, 55, 55, 0.7);
+  border-color: rgba(255, 255, 255, 0.15);
 }
 
 /* Font styles */
-.sidebar h1, .sidebar h2, .sidebar h3, .sidebar h4, .sidebar h5, .sidebar h6 {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+.sidebar h1,
+.sidebar h2,
+.sidebar h3,
+.sidebar h4,
+.sidebar h5,
+.sidebar h6 {
+  font-family:
+    'Inter',
+    -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    Roboto,
+    Helvetica,
+    Arial,
+    sans-serif;
 }
 
-.sidebar p, .sidebar span, .sidebar div, .sidebar button, .sidebar input {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+.sidebar p,
+.sidebar span,
+.sidebar div,
+.sidebar button,
+.sidebar input {
+  font-family:
+    'Inter',
+    -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    Roboto,
+    Helvetica,
+    Arial,
+    sans-serif;
 }
 
-/* Resize handle styles */
+/* Resize handle styles - Modern glassmorphic */
 .sidebar-resize-handle {
   position: absolute;
   left: 0;
@@ -561,22 +652,43 @@
   bottom: 0;
   width: 4px;
   cursor: ew-resize;
-  transition: background-color 0.3s ease;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   touch-action: none; /* Prevent scrolling on touch devices */
+  background: transparent;
 }
 
 .sidebar-resize-handle:hover,
 .sidebar-resize-handle.dragging {
-  background-color: rgba(99, 102, 241, 0.5);
+  background: linear-gradient(to right, rgba(99, 102, 241, 0.6), rgba(99, 102, 241, 0.2));
+  box-shadow: 0 0 12px rgba(99, 102, 241, 0.4);
 }
 
-/* Card styles */
+.dark .sidebar-resize-handle:hover,
+.dark .sidebar-resize-handle.dragging {
+  background: linear-gradient(to right, rgba(138, 180, 248, 0.6), rgba(138, 180, 248, 0.2));
+  box-shadow: 0 0 12px rgba(138, 180, 248, 0.4);
+}
+
+/* Card styles - Glassmorphic */
 .sidebar-card {
   overflow: hidden;
-  transition: box-shadow 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), 
-              transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-  border-radius: 0.5rem;
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  border-radius: 12px;
   margin-bottom: 0.75rem;
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow:
+    0 4px 16px rgba(0, 0, 0, 0.04),
+    inset 0 1px 0 rgba(255, 255, 255, 0.6);
+}
+
+.dark .sidebar-card {
+  background: rgba(45, 45, 45, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow:
+    0 4px 16px rgba(0, 0, 0, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
 }
 /* 
 .sidebar-card:hover {
@@ -595,22 +707,32 @@
 
 /* Spring animation for expanding content - reduced springiness */
 @keyframes expandIn {
-  from { transform: scale(0.95); opacity: 0; }
-  to { transform: scale(1); opacity: 1; }
+  from {
+    transform: scale(0.95);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
 }
 
 .sidebar .expand-in {
-  animation: expandIn 0.5s cubic-bezier(0.25, 1.0, 0.5, 1);
+  animation: expandIn 0.5s cubic-bezier(0.25, 1, 0.5, 1);
 }
 
 /* Spring animation for expanding content - reduced springiness */
 @keyframes expandIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 .sidebar-expand-animation {
-  animation: expandIn 0.5s cubic-bezier(0.25, 1.0, 0.5, 1);
+  animation: expandIn 0.5s cubic-bezier(0.25, 1, 0.5, 1);
 }
 
 /* Content transition animations - reduced springiness */
@@ -622,8 +744,9 @@
 .sidebar-content-enter-active {
   opacity: 1;
   transform: translateX(0) scale(1);
-  transition: opacity 0.4s cubic-bezier(0.25, 1.0, 0.5, 1),
-              transform 0.4s cubic-bezier(0.25, 1.0, 0.5, 1);
+  transition:
+    opacity 0.4s cubic-bezier(0.25, 1, 0.5, 1),
+    transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
 }
 
 .sidebar-content-exit {
@@ -634,8 +757,9 @@
 .sidebar-content-exit-active {
   opacity: 0;
   transform: translateX(-10px) scale(0.98);
-  transition: opacity 0.3s cubic-bezier(0.25, 1.0, 0.5, 1),
-              transform 0.3s cubic-bezier(0.25, 1.0, 0.5, 1);
+  transition:
+    opacity 0.3s cubic-bezier(0.25, 1, 0.5, 1),
+    transform 0.3s cubic-bezier(0.25, 1, 0.5, 1);
 }
 
 /* New styles for placeholder content during transitions */
@@ -652,20 +776,19 @@
 .placeholder-card {
   height: 80px;
   border-radius: 8px;
-  background: linear-gradient(90deg, 
-    rgba(229, 231, 235, 0.3) 0%, 
-    rgba(243, 244, 246, 0.4) 50%, 
-    rgba(229, 231, 235, 0.3) 100%);
+  background: linear-gradient(
+    90deg,
+    rgba(229, 231, 235, 0.3) 0%,
+    rgba(243, 244, 246, 0.4) 50%,
+    rgba(229, 231, 235, 0.3) 100%
+  );
   background-size: 200% 100%;
   animation: shimmer 1.5s infinite;
   will-change: background-position;
 }
 
 .dark .placeholder-card {
-  background: linear-gradient(90deg, 
-    rgba(55, 65, 81, 0.3) 0%, 
-    rgba(75, 85, 99, 0.4) 50%, 
-    rgba(55, 65, 81, 0.3) 100%);
+  background: linear-gradient(90deg, rgba(55, 65, 81, 0.3) 0%, rgba(75, 85, 99, 0.4) 50%, rgba(55, 65, 81, 0.3) 100%);
   background-size: 200% 100%;
 }
 
@@ -680,8 +803,12 @@
 
 /* Simple loading animation */
 @keyframes spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .loading-spinner {
@@ -690,8 +817,12 @@
 
 /* Fade in animation for panels */
 @keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 .fade-in {

@@ -1,6 +1,4 @@
-import type { ILoggerStorage } from './types.js';
-import { LogLevel } from './types.js';
-
+import type { ILoggerStorage, LogLevel } from './types.js';
 const STORAGE_KEY = 'mcp_logger_config';
 
 /**
@@ -24,7 +22,6 @@ export class LoggerStorage implements ILoggerStorage {
 
       const result = await chrome.storage.local.get(this.storageKey);
       const config = result[this.storageKey];
-
       if (config && typeof config.level === 'number') {
         return config.level as LogLevel;
       }

@@ -2,11 +2,9 @@ import { CONFIG } from '../core/config';
 import { renderFunctionResult, processedResultElements } from '../renderer/functionResult';
 import { createLogger } from '@extension/shared/lib/logger';
 
-// State for processing and observers
-
-const logger = createLogger('FunctionResultObserver');
-
-const isProcessing = false;
+// State for processing and observers const logger = createLogger('FunctionResultObserver');
+  
+  const isProcessing = false;
 let functionResultObserver: MutationObserver | null = null;
 
 /**
@@ -73,18 +71,14 @@ const getTargetElements = (): HTMLElement[] => {
         }
       }
 
-      // If the selector contains multiple classes, also try to find elements by individual classes
-      if (selector.includes('.') && selector.includes(' ')) {
+      // If the selector contains multiple classes, also try to find elements by individual classes if (selector.includes('.') && selector.includes(' ')) {
         // This might be a complex selector with multiple classes
-        handleComplexSelector(selector, elements);
-      } else if (selector.startsWith('div.') && selector.split('.').length > 2) {
-        // This is a div with multiple classes like 'div.class1.class2.class3'
+        handleComplexSelector(selector, elements); } else if (selector.startsWith('div.') && selector.split('.').length > 2) { // This is a div with multiple classes like 'div.class1.class2.class3'
         handleMultiClassSelector(selector, elements);
       }
     } catch (e) {
       logger.error(`Invalid selector: ${selector}`, e);
-      // Try alternative approach for complex selectors
-      if (selector.includes('.')) {
+      // Try alternative approach for complex selectors if (selector.includes('.')) {
         handleFallbackSelector(selector, elements);
       }
     }
@@ -99,8 +93,7 @@ const getTargetElements = (): HTMLElement[] => {
  * @param elements Array to add found elements to
  */
 const handleComplexSelector = (selector: string, elements: HTMLElement[]): void => {
-  // Split by spaces to get individual parts
-  const parts = selector.split(' ');
+  // Split by spaces to get individual parts const parts = selector.split(' ');
 
   // Start with all elements matching the first part
   let currentMatches: Element[] = Array.from(document.querySelectorAll(parts[0]));
@@ -128,13 +121,11 @@ const handleComplexSelector = (selector: string, elements: HTMLElement[]): void 
 };
 
 /**
- * Handle a selector with multiple classes on a single element
- * @param selector The multi-class selector (e.g., 'div.class1.class2.class3')
+ * Handle a selector with multiple classes on a single element * @param selector The multi-class selector (e.g., 'div.class1.class2.class3')
  * @param elements Array to add found elements to
  */
 const handleMultiClassSelector = (selector: string, elements: HTMLElement[]): void => {
-  // Parse the selector to get element type and classes
-  const [elementType, ...classNames] = selector.split('.');
+  // Parse the selector to get element type and classes const [elementType, ...classNames] = selector.split('.');
 
   // Find all elements of the specified type
   const allElements = document.querySelectorAll(elementType);
@@ -163,15 +154,13 @@ const handleFallbackSelector = (selector: string, elements: HTMLElement[]): void
   const match = selector.match(/^([a-z]+)\.(.*)/i);
   if (!match) return;
 
-  const [, elementType, classesStr] = match;
-  const classes = classesStr.split('.');
+  const [, elementType, classesStr] = match; const classes = classesStr.split('.');
 
   // Find all elements of the specified type
   const allElements = document.querySelectorAll(elementType);
 
   // Check each element for the required classes
-  for (const element of allElements) {
-    // For complex selectors, we'll be more lenient and match if ANY of the classes match
+  for (const element of allElements) { // For complex selectors, we'll be more lenient and match if ANY of the classes match
     const hasAnyClass = classes.some(cls => element.classList.contains(cls));
 
     if (hasAnyClass && element instanceof HTMLElement && !elements.includes(element)) {
@@ -204,8 +193,7 @@ export const startFunctionResultMonitoring = (): void => {
     stopFunctionResultMonitoring();
   }
 
-  if (CONFIG.debug) {
-    logger.debug('Starting function result monitoring');
+  if (CONFIG.debug) { logger.debug('Starting function result monitoring');
   }
 
   // Initial processing
@@ -217,8 +205,7 @@ export const startFunctionResultMonitoring = (): void => {
     let potentialFunctionResult = false;
 
     // Check if any mutation might contain a function result
-    for (const mutation of mutations) {
-      if (mutation.type === 'childList') {
+    for (const mutation of mutations) { if (mutation.type === 'childList') {
         for (const node of Array.from(mutation.addedNodes)) {
           if (node.nodeType === Node.ELEMENT_NODE) {
             const element = node as Element;
@@ -243,8 +230,7 @@ export const startFunctionResultMonitoring = (): void => {
 
             // Also check if the content of any text nodes might contain function result patterns
             if (
-              element.textContent &&
-              (element.textContent.includes('<function_result') || element.textContent.includes('</function_result>'))
+              element.textContent && (element.textContent.includes('<function_result') || element.textContent.includes('</function_result>'))
             ) {
               potentialFunctionResult = true;
             }
@@ -254,19 +240,14 @@ export const startFunctionResultMonitoring = (): void => {
               break;
             }
           } else if (node.nodeType === Node.TEXT_NODE) {
-            // Also check text nodes for function result patterns
-            const textContent = node.textContent || '';
-            if (textContent.includes('<function_result') || textContent.includes('</function_result>')) {
+            // Also check text nodes for function result patterns const textContent = node.textContent || ''; if (textContent.includes('<function_result') || textContent.includes('</function_result>')) {
               potentialFunctionResult = true;
               shouldProcess = true;
               break;
             }
           }
-        }
-      } else if (mutation.type === 'characterData') {
-        // Check if the characterData mutation might be adding function result content
-        const textContent = mutation.target.textContent || '';
-        if (textContent.includes('<function_result') || textContent.includes('</function_result>')) {
+        } } else if (mutation.type === 'characterData') {
+        // Check if the characterData mutation might be adding function result content const textContent = mutation.target.textContent || ''; if (textContent.includes('<function_result') || textContent.includes('</function_result>')) {
           potentialFunctionResult = true;
           shouldProcess = true;
         }
@@ -276,8 +257,7 @@ export const startFunctionResultMonitoring = (): void => {
     }
 
     if (shouldProcess) {
-      if (potentialFunctionResult && CONFIG.debug) {
-        logger.debug('Potential function result detected, processing DOM changes');
+      if (potentialFunctionResult && CONFIG.debug) { logger.debug('Potential function result detected, processing DOM changes');
       }
       handleDomChanges();
     }
@@ -291,8 +271,7 @@ export const startFunctionResultMonitoring = (): void => {
     characterDataOldValue: true,
   });
 
-  if (CONFIG.debug) {
-    logger.debug('Function result monitoring started');
+  if (CONFIG.debug) { logger.debug('Function result monitoring started');
   }
 };
 
@@ -304,8 +283,7 @@ export const stopFunctionResultMonitoring = (): void => {
     functionResultObserver.disconnect();
     functionResultObserver = null;
 
-    if (CONFIG.debug) {
-      logger.debug('Function result monitoring stopped');
+    if (CONFIG.debug) { logger.debug('Function result monitoring stopped');
     }
   }
 };
@@ -315,8 +293,7 @@ export const stopFunctionResultMonitoring = (): void => {
  */
 export const initializeFunctionResultObserver = (): void => {
   if (!CONFIG.function_result_selector || CONFIG.function_result_selector.length === 0) {
-    if (CONFIG.debug) {
-      logger.debug('Function result observer not initialized: no selectors configured');
+    if (CONFIG.debug) { logger.debug('Function result observer not initialized: no selectors configured');
     }
     return;
   }

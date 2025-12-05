@@ -10,63 +10,49 @@ import { createLogger } from '@extension/shared/lib/logger';
 /**
  * Find the AiStudio chat input textarea element
  * @returns The chat input textarea element or null if not found
- */
-
-const logger = createLogger('AIStudioChatInputHandler');
+ */ const logger = createLogger('AIStudioChatInputHandler');
 
 export const findChatInputElement = (): HTMLTextAreaElement | null => {
-  // Try to find the main "Ask anything..." input first
-  let chatInput = document.querySelector('textarea.textarea[placeholder="Type something"]');
-
-  if (chatInput) {
-    logger.debug('Found AiStudio main input with "Type something" placeholder');
+  // Try to find the main "Ask anything..." input first let chatInput = document.querySelector('textarea.textarea[placeholder="Type something"]');
+  
+    if (chatInput) { logger.debug('Found AiStudio main input with "Type something" placeholder');
     return chatInput as HTMLTextAreaElement;
   }
-  // Try to find the main "Ask anything..." input first
-  chatInput = document.querySelector('textarea.textarea[aria-label="Type something or pick one from prompt gallery"]');
-
-  if (chatInput) {
-    logger.debug('Found AiStudio main input with "Type something or pick one from prompt gallery" placeholder');
+  // Try to find the main "Ask anything..." input first chatInput = document.querySelector('textarea.textarea[aria-label="Type something or pick one from prompt gallery"]');
+  
+    if (chatInput) { logger.debug('Found AiStudio main input with "Type something or pick one from prompt gallery" placeholder');
     return chatInput as HTMLTextAreaElement;
   }
 
-  // Fall back to the follow-up input if main input not found
-  chatInput = document.querySelector('textarea[placeholder="Ask follow-up"]');
-
-  if (chatInput) {
-    logger.debug('Found AiStudio follow-up input with "Ask follow-up" placeholder');
+  // Fall back to the follow-up input if main input not found chatInput = document.querySelector('textarea[placeholder="Ask follow-up"]');
+  
+    if (chatInput) { logger.debug('Found AiStudio follow-up input with "Ask follow-up" placeholder');
     return chatInput as HTMLTextAreaElement;
   }
 
   // Try to find the input with "Type something or tab to choose an example prompt" aria-label
-  chatInput = document.querySelector(
-    "textarea.textarea[aria-label='Type something or tab to choose an example prompt']",
+  chatInput = document.querySelector( "textarea.textarea[aria-label='Type something or tab to choose an example prompt']",
   );
 
-  if (chatInput) {
-    logger.debug('Found AiStudio input with "Type something or tab to choose an example prompt" aria-label');
+  if (chatInput) { logger.debug('Found AiStudio input with "Type something or tab to choose an example prompt" aria-label');
     return chatInput as HTMLTextAreaElement;
   }
 
-  // Try to find the input with "Start typing a prompt" aria-label
-  chatInput = document.querySelector("textarea.textarea[aria-label='Start typing a prompt']");
-
-  if (chatInput) {
-    logger.debug('Found AiStudio input with "Start typing a prompt" aria-label');
+  // Try to find the input with "Start typing a prompt" aria-label chatInput = document.querySelector("textarea.textarea[aria-label='Start typing a prompt']");
+  
+    if (chatInput) { logger.debug('Found AiStudio input with "Start typing a prompt" aria-label');
     return chatInput as HTMLTextAreaElement;
   }
 
-  // If neither specific placeholder is found, try a more general approach
-  chatInput = document.querySelector('textarea[placeholder*="Ask"]');
-
-  if (chatInput) {
+  // If neither specific placeholder is found, try a more general approach chatInput = document.querySelector('textarea[placeholder*="Ask"]');
+  
+    if (chatInput) {
     logger.debug(
       `Found AiStudio input with generic "Ask" in placeholder: ${(chatInput as HTMLTextAreaElement).placeholder}`,
     );
     return chatInput as HTMLTextAreaElement;
   }
-
-  logger.debug('Could not find any AiStudio chat input textarea');
+ logger.debug('Could not find any AiStudio chat input textarea');
   return null;
 };
 
@@ -99,8 +85,7 @@ export const insertTextToChatInput = (text: string): boolean => {
 
     if (chatInput) {
       // Append the text to the existing text in the textarea
-      const currentText = chatInput.value;
-      // Add new line before and after the current text if there's existing content
+      const currentText = chatInput.value; // Add new line before and after the current text if there's existing content
       const formattedText = currentText ? `${currentText}\n\n${text}` : text;
       chatInput.value = formattedText;
 
@@ -110,18 +95,14 @@ export const insertTextToChatInput = (text: string): boolean => {
 
       // Focus the textarea
       chatInput.focus();
-
-      logger.debug('Appended text to AiStudio chat input');
+ logger.debug('Appended text to AiStudio chat input');
       return true;
-    } else {
-      logger.debug('Could not find AiStudio chat input');
-      logger.error('Could not find AiStudio chat input textarea');
+    } else { logger.debug('Could not find AiStudio chat input'); logger.error('Could not find AiStudio chat input textarea');
       return false;
     }
   } catch (error: unknown) {
     const errorMessage = error instanceof Error ? error.message : String(error);
-    logger.debug(`Error inserting text into chat input: ${errorMessage}`);
-    logger.error('Error inserting text into chat input:', error);
+    logger.debug(`Error inserting text into chat input: ${errorMessage}`); logger.error('Error inserting text into chat input:', error);
     return false;
   }
 };
@@ -135,17 +116,14 @@ export const insertToolResultToChatInput = (result: any): boolean => {
   try {
     // Format the tool result as JSON string
     // const formattedResult = formatAsJson(result);
-    // const wrappedResult = wrapInToolOutput(formattedResult);
-    if (typeof result !== 'string') {
-      result = JSON.stringify(result, null, 2);
-      logger.debug('Converted tool result to string format');
+    // const wrappedResult = wrapInToolOutput(formattedResult); if (typeof result !== 'string') {
+      result = JSON.stringify(result, null, 2); logger.debug('Converted tool result to string format');
     }
 
     return insertTextToChatInput(result);
   } catch (error: unknown) {
     const errorMessage = error instanceof Error ? error.message : String(error);
-    logger.debug(`Error formatting tool result: ${errorMessage}`);
-    logger.error('Error formatting tool result:', error);
+    logger.debug(`Error formatting tool result: ${errorMessage}`); logger.error('Error formatting tool result:', error);
     return false;
   }
 };
@@ -160,8 +138,7 @@ export const attachFileToChatInput = async (file: File): Promise<boolean> => {
     // Find the AiStudio input element
     const chatInput = findChatInputElement();
 
-    if (!chatInput) {
-      logger.debug('Could not find AiStudio input element for file attachment');
+    if (!chatInput) { logger.debug('Could not find AiStudio input element for file attachment');
       return false;
     }
 
@@ -169,21 +146,18 @@ export const attachFileToChatInput = async (file: File): Promise<boolean> => {
     const dataTransfer = new DataTransfer();
     dataTransfer.items.add(file);
 
-    // Create custom events
-    const dragOverEvent = new DragEvent('dragover', {
+    // Create custom events const dragOverEvent = new DragEvent('dragover', {
+      bubbles: true,
+      cancelable: true,
+      dataTransfer: dataTransfer,
+    });
+ const dropEvent = new DragEvent('drop', {
       bubbles: true,
       cancelable: true,
       dataTransfer: dataTransfer,
     });
 
-    const dropEvent = new DragEvent('drop', {
-      bubbles: true,
-      cancelable: true,
-      dataTransfer: dataTransfer,
-    });
-
-    // Prevent default on dragover to enable drop
-    chatInput.addEventListener('dragover', e => e.preventDefault(), { once: true });
+    // Prevent default on dragover to enable drop chatInput.addEventListener('dragover', e => e.preventDefault(), { once: true });
     chatInput.dispatchEvent(dragOverEvent);
 
     // Simulate the drop event
@@ -198,8 +172,7 @@ export const attachFileToChatInput = async (file: File): Promise<boolean> => {
       ]);
 
       // Focus the textarea to make it easier to paste
-      chatInput.focus();
-      logger.debug('File copied to clipboard, user can now paste manually if needed');
+      chatInput.focus(); logger.debug('File copied to clipboard, user can now paste manually if needed');
     } catch (clipboardError) {
       logger.debug(`Could not copy to clipboard: ${clipboardError}`);
     }
@@ -208,8 +181,7 @@ export const attachFileToChatInput = async (file: File): Promise<boolean> => {
     return true;
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : String(error);
-    logger.debug(`Error attaching file to AiStudio input: ${errorMessage}`);
-    logger.error('Error attaching file to AiStudio input:', error);
+    logger.debug(`Error attaching file to AiStudio input: ${errorMessage}`); logger.error('Error attaching file to AiStudio input:', error);
     return false;
   }
 };
@@ -223,67 +195,53 @@ export const submitChatInput = (maxWaitTime = 5000): Promise<boolean> => {
     try {
       const chatInput = findChatInputElement();
 
-      if (!chatInput) {
-        logger.debug('Could not find chat input to submit');
+      if (!chatInput) { logger.debug('Could not find chat input to submit');
         resolve(false);
         return;
       }
 
       // Define a function to find the submit button
       const findSubmitButton = (): HTMLButtonElement | null => {
-        const submitButton =
-          document.querySelector('button[aria-label="Submit"]') ||
-          document.querySelector('button[aria-label="Send"]') ||
-          document.querySelector('button[type="submit"]') ||
-          // Look for a button next to the textarea
-          chatInput.parentElement?.querySelector('button') ||
-          // Common pattern: button with paper plane icon
-          document.querySelector('button svg[stroke="currentColor"]')?.closest('button');
-
-        return submitButton as HTMLButtonElement | null;
+        const submitButton = document.querySelector('button[aria-label="Submit"]') || document.querySelector('button[aria-label="Send"]') || document.querySelector('button[type="submit"]') ||
+          // Look for a button next to the textarea chatInput.parentElement?.querySelector('button') ||
+          // Common pattern: button with paper plane icon document.querySelector('button svg[stroke="currentColor"]')?.closest('button');
+  
+          return submitButton as HTMLButtonElement | null;
       };
 
       // Try to find and check the submit button
       const submitButton = findSubmitButton();
 
-      if (submitButton) {
-        logger.debug(`Found submit button (${submitButton.getAttribute('aria-label') || 'unknown'})`);
+      if (submitButton) { logger.debug(`Found submit button (${submitButton.getAttribute('aria-label') || 'unknown'})`);
 
         // Function to check if button is enabled and click it
         const tryClickingButton = () => {
           const button = findSubmitButton();
-          if (!button) {
-            logger.debug('Submit button no longer found');
+          if (!button) { logger.debug('Submit button no longer found');
             resolve(false);
             return;
           }
 
           // Check if the button is disabled
           const isDisabled =
-            button.disabled ||
-            button.getAttribute('disabled') !== null ||
-            button.getAttribute('aria-disabled') === 'true' ||
-            button.classList.contains('disabled');
+            button.disabled || button.getAttribute('disabled') !== null || button.getAttribute('aria-disabled') === 'true' || button.classList.contains('disabled');
 
-          if (!isDisabled) {
-            logger.debug('Submit button is enabled, clicking it');
+          if (!isDisabled) { logger.debug('Submit button is enabled, clicking it');
             button.click();
             resolve(true);
-          } else {
-            logger.debug('Submit button is disabled, waiting...');
+          } else { logger.debug('Submit button is disabled, waiting...');
           }
         };
 
         // Set up a timer to periodically check if the button becomes enabled
         let elapsedTime = 0;
         const checkInterval = 200; // Check every 200ms
-
-        const intervalId = setInterval(() => {
+  
+          const intervalId = setInterval(() => {
           elapsedTime += checkInterval;
 
           tryClickingButton();
-
-          // If we've waited too long, try alternative methods
+ // If we've waited too long, try alternative methods
           if (elapsedTime >= maxWaitTime) {
             clearInterval(intervalId);
             logger.debug(`Button remained disabled for ${maxWaitTime}ms, trying alternative methods`);
@@ -294,30 +252,21 @@ export const submitChatInput = (maxWaitTime = 5000): Promise<boolean> => {
             // Focus the textarea first
             chatInput.focus();
 
-            // Create and dispatch keydown event (Enter key)
-            const keydownEvent = new KeyboardEvent('keydown', {
-              key: 'Enter',
-              code: 'Enter',
+            // Create and dispatch keydown event (Enter key) const keydownEvent = new KeyboardEvent('keydown', { key: 'Enter', code: 'Enter',
               keyCode: 13,
               which: 13,
               bubbles: true,
               cancelable: true,
             });
 
-            // Create and dispatch keypress event
-            const keypressEvent = new KeyboardEvent('keypress', {
-              key: 'Enter',
-              code: 'Enter',
+            // Create and dispatch keypress event const keypressEvent = new KeyboardEvent('keypress', { key: 'Enter', code: 'Enter',
               keyCode: 13,
               which: 13,
               bubbles: true,
               cancelable: true,
             });
 
-            // Create and dispatch keyup event
-            const keyupEvent = new KeyboardEvent('keyup', {
-              key: 'Enter',
-              code: 'Enter',
+            // Create and dispatch keyup event const keyupEvent = new KeyboardEvent('keyup', { key: 'Enter', code: 'Enter',
               keyCode: 13,
               which: 13,
               bubbles: true,
@@ -329,19 +278,14 @@ export const submitChatInput = (maxWaitTime = 5000): Promise<boolean> => {
             chatInput.dispatchEvent(keypressEvent);
             chatInput.dispatchEvent(keyupEvent);
 
-            // Try to find and submit a form as a last resort
-            const form = chatInput.closest('form');
-            if (form) {
-              logger.debug('Found form element, submitting it');
-              form.dispatchEvent(new SubmitEvent('submit', { bubbles: true, cancelable: true }));
+            // Try to find and submit a form as a last resort const form = chatInput.closest('form');
+            if (form) { logger.debug('Found form element, submitting it'); form.dispatchEvent(new SubmitEvent('submit', { bubbles: true, cancelable: true }));
             }
-
-            logger.debug('Attempted all fallback methods to submit chat input');
+ logger.debug('Attempted all fallback methods to submit chat input');
             resolve(true);
           }
         }, checkInterval);
-
-        // Initial check - maybe it's already enabled
+ // Initial check - maybe it's already enabled
         tryClickingButton();
 
         // If the button is already enabled and clicked, clear the interval
@@ -352,36 +296,26 @@ export const submitChatInput = (maxWaitTime = 5000): Promise<boolean> => {
         // If no button found, proceed with alternative methods immediately
         logger.debug('No submit button found, trying alternative methods');
 
-        // Method 2: Simulate Enter key press
-        logger.debug('Simulating Enter key press as fallback');
+        // Method 2: Simulate Enter key press logger.debug('Simulating Enter key press as fallback');
 
         // Focus the textarea first
         chatInput.focus();
 
-        // Create and dispatch keydown event (Enter key)
-        const keydownEvent = new KeyboardEvent('keydown', {
-          key: 'Enter',
-          code: 'Enter',
+        // Create and dispatch keydown event (Enter key) const keydownEvent = new KeyboardEvent('keydown', { key: 'Enter', code: 'Enter',
           keyCode: 13,
           which: 13,
           bubbles: true,
           cancelable: true,
         });
 
-        // Create and dispatch keypress event
-        const keypressEvent = new KeyboardEvent('keypress', {
-          key: 'Enter',
-          code: 'Enter',
+        // Create and dispatch keypress event const keypressEvent = new KeyboardEvent('keypress', { key: 'Enter', code: 'Enter',
           keyCode: 13,
           which: 13,
           bubbles: true,
           cancelable: true,
         });
 
-        // Create and dispatch keyup event
-        const keyupEvent = new KeyboardEvent('keyup', {
-          key: 'Enter',
-          code: 'Enter',
+        // Create and dispatch keyup event const keyupEvent = new KeyboardEvent('keyup', { key: 'Enter', code: 'Enter',
           keyCode: 13,
           which: 13,
           bubbles: true,
@@ -393,20 +327,15 @@ export const submitChatInput = (maxWaitTime = 5000): Promise<boolean> => {
         chatInput.dispatchEvent(keypressEvent);
         chatInput.dispatchEvent(keyupEvent);
 
-        // Try to find and submit a form as a last resort
-        const form = chatInput.closest('form');
-        if (form) {
-          logger.debug('Found form element, submitting it');
-          form.dispatchEvent(new SubmitEvent('submit', { bubbles: true, cancelable: true }));
+        // Try to find and submit a form as a last resort const form = chatInput.closest('form');
+        if (form) { logger.debug('Found form element, submitting it'); form.dispatchEvent(new SubmitEvent('submit', { bubbles: true, cancelable: true }));
         }
-
-        logger.debug('Attempted all methods to submit chat input');
+ logger.debug('Attempted all methods to submit chat input');
         resolve(true);
       }
     } catch (error: unknown) {
       const errorMessage = error instanceof Error ? error.message : String(error);
-      logger.debug(`Error submitting chat input: ${errorMessage}`);
-      logger.error('Error submitting chat input:', error);
+      logger.debug(`Error submitting chat input: ${errorMessage}`); logger.error('Error submitting chat input:', error);
       resolve(false);
     }
   });

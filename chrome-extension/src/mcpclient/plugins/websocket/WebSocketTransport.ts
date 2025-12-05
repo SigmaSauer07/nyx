@@ -1,7 +1,5 @@
 import type { Transport } from '@modelcontextprotocol/sdk/shared/transport.js';
 import { createLogger } from '@extension/shared/lib/logger';
-
-
 const logger = createLogger('WebSocketTransport');
 
 export interface WebSocketTransportOptions {
@@ -19,8 +17,7 @@ export class WebSocketTransport implements Transport {
   onerror?: (error: Error) => void;
 
   async start(): Promise<void> {
-    // Required by Transport interface - delegate to connect method
-    logger.debug('[WebSocketTransport] Start method called - initiating connection');
+    // Required by Transport interface - delegate to connect method logger.debug('[WebSocketTransport] Start method called - initiating connection');
     await this.connect();
   }
   private ws: WebSocket | null = null;
@@ -109,11 +106,9 @@ export class WebSocketTransport implements Transport {
               logger.warn('[WebSocketTransport] Received unknown data type:', typeof event.data);
               return;
             }
-
             // Don't handle custom ping/pong - let MCP protocol handle it
             // The server logs show it's forwarding our ping messages to the child process
             // which suggests the server expects standard MCP messages only
-
             this.emit('message', data);
 
             // Call Transport interface callback - this is critical for MCP client
@@ -185,8 +180,7 @@ export class WebSocketTransport implements Transport {
   }
 
   private startPingPong(): void {
-    // Disable custom ping/pong - MCP protocol and the server handle connection monitoring
-    // The server logs show it's sending its own ping messages to the child process
+    // Disable custom ping/pong - MCP protocol and the server handle connection monitoring // The server logs show it's sending its own ping messages to the child process
     logger.debug('[WebSocketTransport] Skipping custom ping/pong - relying on MCP protocol and server-side monitoring');
     return;
   }

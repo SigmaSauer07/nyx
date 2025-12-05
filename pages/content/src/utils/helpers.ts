@@ -10,7 +10,6 @@
  * @param message The message to log
  */
 import { createLogger } from '@extension/shared/lib/logger';
-
 const logger = createLogger('logMessage');
 
 export const logMessage = (message: string): void => {
@@ -44,11 +43,9 @@ export const injectCSSIntoShadowDOM = async (shadowRoot: ShadowRoot, cssPath: st
     }
 
     logMessage(`Fetched CSS content (${cssText.length} bytes)`);
-
     const styleElement = document.createElement('style');
     styleElement.textContent = cssText;
     shadowRoot.appendChild(styleElement);
-
     logMessage('Successfully injected CSS into Shadow DOM');
     return Promise.resolve();
   } catch (error) {
@@ -70,8 +67,7 @@ export const debugShadowDomStyles = (shadowRoot: ShadowRoot): void => {
     return;
   }
 
-  // Count all style elements
-  const styleElements = shadowRoot.querySelectorAll('style');
+  // Count all style elements const styleElements = shadowRoot.querySelectorAll('style');
   logMessage(`Shadow DOM contains ${styleElements.length} style elements`);
 
   // Log CSS rule count
@@ -88,8 +84,7 @@ export const debugShadowDomStyles = (shadowRoot: ShadowRoot): void => {
 
   logMessage(`Total CSS rules in Shadow DOM: ${totalRules}`);
 
-  // Add a temporary visual indicator to help identify Shadow DOM boundaries
-  const debugStyle = document.createElement('style');
+  // Add a temporary visual indicator to help identify Shadow DOM boundaries const debugStyle = document.createElement('style');
   debugStyle.textContent = `
     :host {
       outline: 2px dashed red !important;

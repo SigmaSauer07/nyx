@@ -6,9 +6,7 @@ import { AsyncZipDeflate, Zip } from 'fflate';
 // Converts bytes to megabytes
 function toMB(bytes: number): number {
   return bytes / 1024 / 1024;
-}
-
-// Creates the build directory if it doesn't exist
+} // Creates the build directory if it doesn't exist
 function ensureBuildDirectoryExists(buildDirectory: string): void {
   if (!existsSync(buildDirectory)) {
     mkdirSync(buildDirectory, { recursive: true });
@@ -63,8 +61,7 @@ export const zipBundle = async (
 
   const fileList = await fg(
     [
-      '**/*', // Pick all nested files
-      ...(!withMaps ? ['!**/(*.js.map|*.css.map)'] : []), // Exclude source maps conditionally
+      '**/*', // Pick all nested files ...(!withMaps ? ['!**/(*.js.map|*.css.map)'] : []), // Exclude source maps conditionally
     ],
     {
       cwd: distDirectory,

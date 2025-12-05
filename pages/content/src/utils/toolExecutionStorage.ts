@@ -10,9 +10,7 @@
  * It provides functions for adding new executed tools and retrieving tool execution history.
  */
 
-import { logMessage } from './helpers';
-
-// Storage key for executed tools
+import { logMessage } from './helpers'; // Storage key for executed tools
 const EXECUTED_TOOLS_STORAGE_KEY = 'mcp_executed_tools';
 
 // Maximum number of executed tools to store per URL (to avoid excessive storage use)
@@ -58,7 +56,6 @@ export const addExecutedTool = async (
     // Get current executed tools
     const storageResult = await chrome.storage.local.get(EXECUTED_TOOLS_STORAGE_KEY);
     const executedTools: ExecutedToolsMap = storageResult[EXECUTED_TOOLS_STORAGE_KEY] || {};
-
     // Initialize array for this URL if it doesn't exist
     if (!executedTools[url]) {
       executedTools[url] = [];

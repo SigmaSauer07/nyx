@@ -8,40 +8,29 @@ import { createLogger } from '@extension/shared/lib/logger';
 
 /**
  * Hook for interacting with the sidebar plugin
- */
-
-const logger = createLogger('useSidebarPlugin');
+ */ const logger = createLogger('useSidebarPlugin');
 
 export const useSidebarPlugin = () => {
   const [sidebarPlugin, setSidebarPlugin] = useState<SidebarPlugin | null>(null);
-  const [isPluginActive, setIsPluginActive] = useState(false);
-  const [pluginStatus, setPluginStatus] = useState<'pending' | 'active' | 'inactive' | 'error' | 'initializing' | 'disabled'>('pending');
+  const [isPluginActive, setIsPluginActive] = useState(false); const [pluginStatus, setPluginStatus] = useState<'pending' | 'active' | 'inactive' | 'error' | 'initializing' | 'disabled'>('pending');
 
   const { isVisible, toggleSidebar: toggleSidebarStore } = useSidebarState();
 
   // Get sidebar plugin instance
-  useEffect(() => {
-    const plugin = pluginRegistry.getPluginByName('sidebar-plugin') as SidebarPlugin | null;
+  useEffect(() => { const plugin = pluginRegistry.getPluginByName('sidebar-plugin') as SidebarPlugin | null;
     setSidebarPlugin(plugin);
     
     if (plugin) {
-      setPluginStatus(plugin.getStatus());
-      setIsPluginActive(plugin.getStatus() === 'active');
+      setPluginStatus(plugin.getStatus()); setIsPluginActive(plugin.getStatus() === 'active');
     }
   }, []);
 
-  // Listen for plugin activation/deactivation events
-  useEventListener('plugin:activated', (data: EventMap['plugin:activated']) => {
-    if (data.pluginName === 'sidebar-plugin') {
-      setIsPluginActive(true);
-      setPluginStatus('active');
+  // Listen for plugin activation/deactivation events useEventListener('plugin:activated', (data: EventMap['plugin:activated']) => { if (data.pluginName === 'sidebar-plugin') {
+      setIsPluginActive(true); setPluginStatus('active');
     }
   });
-
-  useEventListener('plugin:deactivated', (data: EventMap['plugin:deactivated']) => {
-    if (data.pluginName === 'sidebar-plugin') {
-      setIsPluginActive(false);
-      setPluginStatus('inactive');
+ useEventListener('plugin:deactivated', (data: EventMap['plugin:deactivated']) => { if (data.pluginName === 'sidebar-plugin') {
+      setIsPluginActive(false); setPluginStatus('inactive');
     }
   });
 
@@ -85,10 +74,9 @@ export const useSidebarPlugin = () => {
   // Activate sidebar plugin
   const activatePlugin = useCallback(async () => {
     if (sidebarPlugin && !isPluginActive) {
-      try {
-        await pluginRegistry.activatePlugin('sidebar-plugin');
+      try { await pluginRegistry.activatePlugin('sidebar-plugin');
       } catch (error) {
-        logger.error('[useSidebarPlugin] Failed to activate sidebar plugin:', error);
+       logger.error('[useSidebarPlugin] Failed to activate sidebar plugin:', error);
       }
     }
   }, [sidebarPlugin, isPluginActive]);
@@ -99,7 +87,7 @@ export const useSidebarPlugin = () => {
       try {
         await pluginRegistry.deactivateCurrentPlugin();
       } catch (error) {
-        logger.error('[useSidebarPlugin] Failed to deactivate sidebar plugin:', error);
+       logger.error('[useSidebarPlugin] Failed to deactivate sidebar plugin:', error);
       }
     }
   }, [sidebarPlugin, isPluginActive]);
@@ -140,20 +128,15 @@ export const useSidebarPluginStatus = () => {
     error: string | null;
   }>({
     isRegistered: false,
-    isActive: false,
-    pluginStatus: 'pending',
+    isActive: false, pluginStatus: 'pending',
     error: null
   });
 
   // Check initial status function
-  const updateStatus = useCallback(() => {
-    const plugin = pluginRegistry.getPluginByName('sidebar-plugin') as SidebarPlugin | null;
-    const isRegistered = pluginRegistry.isPluginRegistered('sidebar-plugin');
+  const updateStatus = useCallback(() => { const plugin = pluginRegistry.getPluginByName('sidebar-plugin') as SidebarPlugin | null; const isRegistered = pluginRegistry.isPluginRegistered('sidebar-plugin');
 
     setStatus({
-      isRegistered,
-      isActive: plugin?.getStatus() === 'active',
-      pluginStatus: plugin?.getStatus() || 'not-found',
+      isRegistered, isActive: plugin?.getStatus() === 'active', pluginStatus: plugin?.getStatus() || 'not-found',
       error: null
     });
   }, []);
@@ -162,30 +145,21 @@ export const useSidebarPluginStatus = () => {
     updateStatus();
   }, [updateStatus]);
 
-  // Listen for plugin events
-  useEventListener('plugin:registered', (data: EventMap['plugin:registered']) => {
-    if (data.name === 'sidebar-plugin') {
+  // Listen for plugin events useEventListener('plugin:registered', (data: EventMap['plugin:registered']) => { if (data.name === 'sidebar-plugin') {
       updateStatus();
     }
   });
-
-  useEventListener('plugin:activated', (data: EventMap['plugin:activated']) => {
-    if (data.pluginName === 'sidebar-plugin') {
+ useEventListener('plugin:activated', (data: EventMap['plugin:activated']) => { if (data.pluginName === 'sidebar-plugin') {
       updateStatus();
     }
   });
-
-  useEventListener('plugin:deactivated', (data: EventMap['plugin:deactivated']) => {
-    if (data.pluginName === 'sidebar-plugin') {
+ useEventListener('plugin:deactivated', (data: EventMap['plugin:deactivated']) => { if (data.pluginName === 'sidebar-plugin') {
       updateStatus();
     }
   });
-
-  useEventListener('plugin:activation-failed', (data: EventMap['plugin:activation-failed']) => {
-    if (data.name === 'sidebar-plugin') {
+ useEventListener('plugin:activation-failed', (data: EventMap['plugin:activation-failed']) => { if (data.name === 'sidebar-plugin') {
       setStatus(prev => ({
-        ...prev,
-        error: typeof data.error === 'string' ? data.error : data.error.message
+        ...prev, error: typeof data.error === 'string' ? data.error : data.error.message
       }));
     }
   });
@@ -200,28 +174,22 @@ export const useSidebarPluginManagement = () => {
   const { sidebarPlugin, isPluginActive } = useSidebarPlugin();
 
   const registerPlugin = useCallback(async () => {
-    try {
-      const { SidebarPlugin } = await import('../plugins/sidebar.plugin');
+    try { const { SidebarPlugin } = await import('../plugins/sidebar.plugin');
       const plugin = new SidebarPlugin();
-      await pluginRegistry.register(plugin, {
-        id: 'sidebar-plugin',
-        name: 'Sidebar Plugin',
-        description: 'Universal sidebar management plugin',
-        version: '1.0.0',
+      await pluginRegistry.register(plugin, { id: 'sidebar-plugin', name: 'Sidebar Plugin', description: 'Universal sidebar management plugin', version: '1.0.0',
         enabled: true,
         priority: 1, // High priority for core functionality
       });
     } catch (error) {
-      logger.error('[useSidebarPluginManagement] Failed to register sidebar plugin:', error);
+       logger.error('[useSidebarPluginManagement] Failed to register sidebar plugin:', error);
       throw error;
     }
   }, []);
 
   const unregisterPlugin = useCallback(async () => {
-    try {
-      await pluginRegistry.unregister('sidebar-plugin');
+    try { await pluginRegistry.unregister('sidebar-plugin');
     } catch (error) {
-      logger.error('[useSidebarPluginManagement] Failed to unregister sidebar plugin:', error);
+       logger.error('[useSidebarPluginManagement] Failed to unregister sidebar plugin:', error);
       throw error;
     }
   }, []);
@@ -242,7 +210,6 @@ export const useSidebarPluginManagement = () => {
   return {
     registerPlugin,
     unregisterPlugin,
-    getPluginInfo,
-    isRegistered: pluginRegistry.isPluginRegistered('sidebar-plugin')
+    getPluginInfo, isRegistered: pluginRegistry.isPluginRegistered('sidebar-plugin')
   };
 };

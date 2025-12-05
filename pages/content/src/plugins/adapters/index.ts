@@ -1,7 +1,7 @@
 /**
  * Adapter Plugins Export Module
- * 
- * This file exports all available adapter plugins for the MCP-SuperAssistant.
+ *
+ * This file exports all available adapter plugins for the Nyx.
  */
 
 export { BaseAdapterPlugin } from './base.adapter';
@@ -16,13 +16,13 @@ export { DeepSeekAdapter } from './deepseek.adapter';
 export { T3ChatAdapter } from './t3chat.adapter';
 export { MistralAdapter } from './mistral.adapter';
 export { GitHubCopilotAdapter } from './ghcopilot.adapter';
-
+export { ClaudeAdapter } from './claude.adapter';
 
 // Export types
-export type { 
-  AdapterPlugin, 
-  AdapterConfig, 
+export type {
+  AdapterPlugin,
+  AdapterConfig,
   PluginRegistration,
   AdapterCapability,
-  PluginContext 
+  PluginContext,
 } from '../plugin-types';

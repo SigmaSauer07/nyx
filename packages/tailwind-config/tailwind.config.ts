@@ -1,9 +1,7 @@
 import type { Config } from 'tailwindcss';
 
-export default {
-  prefix: '',
+export default { prefix: '',
   theme: {
     extend: {},
-  },
-  plugins: [],
+  }, plugins: [],
 } as Omit<Config, 'content'>;

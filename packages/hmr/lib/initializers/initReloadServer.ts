@@ -13,18 +13,14 @@ const clientsThatNeedToUpdate: Set<WebSocket> = new Set();
 
 (() => {
   const wss = new WebSocketServer({ port: LOCAL_RELOAD_SOCKET_PORT });
-
   wss.on('listening', () => {
     console.log(`[HMR] Server listening at ${LOCAL_RELOAD_SOCKET_URL}`);
   });
-
   wss.on('connection', ws => {
     clientsThatNeedToUpdate.add(ws);
-
     ws.addEventListener('close', () => {
       clientsThatNeedToUpdate.delete(ws);
     });
-
     ws.addEventListener('message', event => {
       if (typeof event.data !== 'string') return;
 
@@ -41,7 +37,6 @@ const clientsThatNeedToUpdate: Set<WebSocket> = new Set();
       }
     });
   });
-
   wss.on('error', error => {
     console.error(`[HMR] Failed to start server at ${LOCAL_RELOAD_SOCKET_URL}`);
     throw error;

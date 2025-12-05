@@ -22,7 +22,6 @@ export class Logger implements ILogger {
   private storage: ILoggerStorage | null;
   private defaultLevel: LogLevel;
   private isInitialized: boolean = false;
-
   constructor(namespace: string = '', config?: Partial<LoggerConfig>) {
     this.namespace = namespace;
     this.componentLevels = new Map();

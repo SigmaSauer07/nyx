@@ -26,16 +26,13 @@ export function makeEntryPointPlugin(): PluginOption {
           case 'asset':
             if (fileName.endsWith('.map')) {
               cleanupTargets.add(path.resolve(outputDir, fileName));
-
               const originalFileName = fileName.replace('.map', '');
               const replacedSource = String(module.source).replaceAll(originalFileName, newFileName);
-
               module.source = '';
               fs.writeFileSync(path.resolve(outputDir, newFileName), replacedSource);
               break;
             }
             break;
-
           case 'chunk': {
             fs.writeFileSync(path.resolve(outputDir, newFileName), module.code);
 
@@ -69,6 +66,5 @@ function extractContentDir(outputDir: string) {
   if (distIndex !== -1 && distIndex < parts.length - 1) {
     return parts.slice(distIndex + 1);
   }
-
   throw new Error('Output directory does not contain "dist"');
 }
