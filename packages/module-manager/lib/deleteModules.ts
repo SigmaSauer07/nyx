@@ -4,7 +4,6 @@ import { rimraf } from 'rimraf';
 import { posix, resolve } from 'node:path';
 import { AsyncZipDeflate, Zip } from 'fflate';
 import fg from 'fast-glob';
-
 const pagesPath = resolve(import.meta.dirname, '..', '..', '..', 'pages');
 const archivePath = resolve(import.meta.dirname, '..', 'archive');
 
@@ -35,11 +34,7 @@ export default async function deleteModules(manifestObject: chrome.runtime.Manif
     process.exit(0);
   }
 
-  const answers = await checkbox({
-    message: 'Choose the features you want to delete',
-    loop: false,
-    choices,
-  });
+  const answers = await checkbox({ message: 'Choose the features you want to delete', loop: false, choices });
 
   if (answers.length === 0) {
     console.log('No features selected');

@@ -4,9 +4,7 @@ import { createLogger } from '@extension/shared/lib/logger';
 
 /**
  * Initializes the entire event system, including the event bus and global handlers.
- */
-
-const logger = createLogger('EventSystem');
+ */ const logger = createLogger('EventSystem');
 
 export async function initializeEventSystem(): Promise<void> {
   logger.debug('[EventSystem] Initializing event system...');
@@ -22,6 +20,5 @@ export function cleanupEventSystem(): void {
   logger.debug('[EventSystem] Cleaning up event system...');
   cleanupGlobalEventHandlers();
   // If eventBus itself had global state or resources to clear beyond listeners,
-  // it would be done here. For now, global handlers cleanup is the main action.
-  logger.debug('[EventSystem] Event system cleaned up.');
+  // it would be done here. For now, global handlers cleanup is the main action. logger.debug('[EventSystem] Event system cleaned up.');
 }

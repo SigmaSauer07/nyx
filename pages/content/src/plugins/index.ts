@@ -1,7 +1,5 @@
 import { createLogger } from '@extension/shared/lib/logger';
-
 const logger = createLogger('Index');
-
 export * from './plugin-types';
 export { pluginRegistry, initializePluginRegistry, cleanupPluginRegistry } from './plugin-registry';
 export { BaseAdapterPlugin } from './adapters/base.adapter';
@@ -28,9 +26,7 @@ export async function cleanupPluginSystem(): Promise<void> {
   } catch (error) {
     logger.error('[Plugin System] Failed to cleanup:', error);
   }
-}
-
-// Development utilities
+} // Development utilities
 if (process.env.NODE_ENV === 'development') {
   (window as any).__pluginSystem = {
     async getRegistry() {
@@ -41,6 +37,6 @@ if (process.env.NODE_ENV === 'development') {
     async initialize() {
       const { initializePluginRegistry } = await import('./plugin-registry');
       return initializePluginRegistry();
-    }
+    },
   };
 }

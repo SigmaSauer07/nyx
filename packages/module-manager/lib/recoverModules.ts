@@ -2,7 +2,6 @@ import path from 'node:path';
 import fs from 'node:fs';
 import { unzipSync } from 'fflate';
 import { checkbox } from '@inquirer/prompts';
-
 const pagesPath = path.resolve(import.meta.dirname, '..', '..', '..', 'pages');
 const archivePath = path.resolve(import.meta.dirname, '..', 'archive');
 
@@ -33,11 +32,7 @@ export default async function recoverModules(manifestObject: chrome.runtime.Mani
     process.exit(0);
   }
 
-  const answers = await checkbox({
-    message: 'Choose the features you want to recover',
-    loop: false,
-    choices,
-  });
+  const answers = await checkbox({ message: 'Choose the features you want to recover', loop: false, choices });
 
   if (answers.length === 0) {
     console.log('No features selected');
@@ -74,10 +69,7 @@ export default async function recoverModules(manifestObject: chrome.runtime.Mani
 }
 
 function recoverBackgroundScript(manifestObject: chrome.runtime.ManifestV3) {
-  manifestObject.background = {
-    service_worker: 'background.js',
-    type: 'module',
-  };
+  manifestObject.background = { service_worker: 'background.js', type: 'module' };
 }
 
 function recoverContentScript(manifestObject: chrome.runtime.ManifestV3) {
@@ -117,18 +109,13 @@ function recoverContentScriptRuntime(manifestObject: chrome.runtime.ManifestV3) 
 }
 
 function recoverNewTabOverride(manifestObject: chrome.runtime.ManifestV3) {
-  manifestObject.chrome_url_overrides = {
-    newtab: 'new-tab/index.html',
-  };
+  manifestObject.chrome_url_overrides = { newtab: 'new-tab/index.html' };
   const zipFilePath = path.resolve(archivePath, 'new-tab.zip');
   upZipAndDelete(zipFilePath, path.resolve(pagesPath, 'new-tab'));
 }
 
 function recoverPopup(manifestObject: chrome.runtime.ManifestV3) {
-  manifestObject.action = {
-    default_popup: 'popup/index.html',
-    default_icon: 'icon-34.png',
-  };
+  manifestObject.action = { default_popup: 'popup/index.html', default_icon: 'icon-34.png' };
   const zipFilePath = path.resolve(archivePath, 'popup.zip');
   upZipAndDelete(zipFilePath, path.resolve(pagesPath, 'popup'));
 }
@@ -142,9 +129,7 @@ function recoverDevTools(manifestObject: chrome.runtime.ManifestV3) {
 }
 
 function recoverSidePanel(manifestObject: chrome.runtime.ManifestV3) {
-  manifestObject.side_panel = {
-    default_path: 'side-panel/index.html',
-  };
+  manifestObject.side_panel = { default_path: 'side-panel/index.html' };
   if (!manifestObject.permissions) {
     manifestObject.permissions = [];
   }

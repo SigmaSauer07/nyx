@@ -15,19 +15,15 @@ import type { EventMap } from '../events/event-types';
 import type { 
   BaseMessage, 
   RequestMessage, 
-  ResponseMessage,
-  McpMessageType
+  ResponseMessage, McpMessageType
 } from '../types/messages';
 import { createLogger } from '@extension/shared/lib/logger';
 
-// Legacy compatibility interface
-
-const logger = createLogger('ContextBridge');
-
-export interface ContextMessage {
+// Legacy compatibility interface const logger = createLogger('ContextBridge');
+  
+  export interface ContextMessage {
   type: string;
-  payload?: any;
-  origin: 'content' | 'background' | 'popup' | 'options';
+  payload?: any; origin: 'content' | 'background' | 'popup' | 'options';
   timestamp: number;
   id?: string;
 }
@@ -46,10 +42,9 @@ class ContextBridge {
   private isExtensionContextValid = true;
   private lastHealthCheck = 0;
   private readonly HEALTH_CHECK_INTERVAL = 30000; // 30 seconds
-
-  constructor(config: ContextBridgeConfig = {}) {
-    this.config = {
-      enableLogging: process.env.NODE_ENV === 'development',
+  
+    constructor(config: ContextBridgeConfig = {}) {
+    this.config = { enableLogging: process.env.NODE_ENV === 'development',
       maxRetries: 3,
       retryDelay: 1000,
       ...config,
@@ -60,15 +55,13 @@ class ContextBridge {
    * Initialize the context bridge with enhanced error handling
    */
   initialize(): void {
-    if (this.initialized) {
-      logger.warn('[ContextBridge] Already initialized');
+    if (this.initialized) { logger.warn('[ContextBridge] Already initialized');
       return;
     }
 
     try {
       // Validate Chrome extension context
-      if (!this.validateExtensionContext()) {
-        throw new Error('Chrome extension context is not available');
+      if (!this.validateExtensionContext()) { throw new Error('Chrome extension context is not available');
       }
 
       // Set up Chrome runtime message listener
@@ -85,41 +78,33 @@ class ContextBridge {
       // Start periodic health checks
       this.startHealthCheck();
 
-      this.initialized = true;
-      logger.debug('[ContextBridge] Initialized successfully');
+      this.initialized = true; logger.debug('[ContextBridge] Initialized successfully');
 
-      // Emit initialization event
-      eventBus.emit('context:bridge-initialized', { timestamp: Date.now() });
+      // Emit initialization event eventBus.emit('context:bridge-initialized', { timestamp: Date.now() });
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : String(error);
-      logger.error('[ContextBridge] Initialization failed:', errorMessage);
+      const errorMessage = error instanceof Error ? error.message : String(error); logger.error('[ContextBridge] Initialization failed:', errorMessage);
       this.isExtensionContextValid = false;
       throw error;
     }
   }
 
-  /**
-   * Validate that we're in a proper Chrome extension context
+  /** * Validate that we're in a proper Chrome extension context
    */
   private validateExtensionContext(): boolean {
     try {
       // Check if chrome APIs are available
-      if (typeof chrome === 'undefined' || !chrome.runtime) {
-        logger.error('[ContextBridge] Chrome runtime API not available');
+      if (typeof chrome === 'undefined' || !chrome.runtime) { logger.error('[ContextBridge] Chrome runtime API not available');
         this.isExtensionContextValid = false;
         return false;
       }
 
       // Check if we can access extension ID
-      if (!chrome.runtime.id) {
-        logger.error('[ContextBridge] Chrome extension ID not available');
+      if (!chrome.runtime.id) { logger.error('[ContextBridge] Chrome extension ID not available');
         this.isExtensionContextValid = false;
         return false;
       }
 
-      // Test basic message sending capability
-      if (typeof chrome.runtime.sendMessage !== 'function') {
-        logger.error('[ContextBridge] Chrome runtime.sendMessage not available');
+      // Test basic message sending capability if (typeof chrome.runtime.sendMessage !== 'function') { logger.error('[ContextBridge] Chrome runtime.sendMessage not available');
         this.isExtensionContextValid = false;
         return false;
       }
@@ -130,11 +115,10 @@ class ContextBridge {
       this.isExtensionContextValid = true;
       return true;
     } catch (error) {
-      logger.error('[ContextBridge] Extension context validation failed:', error);
+       logger.error('[ContextBridge] Extension context validation failed:', error);
       this.isExtensionContextValid = false;
 
-      // Emit event to notify other components
-      eventBus.emit('context:bridge-invalidated', {
+      // Emit event to notify other components eventBus.emit('context:bridge-invalidated', {
         timestamp: Date.now(),
         error: error instanceof Error ? error.message : String(error)
       });
@@ -159,21 +143,16 @@ class ContextBridge {
 
       try {
         // Simple health check - try to access chrome.runtime.id
-        if (!chrome.runtime || !chrome.runtime.id) {
-          throw new Error('Extension context invalidated');
+        if (!chrome.runtime || !chrome.runtime.id) { throw new Error('Extension context invalidated');
         }
 
         // If we were previously invalid, mark as valid again
         if (!this.isExtensionContextValid) {
-          this.isExtensionContextValid = true;
-          logger.debug('[ContextBridge] Extension context restored');
-          eventBus.emit('context:bridge-restored', { timestamp: now });
+          this.isExtensionContextValid = true; logger.debug('[ContextBridge] Extension context restored'); eventBus.emit('context:bridge-restored', { timestamp: now });
         }
       } catch (error) {
         if (this.isExtensionContextValid) {
-          this.isExtensionContextValid = false;
-          logger.error('[ContextBridge] Extension context invalidated:', error);
-          eventBus.emit('context:bridge-invalidated', {
+          this.isExtensionContextValid = false; logger.error('[ContextBridge] Extension context invalidated:', error); eventBus.emit('context:bridge-invalidated', {
             timestamp: now,
             error: error instanceof Error ? error.message : String(error)
           });
@@ -197,20 +176,15 @@ class ContextBridge {
     sendResponse: (response?: any) => void
   ): boolean {
     try {
-      if (this.config.enableLogging) {
-        logger.debug('[ContextBridge] Received Chrome message:', message, 'from:', sender);
+      if (this.config.enableLogging) { logger.debug('[ContextBridge] Received Chrome message:', message, 'from:', sender);
       }
 
-      // Validate message structure
-      if (!message || typeof message !== 'object') {
-        logger.warn('[ContextBridge] Invalid message received:', message);
-        sendResponse({ error: 'Invalid message format' });
+      // Validate message structure if (!message || typeof message !== 'object') { logger.warn('[ContextBridge] Invalid message received:', message); sendResponse({ error: 'Invalid message format' });
         return false;
       }
 
       // Create properly structured ContextMessage
-      const contextMessage: ContextMessage = {
-        type: message.type || message.command || 'unknown',
+      const contextMessage: ContextMessage = { type: message.type || message.command || 'unknown',
         payload: message.payload,
         origin: message.origin || this.inferOrigin(sender),
         timestamp: message.timestamp || Date.now(),
@@ -232,8 +206,7 @@ class ContextBridge {
         } else {
           // Return the payload if it exists, otherwise the whole message
           pending.resolve(message.payload !== undefined ? message.payload : message);
-        }
-        return false; // Don't keep the message channel open
+        } return false; // Don't keep the message channel open
       }
 
       // Log the processed message for debugging
@@ -241,8 +214,7 @@ class ContextBridge {
         logger.debug('[ContextBridge] Processed ContextMessage:', contextMessage);
       }
 
-      // Emit to local event bus
-      eventBus.emit('context:message-received', {
+      // Emit to local event bus eventBus.emit('context:message-received', {
         message: contextMessage,
         sender,
       });
@@ -254,7 +226,7 @@ class ContextBridge {
           try {
             listener(contextMessage);
           } catch (error) {
-            logger.error('[ContextBridge] Error in message listener:', error);
+       logger.error('[ContextBridge] Error in message listener:', error);
           }
         });
       }
@@ -267,7 +239,7 @@ class ContextBridge {
 
       return true; // Keep channel open for async response
     } catch (error) {
-      logger.error('[ContextBridge] Error handling Chrome message:', error);
+       logger.error('[ContextBridge] Error handling Chrome message:', error);
       sendResponse({ error: error instanceof Error ? error.message : String(error) });
       return false;
     }
@@ -276,9 +248,7 @@ class ContextBridge {
   /**
    * Handle tab updates
    */
-  private handleTabUpdated(tabId: number, changeInfo: chrome.tabs.TabChangeInfo, tab: chrome.tabs.Tab): void {
-    if (changeInfo.status === 'complete' && tab.url) {
-      eventBus.emit('context:tab-updated', {
+  private handleTabUpdated(tabId: number, changeInfo: chrome.tabs.TabChangeInfo, tab: chrome.tabs.Tab): void { if (changeInfo.status === 'complete' && tab.url) { eventBus.emit('context:tab-updated', {
         tabId,
         url: tab.url,
         changeInfo,
@@ -288,52 +258,36 @@ class ContextBridge {
 
   /**
    * Infer origin from sender information
-   */
-  private inferOrigin(sender: chrome.runtime.MessageSender): ContextMessage['origin'] {
-    if (sender.tab) return 'content';
-    if (sender.url?.includes('popup.html')) return 'popup';
-    if (sender.url?.includes('options.html')) return 'options';
-    return 'background';
+   */ private inferOrigin(sender: chrome.runtime.MessageSender): ContextMessage['origin'] { if (sender.tab) return 'content'; if (sender.url?.includes('popup.html')) return 'popup'; if (sender.url?.includes('options.html')) return 'options'; return 'background';
   }
 
   /**
    * Set up integration with event bus
    */
   private setupEventBusIntegration(): void {
-    // Listen for events that should be forwarded to other contexts
-    eventBus.on('context:broadcast', ({ event, data, excludeOrigin }) => {
-      this.broadcast(event, data, excludeOrigin as ContextMessage['origin']);
+    // Listen for events that should be forwarded to other contexts eventBus.on('context:broadcast', ({ event, data, excludeOrigin }) => { this.broadcast(event, data, excludeOrigin as ContextMessage['origin']);
     });
-
-    eventBus.on('connection:status-changed', (data) => {
-      this.broadcast('connection:status-changed', data);
+ eventBus.on('connection:status-changed', (data) => { this.broadcast('connection:status-changed', data);
     });
-
-    eventBus.on('adapter:activated', (data) => {
-      this.broadcast('adapter:activated', data);
+ eventBus.on('adapter:activated', (data) => { this.broadcast('adapter:activated', data);
     });
-
-    eventBus.on('tool:execution-completed', (data) => {
-      this.broadcast('tool:execution-completed', data);
+ eventBus.on('tool:execution-completed', (data) => { this.broadcast('tool:execution-completed', data);
     });
   }
 
   /**
    * Send a message to a specific context with enhanced error handling and retry logic
    */
-  async sendMessage(
-    target: 'background' | 'popup' | 'options' | 'content',
+  async sendMessage( target: 'background' | 'popup' | 'options' | 'content',
     type: string,
     payload?: any,
     options: { timeout?: number; retries?: number } = {}
   ): Promise<any> {
     // Check if extension context is valid
-    if (!this.isExtensionContextValid) {
-      throw new Error('Extension context is invalid - cannot send message');
+    if (!this.isExtensionContextValid) { throw new Error('Extension context is invalid - cannot send message');
     }
 
-    if (!this.initialized) {
-      throw new Error('ContextBridge not initialized');
+    if (!this.initialized) { throw new Error('ContextBridge not initialized');
     }
 
     const maxRetries = options.retries ?? this.config.maxRetries ?? 3;
@@ -347,8 +301,7 @@ class ContextBridge {
         return await this.attemptSendMessage(target, type, payload, timeout);
       } catch (error) {
         lastError = error instanceof Error ? error : new Error(String(error));
-
-        // Don't retry on certain types of errors
+ // Don't retry on certain types of errors
         if (this.isNonRetryableError(lastError)) {
           throw lastError;
         }
@@ -380,14 +333,12 @@ class ContextBridge {
     const messageId = this.generateMessageId();
     const message: ContextMessage = {
       type,
-      payload,
-      origin: 'content', // Assuming we're in content script context
+      payload, origin: 'content', // Assuming we're in content script context
       timestamp: Date.now(),
       id: messageId,
     };
 
-    if (this.config.enableLogging) {
-      logger.debug('[ContextBridge] Sending message:', message, 'to:', target);
+    if (this.config.enableLogging) { logger.debug('[ContextBridge] Sending message:', message, 'to:', target);
     }
 
     return new Promise((resolve, reject) => {
@@ -400,14 +351,11 @@ class ContextBridge {
 
       try {
         // Validate chrome runtime is still available
-        if (!chrome.runtime || !chrome.runtime.sendMessage) {
-          throw new Error('Chrome runtime not available');
+        if (!chrome.runtime || !chrome.runtime.sendMessage) { throw new Error('Chrome runtime not available');
         }
 
-        // For background messages, send directly
-        if (target === 'background') {
-          chrome.runtime.sendMessage({ ...message, expectResponse: true }, (response) => {
-            // Clear timeout since we got a response (even if it's an error)
+        // For background messages, send directly if (target === 'background') {
+          chrome.runtime.sendMessage({ ...message, expectResponse: true }, (response) => { // Clear timeout since we got a response (even if it's an error)
             clearTimeout(timeoutHandle);
             this.pendingRequests.delete(messageId);
 
@@ -466,15 +414,13 @@ class ContextBridge {
 
         // Check if this is an extension context invalidation
         if (error instanceof Error && error.message.includes('Extension context invalidated')) {
-          this.isExtensionContextValid = false;
-          eventBus.emit('context:bridge-invalidated', {
+          this.isExtensionContextValid = false; eventBus.emit('context:bridge-invalidated', {
             timestamp: Date.now(),
             error: error.message
           });
         }
 
-        if (this.config.enableLogging) {
-          logger.error('[ContextBridge] Error sending message:', error);
+        if (this.config.enableLogging) { logger.error('[ContextBridge] Error sending message:', error);
         }
 
         reject(error);
@@ -487,41 +433,32 @@ class ContextBridge {
    */
   private isNonRetryableError(error: Error): boolean {
     const message = error.message.toLowerCase();
-    return (
-      message.includes('extension context invalidated') ||
-      message.includes('chrome runtime not available') ||
-      message.includes('invalid arguments') ||
-      message.includes('permission denied')
+    return ( message.includes('extension context invalidated') || message.includes('chrome runtime not available') || message.includes('invalid arguments') || message.includes('permission denied')
     );
   }
 
   /**
    * Broadcast a message to all contexts
-   */
-  broadcast(type: string, payload?: any, excludeOrigin?: ContextMessage['origin']): void {
+   */ broadcast(type: string, payload?: any, excludeOrigin?: ContextMessage['origin']): void {
     // Check if extension context is valid before attempting to broadcast
     if (!this.isExtensionContextValid) {
-      if (this.config.enableLogging) {
-        logger.warn('[ContextBridge] Cannot broadcast - extension context is invalid');
+      if (this.config.enableLogging) { logger.warn('[ContextBridge] Cannot broadcast - extension context is invalid');
       }
       return;
     }
 
     const message: ContextMessage = {
       type,
-      payload,
-      origin: 'content',
+      payload, origin: 'content',
       timestamp: Date.now(),
     };
 
-    if (this.config.enableLogging) {
-      logger.debug('[ContextBridge] Broadcasting message:', message);
+    if (this.config.enableLogging) { logger.debug('[ContextBridge] Broadcasting message:', message);
     }
 
     try {
       // Validate context before sending
-      if (!chrome.runtime || !chrome.runtime.sendMessage) {
-        throw new Error('Chrome runtime not available');
+      if (!chrome.runtime || !chrome.runtime.sendMessage) { throw new Error('Chrome runtime not available');
       }
 
       chrome.runtime.sendMessage({
@@ -530,14 +467,11 @@ class ContextBridge {
         excludeOrigin,
       });
     } catch (error) {
-      logger.error('[ContextBridge] Error broadcasting message:', error);
+       logger.error('[ContextBridge] Error broadcasting message:', error);
 
       // Check if this is an extension context invalidation
-      if (error instanceof Error &&
-          (error.message.includes('Extension context invalidated') ||
-           error.message.includes('Chrome runtime not available'))) {
-        this.isExtensionContextValid = false;
-        eventBus.emit('context:bridge-invalidated', {
+      if (error instanceof Error && (error.message.includes('Extension context invalidated') || error.message.includes('Chrome runtime not available'))) {
+        this.isExtensionContextValid = false; eventBus.emit('context:bridge-invalidated', {
           timestamp: Date.now(),
           error: error.message
         });
@@ -572,15 +506,12 @@ class ContextBridge {
   /**
    * Sync store state across contexts
    */
-  syncStore(storeName: string, state: any): void {
-    this.broadcast('store:sync', { storeName, state });
+  syncStore(storeName: string, state: any): void { this.broadcast('store:sync', { storeName, state });
   }
 
   /**
    * Request store state from other contexts
-   */
-  async requestStoreState(storeName: string, fromOrigin: ContextMessage['origin'] = 'background'): Promise<any> {
-    return this.sendMessage(fromOrigin, 'store:request', { storeName });
+   */ async requestStoreState(storeName: string, fromOrigin: ContextMessage['origin'] = 'background'): Promise<any> { return this.sendMessage(fromOrigin, 'store:request', { storeName });
   }
 
   /**
@@ -596,8 +527,7 @@ class ContextBridge {
   async getConnectionStatus(): Promise<{ [key: string]: boolean }> {
     const statuses: { [key: string]: boolean } = {};
     
-    try {
-      const backgrounds = await this.sendMessage('background', 'ping', {}, { timeout: 2000 });
+    try { const backgrounds = await this.sendMessage('background', 'ping', {}, { timeout: 2000 });
       statuses.background = !!backgrounds;
     } catch {
       statuses.background = false;
@@ -612,16 +542,14 @@ class ContextBridge {
   cleanup(): void {
     // Clear pending requests
     for (const [, pending] of this.pendingRequests) {
-      clearTimeout(pending.timeout);
-      pending.reject(new Error('Context bridge cleanup'));
+      clearTimeout(pending.timeout); pending.reject(new Error('Context bridge cleanup'));
     }
     this.pendingRequests.clear();
 
     // Clear listeners
     this.messageListeners.clear();
 
-    this.initialized = false;
-    logger.debug('[ContextBridge] Cleaned up');
+    this.initialized = false; logger.debug('[ContextBridge] Cleaned up');
   }
 }
 

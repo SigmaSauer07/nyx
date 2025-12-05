@@ -3,51 +3,34 @@ import type { AdapterCapability, PluginContext } from '../plugin-types';
 
 /**
  * Z Adapter for Z AI (z.ai)
- *
- * This adapter provides specialized functionality for interacting with Z AI's
+ * * This adapter provides specialized functionality for interacting with Z AI's
  * chat interface, including text insertion, form submission, and file attachment capabilities.
  *
  * Migrated from the legacy adapter system to the new plugin architecture.
  * Maintains compatibility with existing functionality while integrating with Zustand stores.
  */
 export class ZAdapter extends BaseAdapterPlugin {
-  readonly name = 'ZAdapter';
-  readonly version = '1.0.0'; // Incremented for new architecture
-  readonly hostnames = ['z.ai', 'chat.z.ai'];
-  readonly capabilities: AdapterCapability[] = [
-    'text-insertion',
-    'form-submission',
-    'file-attachment',
-    'dom-manipulation'
+  readonly name = 'ZAdapter'; readonly version = '1.0.0'; // Incremented for new architecture readonly hostnames = ['z.ai', 'chat.z.ai'];
+  readonly capabilities: AdapterCapability[] = [ 'text-insertion', 'form-submission', 'file-attachment', 'dom-manipulation'
   ];
-
-  // CSS selectors for Z's UI elements
+ // CSS selectors for Z's UI elements
   // Updated selectors based on current Z interface
   private readonly selectors = {
     // Primary chat input selectors
     CHAT_INPUT: '#chat-input',
-    // Submit button selectors (multiple fallbacks)
-    SUBMIT_BUTTON: '#send-message-button, #send-message-button[type="submit"]',
-    // File upload related selectors
-    FILE_UPLOAD_BUTTON: 'button[aria-label*="More"], button[aria-label*="more"]',
-    FILE_INPUT:
-      'input[type="file"][multiple][accept*=".pdf,.docx,.doc,.xls,.xlsx,.ppt,.pptx,.png,.jpg,.jpeg,.csv,.py,.txt,.md,.bmp,.gif"], input[type="file"][multiple]',
-    // Main panel and container selectors
-    MAIN_PANEL: 'form.w-full.flex.gap-1\.5',
-    // Drop zones for file attachment
-    DROP_ZONE: 'input[type="file"][multiple][hidden]',
+    // Submit button selectors (multiple fallbacks) SUBMIT_BUTTON: '#send-message-button, #send-message-button[type="submit"]',
+    // File upload related selectors FILE_UPLOAD_BUTTON: 'button[aria-label*="More"], button[aria-label*="more"]',
+    FILE_INPUT: 'input[type="file"][multiple][accept*=".pdf,.docx,.doc,.xls,.xlsx,.ppt,.pptx,.png,.jpg,.jpeg,.csv,.py,.txt,.md,.bmp,.gif"], input[type="file"][multiple]',
+    // Main panel and container selectors MAIN_PANEL: 'form.w-full.flex.gap-1\.5',
+    // Drop zones for file attachment DROP_ZONE: 'input[type="file"][multiple][hidden]',
     // File preview elements
-    FILE_PREVIEW:
-      'div.flex.relative.w-full.h-full > div > div.px-3.pb-3 > div.w-full.font-primary > div.transparent > div > div > form > div > div:nth-of-type(1)',
+    FILE_PREVIEW: 'div.flex.relative.w-full.h-full > div > div.px-3.pb-3 > div.w-full.font-primary > div.transparent > div > div > form > div > div:nth-of-type(1)',
     // Button insertion points (for MCP popover) - looking for search/research toggle area
-    BUTTON_INSERTION_CONTAINER:
-      'button[aria-label="More"], button[type="submit"]',
-    // Alternative insertion points
-    FALLBACK_INSERTION: '#chat-input',
+    BUTTON_INSERTION_CONTAINER: 'button[aria-label="More"], button[type="submit"]',
+    // Alternative insertion points FALLBACK_INSERTION: '#chat-input',
   };
 
-  // URL patterns for navigation tracking
-  private lastUrl: string = '';
+  // URL patterns for navigation tracking private lastUrl: string = '';
   private urlCheckInterval: NodeJS.Timeout | null = null;
 
   // State management integration
@@ -75,8 +58,7 @@ export class ZAdapter extends BaseAdapterPlugin {
   }
 
   async initialize(context: PluginContext): Promise<void> {
-    // Guard against multiple initialization
-    if (this.currentStatus === 'initializing' || this.currentStatus === 'active') {
+    // Guard against multiple initialization if (this.currentStatus === 'initializing' || this.currentStatus === 'active') {
       this.context?.logger.warn(
         `Z adapter instance #${this.instanceId} already initialized or active, skipping re-initialization`,
       );
@@ -95,8 +77,7 @@ export class ZAdapter extends BaseAdapterPlugin {
   }
 
   async activate(): Promise<void> {
-    // Guard against multiple activation
-    if (this.currentStatus === 'active') {
+    // Guard against multiple activation if (this.currentStatus === 'active') {
       this.context?.logger.warn(`Z adapter instance #${this.instanceId} already active, skipping re-activation`);
       return;
     }
@@ -111,22 +92,18 @@ export class ZAdapter extends BaseAdapterPlugin {
     this.setupDOMObservers();
     this.setupUIIntegration();
 
-    // Emit activation event for store synchronization
-    this.context.eventBus.emit('adapter:activated', {
+    // Emit activation event for store synchronization this.context.eventBus.emit('adapter:activated', {
       pluginName: this.name,
       timestamp: Date.now()
     });
   }
 
   async deactivate(): Promise<void> {
-    // Guard against double deactivation
-    if (this.currentStatus === 'inactive' || this.currentStatus === 'disabled') {
-      this.context?.logger.warn('Z adapter already inactive, skipping deactivation');
+    // Guard against double deactivation if (this.currentStatus === 'inactive' || this.currentStatus === 'disabled') { this.context?.logger.warn('Z adapter already inactive, skipping deactivation');
       return;
     }
 
-    await super.deactivate();
-    this.context.logger.debug('Deactivating Z adapter...');
+    await super.deactivate(); this.context.logger.debug('Deactivating Z adapter...');
 
     // Clean up UI integration
     this.cleanupUIIntegration();
@@ -137,16 +114,14 @@ export class ZAdapter extends BaseAdapterPlugin {
     this.domObserversSetup = false;
     this.uiIntegrationSetup = false;
 
-    // Emit deactivation event
-    this.context.eventBus.emit('adapter:deactivated', {
+    // Emit deactivation event this.context.eventBus.emit('adapter:deactivated', {
       pluginName: this.name,
       timestamp: Date.now()
     });
   }
 
   async cleanup(): Promise<void> {
-    await super.cleanup();
-    this.context.logger.debug('Cleaning up Z adapter...');
+    await super.cleanup(); this.context.logger.debug('Cleaning up Z adapter...');
 
     // Clear URL tracking interval
     if (this.urlCheckInterval) {
@@ -160,8 +135,7 @@ export class ZAdapter extends BaseAdapterPlugin {
       this.popoverCheckInterval = null;
     }
 
-    // Remove injected adapter styles
-    const styleElement = document.getElementById('mcp-z-button-styles');
+    // Remove injected adapter styles const styleElement = document.getElementById('mcp-z-button-styles');
     if (styleElement) {
       styleElement.remove();
       this.adapterStylesInjected = false;
@@ -182,8 +156,7 @@ export class ZAdapter extends BaseAdapterPlugin {
    * Enhanced with better selector handling, event integration, and URL-specific methods
    */
   async insertText(text: string, options?: { targetElement?: HTMLElement }): Promise<boolean> {
-    this.context.logger.debug(
-      `Attempting to insert text into Z chat input: ${text.substring(0, 50)}${text.length > 50 ? '...' : ''}`,
+    this.context.logger.debug( `Attempting to insert text into Z chat input: ${text.substring(0, 50)}${text.length > 50 ? '...' : ''}`,
     );
 
     let targetElement: HTMLElement | null = null;
@@ -191,8 +164,7 @@ export class ZAdapter extends BaseAdapterPlugin {
     if (options?.targetElement) {
       targetElement = options.targetElement;
     } else {
-      // Try multiple selectors for better compatibility
-      const selectors = this.selectors.CHAT_INPUT.split(', ');
+      // Try multiple selectors for better compatibility const selectors = this.selectors.CHAT_INPUT.split(', ');
       for (const selector of selectors) {
         targetElement = document.querySelector(selector.trim()) as HTMLElement;
         if (targetElement) {
@@ -202,18 +174,13 @@ export class ZAdapter extends BaseAdapterPlugin {
       }
     }
 
-    if (!targetElement) {
-      this.context.logger.error('Could not find Z chat input element');
-      this.emitExecutionFailed('insertText', 'Chat input element not found');
+    if (!targetElement) { this.context.logger.error('Could not find Z chat input element'); this.emitExecutionFailed('insertText', 'Chat input element not found');
       return false;
     }
 
-    try {
-      // Check if we're on the homepage and use the special method
+    try { // Check if we're on the homepage and use the special method
       const currentUrl = window.location.href;
-      if (currentUrl === 'https://chat.z.ai/' || currentUrl === 'https://z.ai/' || true) {
-        // this.context.logger.debug('Homepage detected, using InputEvent method for text insertion');
-        this.context.logger.debug('Using InputEvent method for text insertion for all pages');
+      if (currentUrl === 'https://chat.z.ai/' || currentUrl === 'https://z.ai/' || true) { // this.context.logger.debug('Homepage detected, using InputEvent method for text insertion'); this.context.logger.debug('Using InputEvent method for text insertion for all pages');
         return await this.insertTextViaInputEvent(targetElement, text);
       }
 
@@ -224,8 +191,7 @@ export class ZAdapter extends BaseAdapterPlugin {
       // // Focus the input element
       // targetElement.focus();
 
-      // // Insert the text by updating the value and dispatching appropriate events
-      // // Append the text to the original value on a new line if there's existing content
+      // // Insert the text by updating the value and dispatching appropriate events // // Append the text to the original value on a new line if there's existing content
       // const newContent = originalValue ? originalValue + '\n\n' + text : text;
 
       // if (isContentEditable) {
@@ -234,25 +200,20 @@ export class ZAdapter extends BaseAdapterPlugin {
       //   (targetElement as HTMLInputElement | HTMLTextAreaElement).value = newContent;
       // }
 
-      // // Dispatch events to simulate user typing for better compatibility
-      // targetElement.dispatchEvent(new Event('input', { bubbles: true }));
-      // targetElement.dispatchEvent(new Event('change', { bubbles: true }));
+      // // Dispatch events to simulate user typing for better compatibility // targetElement.dispatchEvent(new Event('input', { bubbles: true })); // targetElement.dispatchEvent(new Event('change', { bubbles: true }));
 
-      // // Emit success event to the new event system
-      // this.emitExecutionCompleted('insertText', { text }, {
+      // // Emit success event to the new event system // this.emitExecutionCompleted('insertText', { text }, {
       //   success: true,
       //   originalLength: originalValue.length,
       //   newLength: text.length,
-      //   totalLength: newContent.length,
-      //   method: 'standard'
+      //   totalLength: newContent.length, //   method: 'standard'
       // });
 
       // this.context.logger.debug(`Text inserted successfully. Original: ${originalValue.length}, Added: ${text.length}, Total: ${newContent.length}`);
       // return true;
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : String(error);
-      this.context.logger.error(`Error inserting text into Z chat input: ${errorMessage}`);
-      this.emitExecutionFailed('insertText', errorMessage);
+      this.context.logger.error(`Error inserting text into Z chat input: ${errorMessage}`); this.emitExecutionFailed('insertText', errorMessage);
       return false;
     }
   }
@@ -276,26 +237,20 @@ export class ZAdapter extends BaseAdapterPlugin {
         selection.addRange(range);
       }
 
-      // Prepare text to enter with proper line breaks
-      const textToEnter = originalValue ? originalValue + '\n\n' + text : text;
+      // Prepare text to enter with proper line breaks const textToEnter = originalValue ? originalValue + '\n\n' + text : text;
 
       // Use InputEvent instead of execCommand
-      element.value = textToEnter;
-      element.dispatchEvent(new Event('input', { bubbles: true }));
-
-      /*element.dispatchEvent(new InputEvent('input', {
-        inputType: 'insertText',
+      element.value = textToEnter; element.dispatchEvent(new Event('input', { bubbles: true }));
+ /*element.dispatchEvent(new InputEvent('input', { inputType: 'insertText',
         data: textToEnter,
         bubbles: true,
         cancelable: true
       }));*/
 
-      // Also dispatch change event for compatibility
-      element.dispatchEvent(new Event('change', { bubbles: true }));
+      // Also dispatch change event for compatibility element.dispatchEvent(new Event('change', { bubbles: true }));
 
       // Emit success event
-      this.emitExecutionCompleted(
-        'insertText',
+      this.emitExecutionCompleted( 'insertText',
         { text },
         {
           success: true,
@@ -311,8 +266,7 @@ export class ZAdapter extends BaseAdapterPlugin {
       return true;
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : String(error);
-      this.context.logger.error(`InputEvent method failed: ${errorMessage}`);
-      this.emitExecutionFailed('insertText', `InputEvent method failed: ${errorMessage}`);
+      this.context.logger.error(`InputEvent method failed: ${errorMessage}`); this.emitExecutionFailed('insertText', `InputEvent method failed: ${errorMessage}`);
       return false;
     }
   }
@@ -322,9 +276,7 @@ export class ZAdapter extends BaseAdapterPlugin {
    */
   private isContentEditableElement(element: HTMLElement): boolean {
     return (
-      element.isContentEditable ||
-      element.getAttribute('contenteditable') === 'true' ||
-      element.hasAttribute('contenteditable')
+      element.isContentEditable || element.getAttribute('contenteditable') === 'true' || element.hasAttribute('contenteditable')
     );
   }
 
@@ -332,10 +284,8 @@ export class ZAdapter extends BaseAdapterPlugin {
    * Get content from element (handles both contenteditable and input/textarea)
    */
   private getElementContent(element: HTMLElement): string {
-    if (this.isContentEditableElement(element)) {
-      return element.textContent || element.innerText || '';
-    } else {
-      return (element as HTMLInputElement | HTMLTextAreaElement).value || '';
+    if (this.isContentEditableElement(element)) { return element.textContent || element.innerText || '';
+    } else { return (element as HTMLInputElement | HTMLTextAreaElement).value || '';
     }
   }
 
@@ -343,12 +293,10 @@ export class ZAdapter extends BaseAdapterPlugin {
    * Submit the current text in the Z chat input
    * Enhanced with multiple selector fallbacks and better error handling
    */
-  async submitForm(options?: { formElement?: HTMLFormElement }): Promise<boolean> {
-    this.context.logger.debug('Attempting to submit Z chat input');
+  async submitForm(options?: { formElement?: HTMLFormElement }): Promise<boolean> { this.context.logger.debug('Attempting to submit Z chat input');
 
     // First try to find submit button
-    let submitButton: HTMLButtonElement | null = null;
-    const selectors = this.selectors.SUBMIT_BUTTON.split(', ');
+    let submitButton: HTMLButtonElement | null = null; const selectors = this.selectors.SUBMIT_BUTTON.split(', ');
 
     for (const selector of selectors) {
       submitButton = document.querySelector(selector.trim()) as HTMLButtonElement;
@@ -361,10 +309,8 @@ export class ZAdapter extends BaseAdapterPlugin {
     // Also check for generic button near chat input
     if (!submitButton) {
       const chatInput = document.querySelector(this.selectors.CHAT_INPUT) as HTMLTextAreaElement;
-      if (chatInput) {
-        submitButton = chatInput.parentElement?.querySelector('button') as HTMLButtonElement;
-        if (submitButton) {
-          this.context.logger.debug('Found submit button near chat input');
+      if (chatInput) { submitButton = chatInput.parentElement?.querySelector('button') as HTMLButtonElement;
+        if (submitButton) { this.context.logger.debug('Found submit button near chat input');
         }
       }
     }
@@ -373,13 +319,9 @@ export class ZAdapter extends BaseAdapterPlugin {
       try {
         // Check if the button is disabled
         const isDisabled =
-          submitButton.disabled ||
-          submitButton.getAttribute('disabled') !== null ||
-          submitButton.getAttribute('aria-disabled') === 'true' ||
-          submitButton.classList.contains('disabled');
+          submitButton.disabled || submitButton.getAttribute('disabled') !== null || submitButton.getAttribute('aria-disabled') === 'true' || submitButton.classList.contains('disabled');
 
-        if (isDisabled) {
-          this.context.logger.warn('Z submit button is disabled, waiting for it to be enabled');
+        if (isDisabled) { this.context.logger.warn('Z submit button is disabled, waiting for it to be enabled');
 
           // Wait for button to be enabled (with timeout)
           const maxWaitTime = 5000; // 5 seconds
@@ -390,10 +332,7 @@ export class ZAdapter extends BaseAdapterPlugin {
 
             // Re-check if button is now enabled
             const stillDisabled =
-              submitButton!.disabled ||
-              submitButton!.getAttribute('disabled') !== null ||
-              submitButton!.getAttribute('aria-disabled') === 'true' ||
-              submitButton!.classList.contains('disabled');
+              submitButton!.disabled || submitButton!.getAttribute('disabled') !== null || submitButton!.getAttribute('aria-disabled') === 'true' || submitButton!.classList.contains('disabled');
 
             if (!stillDisabled) {
               break;
@@ -402,21 +341,16 @@ export class ZAdapter extends BaseAdapterPlugin {
 
           // Final check
           const finallyDisabled =
-            submitButton.disabled ||
-            submitButton.getAttribute('disabled') !== null ||
-            submitButton.getAttribute('aria-disabled') === 'true' ||
-            submitButton.classList.contains('disabled');
+            submitButton.disabled || submitButton.getAttribute('disabled') !== null || submitButton.getAttribute('aria-disabled') === 'true' || submitButton.classList.contains('disabled');
 
-          if (finallyDisabled) {
-            this.context.logger.warn('Submit button remained disabled, falling back to Enter key');
+          if (finallyDisabled) { this.context.logger.warn('Submit button remained disabled, falling back to Enter key');
             return this.submitWithEnterKey();
           }
         }
 
         // Check if the button is visible and clickable
         const rect = submitButton.getBoundingClientRect();
-        if (rect.width === 0 || rect.height === 0) {
-          this.context.logger.warn('Z submit button is not visible, falling back to Enter key');
+        if (rect.width === 0 || rect.height === 0) { this.context.logger.warn('Z submit button is not visible, falling back to Enter key');
           return this.submitWithEnterKey();
         }
 
@@ -424,27 +358,22 @@ export class ZAdapter extends BaseAdapterPlugin {
         submitButton.click();
 
         // Emit success event to the new event system
-        this.emitExecutionCompleted(
-          'submitForm',
-          {
-            formElement: options?.formElement?.tagName || 'unknown',
+        this.emitExecutionCompleted( 'submitForm',
+          { formElement: options?.formElement?.tagName || 'unknown',
           },
           {
-            success: true,
-            method: 'submitButton.click',
+            success: true, method: 'submitButton.click',
             buttonSelector: selectors.find(s => document.querySelector(s.trim()) === submitButton),
           },
         );
-
-        this.context.logger.debug('Z chat input submitted successfully via button click');
+ this.context.logger.debug('Z chat input submitted successfully via button click');
         return true;
       } catch (error) {
         const errorMessage = error instanceof Error ? error.message : String(error);
         this.context.logger.error(`Error clicking submit button: ${errorMessage}, falling back to Enter key`);
         return this.submitWithEnterKey();
       }
-    } else {
-      this.context.logger.warn('Could not find Z submit button, falling back to Enter key');
+    } else { this.context.logger.warn('Could not find Z submit button, falling back to Enter key');
       return this.submitWithEnterKey();
     }
   }
@@ -455,21 +384,17 @@ export class ZAdapter extends BaseAdapterPlugin {
   private async submitWithEnterKey(): Promise<boolean> {
     try {
       const chatInput = document.querySelector(this.selectors.CHAT_INPUT) as HTMLTextAreaElement;
-      if (!chatInput) {
-        this.emitExecutionFailed('submitForm', 'Chat input element not found for Enter key fallback');
+      if (!chatInput) { this.emitExecutionFailed('submitForm', 'Chat input element not found for Enter key fallback');
         return false;
       }
 
       // Focus the textarea
       chatInput.focus();
 
-      // Simulate Enter key press
-      const enterEvents = ['keydown', 'keypress', 'keyup'];
+      // Simulate Enter key press const enterEvents = ['keydown', 'keypress', 'keyup'];
       for (const eventType of enterEvents) {
         chatInput.dispatchEvent(
-          new KeyboardEvent(eventType, {
-            key: 'Enter',
-            code: 'Enter',
+          new KeyboardEvent(eventType, { key: 'Enter', code: 'Enter',
             keyCode: 13,
             which: 13,
             bubbles: true,
@@ -478,28 +403,21 @@ export class ZAdapter extends BaseAdapterPlugin {
         );
       }
 
-      // Try form submission as additional fallback
-      const form = chatInput.closest('form') as HTMLFormElement;
-      if (form) {
-        this.context.logger.debug('Submitting form as additional fallback');
-        form.dispatchEvent(new SubmitEvent('submit', { bubbles: true, cancelable: true }));
+      // Try form submission as additional fallback const form = chatInput.closest('form') as HTMLFormElement;
+      if (form) { this.context.logger.debug('Submitting form as additional fallback'); form.dispatchEvent(new SubmitEvent('submit', { bubbles: true, cancelable: true }));
       }
 
-      this.emitExecutionCompleted(
-        'submitForm',
+      this.emitExecutionCompleted( 'submitForm',
         {},
         {
-          success: true,
-          method: 'enterKey+formSubmit',
+          success: true, method: 'enterKey+formSubmit',
         },
       );
-
-      this.context.logger.debug('Z chat input submitted successfully via Enter key');
+ this.context.logger.debug('Z chat input submitted successfully via Enter key');
       return true;
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : String(error);
-      this.context.logger.error(`Error submitting with Enter key: ${errorMessage}`);
-      this.emitExecutionFailed('submitForm', errorMessage);
+      this.context.logger.error(`Error submitting with Enter key: ${errorMessage}`); this.emitExecutionFailed('submitForm', errorMessage);
       return false;
     }
   }
@@ -513,30 +431,26 @@ export class ZAdapter extends BaseAdapterPlugin {
 
     try {
       // Validate file before attempting attachment
-      if (!file || file.size === 0) {
-        this.emitExecutionFailed('attachFile', 'Invalid file: file is empty or null');
+      if (!file || file.size === 0) { this.emitExecutionFailed('attachFile', 'Invalid file: file is empty or null');
         return false;
       }
 
       // Check if file upload is supported on current page
-      if (!this.supportsFileUpload()) {
-        this.emitExecutionFailed('attachFile', 'File upload not supported on current page');
+      if (!this.supportsFileUpload()) { this.emitExecutionFailed('attachFile', 'File upload not supported on current page');
         return false;
       }
 
       // Method 1: Try using hidden file input element
       const success1 = await this.attachFileViaInput(file);
       if (success1) {
-        this.emitExecutionCompleted(
-          'attachFile',
+        this.emitExecutionCompleted( 'attachFile',
           {
             fileName: file.name,
             fileType: file.type,
             fileSize: file.size,
           },
           {
-            success: true,
-            method: 'file-input',
+            success: true, method: 'file-input',
           },
         );
         this.context.logger.debug(`File attached successfully via input: ${file.name}`);
@@ -546,16 +460,14 @@ export class ZAdapter extends BaseAdapterPlugin {
       // Method 2: Fallback to drag and drop simulation
       const success2 = await this.attachFileViaDragDrop(file);
       if (success2) {
-        this.emitExecutionCompleted(
-          'attachFile',
+        this.emitExecutionCompleted( 'attachFile',
           {
             fileName: file.name,
             fileType: file.type,
             fileSize: file.size,
           },
           {
-            success: true,
-            method: 'drag-drop',
+            success: true, method: 'drag-drop',
           },
         );
         this.context.logger.debug(`File attached successfully via drag-drop: ${file.name}`);
@@ -564,16 +476,14 @@ export class ZAdapter extends BaseAdapterPlugin {
 
       // Method 3: Try clipboard as final fallback
       const success3 = await this.attachFileViaClipboard(file);
-      this.emitExecutionCompleted(
-        'attachFile',
+      this.emitExecutionCompleted( 'attachFile',
         {
           fileName: file.name,
           fileType: file.type,
           fileSize: file.size,
         },
         {
-          success: success3,
-          method: 'clipboard',
+          success: success3, method: 'clipboard',
         },
       );
 
@@ -586,8 +496,7 @@ export class ZAdapter extends BaseAdapterPlugin {
       return success3;
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : String(error);
-      this.context.logger.error(`Error attaching file to Z: ${errorMessage}`);
-      this.emitExecutionFailed('attachFile', errorMessage);
+      this.context.logger.error(`Error attaching file to Z: ${errorMessage}`); this.emitExecutionFailed('attachFile', errorMessage);
       return false;
     }
   }
@@ -596,8 +505,7 @@ export class ZAdapter extends BaseAdapterPlugin {
    * Method 1: Attach file via hidden file input
    */
   private async attachFileViaInput(file: File): Promise<boolean> {
-    try {
-      const selectors = this.selectors.FILE_INPUT.split(', ');
+    try { const selectors = this.selectors.FILE_INPUT.split(', ');
       let fileInput: HTMLInputElement | null = null;
 
       for (const selector of selectors) {
@@ -608,8 +516,7 @@ export class ZAdapter extends BaseAdapterPlugin {
         }
       }
 
-      if (!fileInput) {
-        this.context.logger.debug('No file input element found');
+      if (!fileInput) { this.context.logger.debug('No file input element found');
         return false;
       }
 
@@ -620,8 +527,7 @@ export class ZAdapter extends BaseAdapterPlugin {
       // Set the files property on the input element
       fileInput.files = dataTransfer.files;
 
-      // Trigger the change event to notify the application
-      const changeEvent = new Event('change', { bubbles: true });
+      // Trigger the change event to notify the application const changeEvent = new Event('change', { bubbles: true });
       fileInput.dispatchEvent(changeEvent);
 
       return true;
@@ -637,8 +543,7 @@ export class ZAdapter extends BaseAdapterPlugin {
   private async attachFileViaDragDrop(file: File): Promise<boolean> {
     try {
       const chatInput = document.querySelector(this.selectors.CHAT_INPUT) as HTMLTextAreaElement;
-      if (!chatInput) {
-        this.context.logger.debug('No chat input found for drag-drop');
+      if (!chatInput) { this.context.logger.debug('No chat input found for drag-drop');
         return false;
       }
 
@@ -646,21 +551,18 @@ export class ZAdapter extends BaseAdapterPlugin {
       const dataTransfer = new DataTransfer();
       dataTransfer.items.add(file);
 
-      // Create custom events
-      const dragOverEvent = new DragEvent('dragover', {
+      // Create custom events const dragOverEvent = new DragEvent('dragover', {
+        bubbles: true,
+        cancelable: true,
+        dataTransfer: dataTransfer,
+      });
+ const dropEvent = new DragEvent('drop', {
         bubbles: true,
         cancelable: true,
         dataTransfer: dataTransfer,
       });
 
-      const dropEvent = new DragEvent('drop', {
-        bubbles: true,
-        cancelable: true,
-        dataTransfer: dataTransfer,
-      });
-
-      // Prevent default on dragover to enable drop
-      chatInput.addEventListener('dragover', e => e.preventDefault(), { once: true });
+      // Prevent default on dragover to enable drop chatInput.addEventListener('dragover', e => e.preventDefault(), { once: true });
       chatInput.dispatchEvent(dragOverEvent);
 
       // Simulate the drop event
@@ -708,11 +610,9 @@ export class ZAdapter extends BaseAdapterPlugin {
     this.context.logger.debug(`Checking if Z adapter supports: ${currentUrl}`);
 
     // Check hostname first
-    const isZHost = this.hostnames.some(hostname => {
-      if (typeof hostname === 'string') {
+    const isZHost = this.hostnames.some(hostname => { if (typeof hostname === 'string') {
         return currentHost.includes(hostname);
-      }
-      // hostname is RegExp if it's not a string
+      } // hostname is RegExp if it's not a string
       return (hostname as RegExp).test(currentHost);
     });
 
@@ -741,11 +641,9 @@ export class ZAdapter extends BaseAdapterPlugin {
    * Check if file upload is supported on the current page
    * Enhanced with multiple selector checking and better detection
    */
-  supportsFileUpload(): boolean {
-    this.context.logger.debug('Checking file upload support for Z');
+  supportsFileUpload(): boolean { this.context.logger.debug('Checking file upload support for Z');
 
-    // Check for file input elements
-    const fileInputSelectors = this.selectors.FILE_INPUT.split(', ');
+    // Check for file input elements const fileInputSelectors = this.selectors.FILE_INPUT.split(', ');
     for (const selector of fileInputSelectors) {
       const fileInput = document.querySelector(selector.trim());
       if (fileInput) {
@@ -754,8 +652,7 @@ export class ZAdapter extends BaseAdapterPlugin {
       }
     }
 
-    // Check for file upload buttons
-    const uploadButtonSelectors = this.selectors.FILE_UPLOAD_BUTTON.split(', ');
+    // Check for file upload buttons const uploadButtonSelectors = this.selectors.FILE_UPLOAD_BUTTON.split(', ');
     for (const selector of uploadButtonSelectors) {
       const uploadButton = document.querySelector(selector.trim());
       if (uploadButton) {
@@ -764,8 +661,7 @@ export class ZAdapter extends BaseAdapterPlugin {
       }
     }
 
-    // Check for drop zones
-    const dropZoneSelectors = this.selectors.DROP_ZONE.split(', ');
+    // Check for drop zones const dropZoneSelectors = this.selectors.DROP_ZONE.split(', ');
     for (const selector of dropZoneSelectors) {
       const dropZone = document.querySelector(selector.trim());
       if (dropZone) {
@@ -773,14 +669,13 @@ export class ZAdapter extends BaseAdapterPlugin {
         return true;
       }
     }
-
-    this.context.logger.debug('No file upload support detected');
+ this.context.logger.debug('No file upload support detected');
     return false;
   }
 
   // Private helper methods
-
-  private setupUrlTracking(): void {
+  
+    private setupUrlTracking(): void {
     if (!this.urlCheckInterval) {
       this.urlCheckInterval = setInterval(() => {
         const currentUrl = window.location.href;
@@ -799,8 +694,8 @@ export class ZAdapter extends BaseAdapterPlugin {
   }
 
   // New architecture integration methods
-
-  private setupStoreEventListeners(): void {
+  
+    private setupStoreEventListeners(): void {
     if (this.storeEventListenersSetup) {
       this.context.logger.warn(`Store event listeners already set up for instance #${this.instanceId}, skipping`);
       return;
@@ -808,16 +703,12 @@ export class ZAdapter extends BaseAdapterPlugin {
 
     this.context.logger.debug(`Setting up store event listeners for Z adapter instance #${this.instanceId}`);
 
-    // Listen for tool execution events from the store
-    this.context.eventBus.on('tool:execution-completed', data => {
-      this.context.logger.debug('Tool execution completed:', data);
+    // Listen for tool execution events from the store this.context.eventBus.on('tool:execution-completed', data => { this.context.logger.debug('Tool execution completed:', data);
       // Handle auto-actions based on store state
       this.handleToolExecutionCompleted(data);
     });
 
-    // Listen for UI state changes
-    this.context.eventBus.on('ui:sidebar-toggle', data => {
-      this.context.logger.debug('Sidebar toggled:', data);
+    // Listen for UI state changes this.context.eventBus.on('ui:sidebar-toggle', data => { this.context.logger.debug('Sidebar toggled:', data);
     });
 
     this.storeEventListenersSetup = true;
@@ -835,10 +726,8 @@ export class ZAdapter extends BaseAdapterPlugin {
     this.mutationObserver = new MutationObserver(mutations => {
       let shouldReinject = false;
 
-      mutations.forEach(mutation => {
-        if (mutation.type === 'childList') {
-          // Check if our MCP popover was removed
-          if (!document.getElementById('mcp-popover-container')) {
+      mutations.forEach(mutation => { if (mutation.type === 'childList') {
+          // Check if our MCP popover was removed if (!document.getElementById('mcp-popover-container')) {
             shouldReinject = true;
           }
         }
@@ -847,8 +736,7 @@ export class ZAdapter extends BaseAdapterPlugin {
       if (shouldReinject) {
         // Only attempt re-injection if we can find an insertion point
         const insertionPoint = this.findButtonInsertionPoint();
-        if (insertionPoint) {
-          this.context.logger.debug('MCP popover removed, attempting to re-inject');
+        if (insertionPoint) { this.context.logger.debug('MCP popover removed, attempting to re-inject');
           this.setupUIIntegration();
         }
       }
@@ -880,9 +768,7 @@ export class ZAdapter extends BaseAdapterPlugin {
       .then(() => {
         this.injectMCPPopoverWithRetry();
       })
-      .catch(error => {
-        this.context.logger.warn('Failed to wait for page ready:', error);
-        // Don't retry if we can't find insertion point
+      .catch(error => { this.context.logger.warn('Failed to wait for page ready:', error); // Don't retry if we can't find insertion point
       });
 
     // Set up periodic check to ensure popover stays injected
@@ -893,16 +779,13 @@ export class ZAdapter extends BaseAdapterPlugin {
     return new Promise((resolve, reject) => {
       let attempts = 0;
       const maxAttempts = 5; // Maximum 10 seconds (20 * 500ms)
-
-      const checkReady = () => {
+  
+        const checkReady = () => {
         attempts++;
         const insertionPoint = this.findButtonInsertionPoint();
-        if (insertionPoint) {
-          this.context.logger.debug('Page ready for MCP popover injection');
+        if (insertionPoint) { this.context.logger.debug('Page ready for MCP popover injection');
           resolve();
-        } else if (attempts >= maxAttempts) {
-          this.context.logger.warn('Page ready check timed out - no insertion point found');
-          reject(new Error('No insertion point found after maximum attempts'));
+        } else if (attempts >= maxAttempts) { this.context.logger.warn('Page ready check timed out - no insertion point found'); reject(new Error('No insertion point found after maximum attempts'));
         } else {
           setTimeout(checkReady, 500);
         }
@@ -915,9 +798,7 @@ export class ZAdapter extends BaseAdapterPlugin {
     const attemptInjection = (attempt: number) => {
       this.context.logger.debug(`Attempting MCP popover injection (attempt ${attempt}/${maxRetries})`);
 
-      // Check if popover already exists
-      if (document.getElementById('mcp-popover-container')) {
-        this.context.logger.debug('MCP popover already exists');
+      // Check if popover already exists if (document.getElementById('mcp-popover-container')) { this.context.logger.debug('MCP popover already exists');
         return;
       }
 
@@ -929,8 +810,7 @@ export class ZAdapter extends BaseAdapterPlugin {
         // Retry after delay
         this.context.logger.debug(`Insertion point not found, retrying in 1 second (attempt ${attempt}/${maxRetries})`);
         setTimeout(() => attemptInjection(attempt + 1), 1000);
-      } else {
-        this.context.logger.warn('Failed to inject MCP popover after maximum retries');
+      } else { this.context.logger.warn('Failed to inject MCP popover after maximum retries');
       }
     };
 
@@ -940,12 +820,10 @@ export class ZAdapter extends BaseAdapterPlugin {
   private setupPeriodicPopoverCheck(): void {
     // Check every 5 seconds if the popover is still there
     if (!this.popoverCheckInterval) {
-      this.popoverCheckInterval = setInterval(() => {
-        if (!document.getElementById('mcp-popover-container')) {
+      this.popoverCheckInterval = setInterval(() => { if (!document.getElementById('mcp-popover-container')) {
           // Only attempt re-injection if we can find an insertion point
           const insertionPoint = this.findButtonInsertionPoint();
-          if (insertionPoint) {
-            this.context.logger.debug('MCP popover missing, attempting to re-inject');
+          if (insertionPoint) { this.context.logger.debug('MCP popover missing, attempting to re-inject');
             this.injectMCPPopoverWithRetry(3); // Fewer retries for periodic checks
           }
         }
@@ -953,8 +831,7 @@ export class ZAdapter extends BaseAdapterPlugin {
     }
   }
 
-  private cleanupDOMObservers(): void {
-    this.context.logger.debug('Cleaning up DOM observers for Z adapter');
+  private cleanupDOMObservers(): void { this.context.logger.debug('Cleaning up DOM observers for Z adapter');
 
     if (this.mutationObserver) {
       this.mutationObserver.disconnect();
@@ -962,11 +839,9 @@ export class ZAdapter extends BaseAdapterPlugin {
     }
   }
 
-  private cleanupUIIntegration(): void {
-    this.context.logger.debug('Cleaning up UI integration for Z adapter');
+  private cleanupUIIntegration(): void { this.context.logger.debug('Cleaning up UI integration for Z adapter');
 
-    // Remove MCP popover if it exists
-    const popoverContainer = document.getElementById('mcp-popover-container');
+    // Remove MCP popover if it exists const popoverContainer = document.getElementById('mcp-popover-container');
     if (popoverContainer) {
       popoverContainer.remove();
     }
@@ -974,85 +849,65 @@ export class ZAdapter extends BaseAdapterPlugin {
     this.mcpPopoverContainer = null;
   }
 
-  private handleToolExecutionCompleted(data: any): void {
-    this.context.logger.debug('Handling tool execution completion in Z adapter:', data);
+  private handleToolExecutionCompleted(data: any): void { this.context.logger.debug('Handling tool execution completion in Z adapter:', data);
 
     // Use the base class method to check if we should handle events
-    if (!this.shouldHandleEvents()) {
-      this.context.logger.debug('Z adapter should not handle events, ignoring tool execution event');
+    if (!this.shouldHandleEvents()) { this.context.logger.debug('Z adapter should not handle events, ignoring tool execution event');
       return;
     }
 
     // Get current UI state from stores to determine auto-actions
     const uiState = this.context.stores.ui;
     if (uiState && data.execution) {
-      // Handle auto-insert, auto-submit based on store state
-      // This integrates with the new architecture's state management
+      // Handle auto-insert, auto-submit based on store state // This integrates with the new architecture's state management
       this.context.logger.debug('Tool execution handled with new architecture integration');
     }
   }
 
-  private findButtonInsertionPoint(): { container: Element; insertAfter: Element | null } | null {
-    this.context.logger.debug('Finding button insertion point for MCP popover');
+  private findButtonInsertionPoint(): { container: Element; insertAfter: Element | null } | null { this.context.logger.debug('Finding button insertion point for MCP popover');
 
     // Try to find the search/research toggle area first (primary insertion point)
     const radioGroup = document.querySelector(this.selectors.BUTTON_INSERTION_CONTAINER);
-    if (radioGroup) {
-      const container = radioGroup.closest('div.flex');
-      if (container) {
-        this.context.logger.debug('Found Tools container, placing MCP button next to it');
+    if (radioGroup) { const container = radioGroup.closest('div.flex');
+      if (container) { this.context.logger.debug('Found Tools container, placing MCP button next to it');
         const wrapperDiv = radioGroup.parentElement;
         return { container, insertAfter: wrapperDiv };
       }
     }
-
-    // Fallback: Look for the main input area's action buttons container
+ // Fallback: Look for the main input area's action buttons container
     const actionsContainer = document.querySelector('div.flex.items-end.gap-sm');
-    if (actionsContainer) {
-      this.context.logger.debug('Found actions container (fallback)');
-      const fileUploadButton = actionsContainer.querySelector('button[aria-label*="Attach"]');
+    if (actionsContainer) { this.context.logger.debug('Found actions container (fallback)'); const fileUploadButton = actionsContainer.querySelector('button[aria-label*="Attach"]');
       return { container: actionsContainer, insertAfter: fileUploadButton };
     }
 
-    // Try fallback selectors
-    const fallbackSelectors = ['.input-area .actions', '.chat-input-actions', '.conversation-input .actions'];
-
-    for (const selector of fallbackSelectors) {
+    // Try fallback selectors const fallbackSelectors = ['.input-area .actions', '.chat-input-actions', '.conversation-input .actions'];
+  
+      for (const selector of fallbackSelectors) {
       const container = document.querySelector(selector);
       if (container) {
         this.context.logger.debug(`Found fallback insertion point: ${selector}`);
         return { container, insertAfter: null };
       }
     }
-
-    this.context.logger.debug('Could not find suitable insertion point for MCP popover');
+ this.context.logger.debug('Could not find suitable insertion point for MCP popover');
     return null;
   }
 
-  private injectMCPPopover(insertionPoint: { container: Element; insertAfter: Element | null }): void {
-    this.context.logger.debug('Injecting MCP popover into Z interface');
+  private injectMCPPopover(insertionPoint: { container: Element; insertAfter: Element | null }): void { this.context.logger.debug('Injecting MCP popover into Z interface');
 
     try {
-      // Check if popover already exists
-      if (document.getElementById('mcp-popover-container')) {
-        this.context.logger.debug('MCP popover already exists, skipping injection');
+      // Check if popover already exists if (document.getElementById('mcp-popover-container')) { this.context.logger.debug('MCP popover already exists, skipping injection');
         return;
       }
 
-      // Create container for the popover
-      const reactContainer = document.createElement('div');
-      reactContainer.id = 'mcp-popover-container';
-      reactContainer.style.display = 'inline-block';
-      reactContainer.style.margin = '0 4px';
+      // Create container for the popover const reactContainer = document.createElement('div'); reactContainer.id = 'mcp-popover-container'; reactContainer.style.display = 'inline-block'; reactContainer.style.margin = '0 4px';
 
       // Insert at appropriate location
       const { container, insertAfter } = insertionPoint;
       if (insertAfter && insertAfter.parentNode === container) {
-        container.insertBefore(reactContainer, insertAfter.nextSibling);
-        this.context.logger.debug('Inserted popover container after specified element');
+        container.insertBefore(reactContainer, insertAfter.nextSibling); this.context.logger.debug('Inserted popover container after specified element');
       } else {
-        container.appendChild(reactContainer);
-        this.context.logger.debug('Appended popover container to container element');
+        container.appendChild(reactContainer); this.context.logger.debug('Appended popover container to container element');
       }
 
       // Store reference
@@ -1060,33 +915,24 @@ export class ZAdapter extends BaseAdapterPlugin {
 
       // Render the React MCP Popover using the new architecture
       this.renderMCPPopover(reactContainer);
-
-      this.context.logger.debug('MCP popover injected and rendered successfully');
+ this.context.logger.debug('MCP popover injected and rendered successfully');
     } catch (error) {
-      this.context.logger.error('Failed to inject MCP popover:', error);
+       this.context.logger.error('Failed to inject MCP popover:', error);
     }
   }
 
-  private renderMCPPopover(container: HTMLElement): void {
-    this.context.logger.debug('Rendering MCP popover with new architecture integration');
+  private renderMCPPopover(container: HTMLElement): void { this.context.logger.debug('Rendering MCP popover with new architecture integration');
 
     try {
-      // Import React and ReactDOM dynamically to avoid bundling issues
-      import('react')
-        .then(React => {
-          import('react-dom/client')
-            .then(ReactDOM => {
-              import('../../components/mcpPopover/mcpPopover')
+      // Import React and ReactDOM dynamically to avoid bundling issues import('react')
+        .then(React => { import('react-dom/client')
+            .then(ReactDOM => { import('../../components/mcpPopover/mcpPopover')
                 .then(({ MCPPopover }) => {
                   // Create toggle state manager that integrates with new stores
                   const toggleStateManager = this.createToggleStateManager();
 
                   // Create adapter button configuration
-                  const adapterButtonConfig = {
-                    className: 'mcp-z-button-base',
-                    contentClassName: 'mcp-z-button-content',
-                    textClassName: 'mcp-z-button-text',
-                    activeClassName: 'mcp-button-active',
+                  const adapterButtonConfig = { className: 'mcp-z-button-base', contentClassName: 'mcp-z-button-content', textClassName: 'mcp-z-button-text', activeClassName: 'mcp-button-active',
                   };
 
                   // Create React root and render
@@ -1098,22 +944,18 @@ export class ZAdapter extends BaseAdapterPlugin {
                       adapterName: this.name,
                     }),
                   );
-
-                  this.context.logger.debug('MCP popover rendered successfully with new architecture');
+ this.context.logger.debug('MCP popover rendered successfully with new architecture');
                 })
-                .catch(error => {
-                  this.context.logger.error('Failed to import MCPPopover component:', error);
+                .catch(error => { this.context.logger.error('Failed to import MCPPopover component:', error);
                 });
             })
-            .catch(error => {
-              this.context.logger.error('Failed to import ReactDOM:', error);
+            .catch(error => { this.context.logger.error('Failed to import ReactDOM:', error);
             });
         })
-        .catch(error => {
-          this.context.logger.error('Failed to import React:', error);
+        .catch(error => { this.context.logger.error('Failed to import React:', error);
         });
     } catch (error) {
-      this.context.logger.error('Failed to render MCP popover:', error);
+       this.context.logger.error('Failed to render MCP popover:', error);
     }
   }
 
@@ -1141,7 +983,7 @@ export class ZAdapter extends BaseAdapterPlugin {
             autoExecute: false, // Default for now, can be extended
           };
         } catch (error) {
-          context.logger.error('Error getting toggle state:', error);
+       context.logger.error('Error getting toggle state:', error);
           // Return safe defaults in case of error
           return {
             mcpEnabled: false,
@@ -1153,21 +995,17 @@ export class ZAdapter extends BaseAdapterPlugin {
       },
 
       setMCPEnabled: (enabled: boolean) => {
-        context.logger.debug(
-          `Setting MCP ${enabled ? 'enabled' : 'disabled'} - controlling sidebar visibility via MCP state`,
+        context.logger.debug( `Setting MCP ${enabled ? 'enabled' : 'disabled'} - controlling sidebar visibility via MCP state`,
         );
 
         try {
           // Primary method: Control MCP state through UI store (which will automatically control sidebar)
-          if (context.stores.ui?.setMCPEnabled) {
-            context.stores.ui.setMCPEnabled(enabled, 'mcp-popover-toggle');
+          if (context.stores.ui?.setMCPEnabled) { context.stores.ui.setMCPEnabled(enabled, 'mcp-popover-toggle');
             context.logger.debug(`MCP state set to: ${enabled} via UI store`);
-          } else {
-            context.logger.warn('UI store setMCPEnabled method not available');
+          } else { context.logger.warn('UI store setMCPEnabled method not available');
 
             // Fallback: Control sidebar visibility directly if MCP state setter not available
-            if (context.stores.ui?.setSidebarVisibility) {
-              context.stores.ui.setSidebarVisibility(enabled, 'mcp-popover-toggle-fallback');
+            if (context.stores.ui?.setSidebarVisibility) { context.stores.ui.setSidebarVisibility(enabled, 'mcp-popover-toggle-fallback');
               context.logger.debug(`Sidebar visibility set to: ${enabled} via UI store fallback`);
             }
           }
@@ -1175,33 +1013,26 @@ export class ZAdapter extends BaseAdapterPlugin {
           // Secondary method: Control through global sidebar manager as additional safeguard
           const sidebarManager = (window as any).activeSidebarManager;
           if (sidebarManager) {
-            if (enabled) {
-              context.logger.debug('Showing sidebar via activeSidebarManager');
-              sidebarManager.show().catch((error: any) => {
-                context.logger.error('Error showing sidebar:', error);
+            if (enabled) { context.logger.debug('Showing sidebar via activeSidebarManager');
+              sidebarManager.show().catch((error: any) => { context.logger.error('Error showing sidebar:', error);
               });
-            } else {
-              context.logger.debug('Hiding sidebar via activeSidebarManager');
-              sidebarManager.hide().catch((error: any) => {
-                context.logger.error('Error hiding sidebar:', error);
+            } else { context.logger.debug('Hiding sidebar via activeSidebarManager');
+              sidebarManager.hide().catch((error: any) => { context.logger.error('Error hiding sidebar:', error);
               });
             }
-          } else {
-            context.logger.warn('activeSidebarManager not available on window - will rely on UI store only');
+          } else { context.logger.warn('activeSidebarManager not available on window - will rely on UI store only');
           }
 
-          context.logger.debug(
-            `MCP toggle completed: MCP ${enabled ? 'enabled' : 'disabled'}, sidebar ${enabled ? 'shown' : 'hidden'}`,
+          context.logger.debug( `MCP toggle completed: MCP ${enabled ? 'enabled' : 'disabled'}, sidebar ${enabled ? 'shown' : 'hidden'}`,
           );
         } catch (error) {
-          context.logger.error('Error in setMCPEnabled:', error);
+       context.logger.error('Error in setMCPEnabled:', error);
         }
 
         stateManager.updateUI();
       },
 
-      setAutoInsert: (enabled: boolean) => {
-        context.logger.debug(`Setting Auto Insert ${enabled ? 'enabled' : 'disabled'}`);
+      setAutoInsert: (enabled: boolean) => { context.logger.debug(`Setting Auto Insert ${enabled ? 'enabled' : 'disabled'}`);
 
         // Update preferences through store
         if (context.stores.ui?.updatePreferences) {
@@ -1211,8 +1042,7 @@ export class ZAdapter extends BaseAdapterPlugin {
         stateManager.updateUI();
       },
 
-      setAutoSubmit: (enabled: boolean) => {
-        context.logger.debug(`Setting Auto Submit ${enabled ? 'enabled' : 'disabled'}`);
+      setAutoSubmit: (enabled: boolean) => { context.logger.debug(`Setting Auto Submit ${enabled ? 'enabled' : 'disabled'}`);
 
         // Update preferences through store
         if (context.stores.ui?.updatePreferences) {
@@ -1222,20 +1052,16 @@ export class ZAdapter extends BaseAdapterPlugin {
         stateManager.updateUI();
       },
 
-      setAutoExecute: (enabled: boolean) => {
-        context.logger.debug(`Setting Auto Execute ${enabled ? 'enabled' : 'disabled'}`);
+      setAutoExecute: (enabled: boolean) => { context.logger.debug(`Setting Auto Execute ${enabled ? 'enabled' : 'disabled'}`);
         // Can be extended to handle auto execute functionality
         stateManager.updateUI();
       },
 
-      updateUI: () => {
-        context.logger.debug('Updating MCP popover UI');
+      updateUI: () => { context.logger.debug('Updating MCP popover UI');
 
-        // Dispatch custom event to update the popover
-        const popoverContainer = document.getElementById('mcp-popover-container');
+        // Dispatch custom event to update the popover const popoverContainer = document.getElementById('mcp-popover-container');
         if (popoverContainer) {
-          const currentState = stateManager.getState();
-          const event = new CustomEvent('mcp:update-toggle-state', {
+          const currentState = stateManager.getState(); const event = new CustomEvent('mcp:update-toggle-state', {
             detail: { toggleState: currentState },
           });
           popoverContainer.dispatchEvent(event);
@@ -1249,33 +1075,28 @@ export class ZAdapter extends BaseAdapterPlugin {
   /**
    * Public method to manually inject MCP popover (for debugging or external calls)
    */
-  public injectMCPPopoverManually(): void {
-    this.context.logger.debug('Manual MCP popover injection requested');
+  public injectMCPPopoverManually(): void { this.context.logger.debug('Manual MCP popover injection requested');
     this.injectMCPPopoverWithRetry();
   }
 
   /**
    * Check if MCP popover is currently injected
    */
-  public isMCPPopoverInjected(): boolean {
-    return !!document.getElementById('mcp-popover-container');
+  public isMCPPopoverInjected(): boolean { return !!document.getElementById('mcp-popover-container');
   }
 
-  private emitExecutionCompleted(toolName: string, parameters: any, result: any): void {
-    this.context.eventBus.emit('tool:execution-completed', {
+  private emitExecutionCompleted(toolName: string, parameters: any, result: any): void { this.context.eventBus.emit('tool:execution-completed', {
       execution: {
         id: this.generateCallId(),
         toolName,
         parameters,
         result,
-        timestamp: Date.now(),
-        status: 'success'
+        timestamp: Date.now(), status: 'success'
       }
     });
   }
 
-  private emitExecutionFailed(toolName: string, error: string): void {
-    this.context.eventBus.emit('tool:execution-failed', {
+  private emitExecutionFailed(toolName: string, error: string): void { this.context.eventBus.emit('tool:execution-failed', {
       toolName,
       error,
       callId: this.generateCallId(),
@@ -1289,11 +1110,9 @@ export class ZAdapter extends BaseAdapterPlugin {
   /**
    * Check if the sidebar is properly available after navigation
    */
-  private checkAndRestoreSidebar(): void {
-    this.context.logger.debug('Checking sidebar state after page navigation');
+  private checkAndRestoreSidebar(): void { this.context.logger.debug('Checking sidebar state after page navigation');
 
-    try {
-      // Check if there's an active sidebar manager
+    try { // Check if there's an active sidebar manager
       const activeSidebarManager = (window as any).activeSidebarManager;
 
       if (!activeSidebarManager) {
@@ -1304,32 +1123,28 @@ export class ZAdapter extends BaseAdapterPlugin {
       // Sidebar manager exists, just ensure MCP popover connection is working
       this.ensureMCPPopoverConnection();
     } catch (error) {
-      this.context.logger.error('Error checking sidebar state after navigation:', error);
+       this.context.logger.error('Error checking sidebar state after navigation:', error);
     }
   }
 
   /**
    * Ensure MCP popover is properly connected to the sidebar after navigation
    */
-  private ensureMCPPopoverConnection(): void {
-    this.context.logger.debug('Ensuring MCP popover connection after navigation');
+  private ensureMCPPopoverConnection(): void { this.context.logger.debug('Ensuring MCP popover connection after navigation');
 
     try {
       // Check if MCP popover is still injected
-      if (!this.isMCPPopoverInjected()) {
-        this.context.logger.debug('MCP popover missing after navigation, re-injecting');
+      if (!this.isMCPPopoverInjected()) { this.context.logger.debug('MCP popover missing after navigation, re-injecting');
         this.injectMCPPopoverWithRetry(3);
-      } else {
-        this.context.logger.debug('MCP popover is still present after navigation');
+      } else { this.context.logger.debug('MCP popover is still present after navigation');
       }
     } catch (error) {
-      this.context.logger.error('Error ensuring MCP popover connection:', error);
+       this.context.logger.error('Error ensuring MCP popover connection:', error);
     }
   }
 
   // Event handlers - Enhanced for new architecture integration
-  onPageChanged?(url: string, oldUrl?: string): void {
-    this.context.logger.debug(`Z page changed: from ${oldUrl || 'N/A'} to ${url}`);
+  onPageChanged?(url: string, oldUrl?: string): void { this.context.logger.debug(`Z page changed: from ${oldUrl || 'N/A'} to ${url}`);
 
     // Update URL tracking
     this.lastUrl = url;
@@ -1350,26 +1165,21 @@ export class ZAdapter extends BaseAdapterPlugin {
       setTimeout(() => {
         this.checkAndRestoreSidebar();
       }, 1500); // Additional delay to ensure page is fully loaded
-    } else {
-      this.context.logger.warn('Page no longer supported after navigation');
+    } else { this.context.logger.warn('Page no longer supported after navigation');
     }
 
-    // Emit page change event to stores
-    this.context.eventBus.emit('app:site-changed', {
+    // Emit page change event to stores this.context.eventBus.emit('app:site-changed', {
       site: url,
       hostname: window.location.hostname,
     });
   }
 
-  onHostChanged?(newHost: string, oldHost?: string): void {
-    this.context.logger.debug(`Z host changed: from ${oldHost || 'N/A'} to ${newHost}`);
+  onHostChanged?(newHost: string, oldHost?: string): void { this.context.logger.debug(`Z host changed: from ${oldHost || 'N/A'} to ${newHost}`);
 
     // Re-check if the adapter is still supported
     const stillSupported = this.isSupported();
-    if (!stillSupported) {
-      this.context.logger.warn('Z adapter no longer supported on this host/page');
-      // Emit deactivation event using available event type
-      this.context.eventBus.emit('adapter:deactivated', {
+    if (!stillSupported) { this.context.logger.warn('Z adapter no longer supported on this host/page');
+      // Emit deactivation event using available event type this.context.eventBus.emit('adapter:deactivated', {
         pluginName: this.name,
         timestamp: Date.now(),
       });
@@ -1390,8 +1200,7 @@ export class ZAdapter extends BaseAdapterPlugin {
 
   // Z-specific button styling methods
 
-  /**
-   * Get Z-specific button styles that match the platform's segmented control design system
+  /** * Get Z-specific button styles that match the platform's segmented control design system
    */
   private getZButtonStyles(): string {
     return `
@@ -1415,8 +1224,7 @@ export class ZAdapter extends BaseAdapterPlugin {
         border: none;
         background: transparent;
         transition: all 300ms ease-out;
-        
-        /* Default colors - using Z's actual theme colors */
+         /* Default colors - using Z's actual theme colors */
         color: oklch(var(--text-color-200, 50.2% 0.008 106.677)); /* Inactive text */
         
         /* Focus states */
@@ -1505,8 +1313,7 @@ export class ZAdapter extends BaseAdapterPlugin {
         border-radius: 50%;
         margin-right: 1px;
       }
-      
-      /* Integration with Z's button group layout */
+       /* Integration with Z's button group layout */
       .gap-xs .mcp-z-button-base,
       .gap-sm .mcp-z-button-base,
       .flex.items-center .mcp-z-button-base {
@@ -1570,16 +1377,14 @@ export class ZAdapter extends BaseAdapterPlugin {
       const styleId = 'mcp-z-button-styles';
       const existingStyles = document.getElementById(styleId);
       if (existingStyles) existingStyles.remove();
-
-      const styleElement = document.createElement('style');
+ const styleElement = document.createElement('style');
       styleElement.id = styleId;
       styleElement.textContent = this.getZButtonStyles();
       document.head.appendChild(styleElement);
 
-      this.adapterStylesInjected = true;
-      this.context.logger.debug('Z button styles injected successfully');
+      this.adapterStylesInjected = true; this.context.logger.debug('Z button styles injected successfully');
     } catch (error) {
-      this.context.logger.error('Failed to inject Z button styles:', error);
+       this.context.logger.error('Failed to inject Z button styles:', error);
     }
   }
 }

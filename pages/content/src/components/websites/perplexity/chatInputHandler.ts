@@ -10,38 +10,30 @@ import { createLogger } from '@extension/shared/lib/logger';
 /**
  * Find the Perplexity chat input textarea element
  * @returns The chat input textarea element or null if not found
- */
-
-const logger = createLogger('PerplexityChatInputHandler');
+ */ const logger = createLogger('PerplexityChatInputHandler');
 
 export const findChatInputElement = (): HTMLTextAreaElement | null => {
-  // Try to find the main "Ask anything..." input first
-  let chatInput = document.querySelector('textarea[placeholder="Ask anything..."]');
-
-  if (chatInput) {
-    logMessage('Found Perplexity main input with "Ask anything..." placeholder');
+  // Try to find the main "Ask anything..." input first let chatInput = document.querySelector('textarea[placeholder="Ask anything..."]');
+  
+    if (chatInput) { logMessage('Found Perplexity main input with "Ask anything..." placeholder');
     return chatInput as HTMLTextAreaElement;
   }
 
-  // Fall back to the follow-up input if main input not found
-  chatInput = document.querySelector('textarea[placeholder="Ask follow-up"]');
-
-  if (chatInput) {
-    logMessage('Found Perplexity follow-up input with "Ask follow-up" placeholder');
+  // Fall back to the follow-up input if main input not found chatInput = document.querySelector('textarea[placeholder="Ask follow-up"]');
+  
+    if (chatInput) { logMessage('Found Perplexity follow-up input with "Ask follow-up" placeholder');
     return chatInput as HTMLTextAreaElement;
   }
 
-  // If neither specific placeholder is found, try a more general approach
-  chatInput = document.querySelector('textarea[placeholder*="Ask"]');
-
-  if (chatInput) {
+  // If neither specific placeholder is found, try a more general approach chatInput = document.querySelector('textarea[placeholder*="Ask"]');
+  
+    if (chatInput) {
     logMessage(
       `Found Perplexity input with generic "Ask" in placeholder: ${(chatInput as HTMLTextAreaElement).placeholder}`,
     );
     return chatInput as HTMLTextAreaElement;
   }
-
-  logMessage('Could not find any Perplexity chat input textarea');
+ logMessage('Could not find any Perplexity chat input textarea');
   return null;
 };
 
@@ -74,8 +66,7 @@ export const insertTextToChatInput = (text: string): boolean => {
 
     if (chatInput) {
       // Append the text to the existing text in the textarea
-      const currentText = chatInput.value;
-      // Add new line before and after the current text if there's existing content
+      const currentText = chatInput.value; // Add new line before and after the current text if there's existing content
       const formattedText = currentText ? `${currentText}\n\n${text}` : text;
       chatInput.value = formattedText;
 
@@ -85,18 +76,14 @@ export const insertTextToChatInput = (text: string): boolean => {
 
       // Focus the textarea
       chatInput.focus();
-
-      logMessage('Appended text to Perplexity chat input');
+ logMessage('Appended text to Perplexity chat input');
       return true;
-    } else {
-      logMessage('Could not find Perplexity chat input');
-      logger.error('Could not find Perplexity chat input textarea');
+    } else { logMessage('Could not find Perplexity chat input'); logger.error('Could not find Perplexity chat input textarea');
       return false;
     }
   } catch (error: unknown) {
     const errorMessage = error instanceof Error ? error.message : String(error);
-    logMessage(`Error inserting text into chat input: ${errorMessage}`);
-    logger.error('Error inserting text into chat input:', error);
+    logMessage(`Error inserting text into chat input: ${errorMessage}`); logger.error('Error inserting text into chat input:', error);
     return false;
   }
 };
@@ -110,17 +97,14 @@ export const insertToolResultToChatInput = (result: any): boolean => {
   try {
     // Format the tool result as JSON string
     // const formattedResult = formatAsJson(result);
-    // const wrappedResult = wrapInToolOutput(formattedResult);
-    if (typeof result !== 'string') {
-      result = JSON.stringify(result, null, 2);
-      logMessage('Converted tool result to string format');
+    // const wrappedResult = wrapInToolOutput(formattedResult); if (typeof result !== 'string') {
+      result = JSON.stringify(result, null, 2); logMessage('Converted tool result to string format');
     }
 
     return insertTextToChatInput(result);
   } catch (error: unknown) {
     const errorMessage = error instanceof Error ? error.message : String(error);
-    logMessage(`Error formatting tool result: ${errorMessage}`);
-    logger.error('Error formatting tool result:', error);
+    logMessage(`Error formatting tool result: ${errorMessage}`); logger.error('Error formatting tool result:', error);
     return false;
   }
 };
@@ -132,18 +116,14 @@ export const insertToolResultToChatInput = (result: any): boolean => {
  */
 export const attachFileToChatInput = async (file: File): Promise<boolean> => {
   try {
-    // First try to find the hidden file input element in Perplexity
-    const fileInputSelector = 'input[type="file"][multiple][accept*=".pdf"]';
+    // First try to find the hidden file input element in Perplexity const fileInputSelector = 'input[type="file"][multiple][accept*=".pdf"]';
     let fileInput = document.querySelector(fileInputSelector) as HTMLInputElement | null;
 
-    if (!fileInput) {
-      logMessage('Could not find Perplexity file input element, looking for more generic selector');
-      // Try a more generic selector if the specific one fails
-      fileInput = document.querySelector('input[type="file"][multiple]') as HTMLInputElement | null;
+    if (!fileInput) { logMessage('Could not find Perplexity file input element, looking for more generic selector');
+      // Try a more generic selector if the specific one fails fileInput = document.querySelector('input[type="file"][multiple]') as HTMLInputElement | null;
     }
 
-    if (fileInput) {
-      logMessage('Found Perplexity file input element');
+    if (fileInput) { logMessage('Found Perplexity file input element');
 
       // Create a DataTransfer object and add the file
       const dataTransfer = new DataTransfer();
@@ -152,20 +132,17 @@ export const attachFileToChatInput = async (file: File): Promise<boolean> => {
       // Set the files property on the input element
       fileInput.files = dataTransfer.files;
 
-      // Trigger the change event to notify the application
-      const changeEvent = new Event('change', { bubbles: true });
+      // Trigger the change event to notify the application const changeEvent = new Event('change', { bubbles: true });
       fileInput.dispatchEvent(changeEvent);
 
       logMessage(`Attached file ${file.name} to Perplexity input via file input element`);
       return true;
     }
 
-    // Fallback to the original method if no file input element is found
-    logMessage('No file input element found, falling back to drag and drop simulation');
+    // Fallback to the original method if no file input element is found logMessage('No file input element found, falling back to drag and drop simulation');
     const chatInput = findChatInputElement();
 
-    if (!chatInput) {
-      logMessage('Could not find Perplexity input element for file attachment');
+    if (!chatInput) { logMessage('Could not find Perplexity input element for file attachment');
       return false;
     }
 
@@ -173,21 +150,18 @@ export const attachFileToChatInput = async (file: File): Promise<boolean> => {
     const dataTransfer = new DataTransfer();
     dataTransfer.items.add(file);
 
-    // Create custom events
-    const dragOverEvent = new DragEvent('dragover', {
+    // Create custom events const dragOverEvent = new DragEvent('dragover', {
+      bubbles: true,
+      cancelable: true,
+      dataTransfer: dataTransfer,
+    });
+ const dropEvent = new DragEvent('drop', {
       bubbles: true,
       cancelable: true,
       dataTransfer: dataTransfer,
     });
 
-    const dropEvent = new DragEvent('drop', {
-      bubbles: true,
-      cancelable: true,
-      dataTransfer: dataTransfer,
-    });
-
-    // Prevent default on dragover to enable drop
-    chatInput.addEventListener('dragover', e => e.preventDefault(), { once: true });
+    // Prevent default on dragover to enable drop chatInput.addEventListener('dragover', e => e.preventDefault(), { once: true });
     chatInput.dispatchEvent(dragOverEvent);
 
     // Simulate the drop event
@@ -202,8 +176,7 @@ export const attachFileToChatInput = async (file: File): Promise<boolean> => {
       ]);
 
       // Focus the textarea to make it easier to paste
-      chatInput.focus();
-      logMessage('File copied to clipboard, user can now paste manually if needed');
+      chatInput.focus(); logMessage('File copied to clipboard, user can now paste manually if needed');
     } catch (clipboardError) {
       logMessage(`Could not copy to clipboard: ${clipboardError}`);
     }
@@ -212,8 +185,7 @@ export const attachFileToChatInput = async (file: File): Promise<boolean> => {
     return true;
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : String(error);
-    logMessage(`Error attaching file to Perplexity input: ${errorMessage}`);
-    logger.error('Error attaching file to Perplexity input:', error);
+    logMessage(`Error attaching file to Perplexity input: ${errorMessage}`); logger.error('Error attaching file to Perplexity input:', error);
     return false;
   }
 };
@@ -225,48 +197,33 @@ export const attachFileToChatInput = async (file: File): Promise<boolean> => {
 export const submitChatInput = async (maxWaitTime = 5000): Promise<boolean> => {
   try {
     const chatInput = findChatInputElement();
-    if (!chatInput) {
-      logMessage('Could not find chat input to submit');
+    if (!chatInput) { logMessage('Could not find chat input to submit');
       return false;
     }
 
-    const findSubmitButton = (): HTMLButtonElement | null => {
-      return (document.querySelector('button[aria-label="Submit"]') ??
-        document.querySelector('button[aria-label="Send"]') ??
-        document.querySelector('button[type="submit"]') ??
-        chatInput.parentElement?.querySelector('button') ??
-        document.querySelector('button svg[stroke="currentColor"]')?.closest('button')) as HTMLButtonElement | null;
+    const findSubmitButton = (): HTMLButtonElement | null => { return (document.querySelector('button[aria-label="Submit"]') ?? document.querySelector('button[aria-label="Send"]') ?? document.querySelector('button[type="submit"]') ?? chatInput.parentElement?.querySelector('button') ?? document.querySelector('button svg[stroke="currentColor"]')?.closest('button')) as HTMLButtonElement | null;
     };
 
     const isDisabled = (btn: HTMLButtonElement) =>
-      btn.disabled ||
-      btn.getAttribute('disabled') !== null ||
-      btn.getAttribute('aria-disabled') === 'true' ||
-      btn.classList.contains('disabled');
+      btn.disabled || btn.getAttribute('disabled') !== null || btn.getAttribute('aria-disabled') === 'true' || btn.classList.contains('disabled');
 
     let button = findSubmitButton();
-    if (button) {
-      logMessage(`Found submit button (${button.getAttribute('aria-label') || 'unknown'})`);
+    if (button) { logMessage(`Found submit button (${button.getAttribute('aria-label') || 'unknown'})`);
       const start = Date.now();
       while (isDisabled(button) && Date.now() - start < maxWaitTime) {
         await new Promise(res => setTimeout(res, 300));
         button = findSubmitButton()!;
       }
-      if (!isDisabled(button)) {
-        logMessage('Clicking submit button');
+      if (!isDisabled(button)) { logMessage('Clicking submit button');
         button.click();
         return true;
-      }
-      logMessage('Submit button remained disabled, falling back to Enter key');
+      } logMessage('Submit button remained disabled, falling back to Enter key');
     }
 
     // Fallback: simulate Enter key
-    chatInput.focus();
-    ['keydown', 'keypress', 'keyup'].forEach(type => {
+    chatInput.focus(); ['keydown', 'keypress', 'keyup'].forEach(type => {
       chatInput.dispatchEvent(
-        new KeyboardEvent(type, {
-          key: 'Enter',
-          code: 'Enter',
+        new KeyboardEvent(type, { key: 'Enter', code: 'Enter',
           keyCode: 13,
           which: 13,
           bubbles: true,
@@ -275,18 +232,14 @@ export const submitChatInput = async (maxWaitTime = 5000): Promise<boolean> => {
       );
     });
 
-    // Form submission fallback
-    const form = chatInput.closest<HTMLFormElement>('form');
-    if (form) {
-      logMessage('Submitting form as fallback');
-      form.dispatchEvent(new SubmitEvent('submit', { bubbles: true, cancelable: true }));
+    // Form submission fallback const form = chatInput.closest<HTMLFormElement>('form');
+    if (form) { logMessage('Submitting form as fallback'); form.dispatchEvent(new SubmitEvent('submit', { bubbles: true, cancelable: true }));
     }
 
     return true;
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : String(error);
-    logMessage(`Error submitting chat input: ${errorMessage}`);
-    logger.error('Error submitting chat input:', error);
+    logMessage(`Error submitting chat input: ${errorMessage}`); logger.error('Error submitting chat input:', error);
     return false;
   }
 };

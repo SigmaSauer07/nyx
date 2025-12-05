@@ -6,8 +6,6 @@ import PopoverPortal from './PopoverPortal';
 import { instructionsState } from '../sidebar/Instructions/InstructionManager';
 import { AutomationService } from '../../services/automation.service';
 import { createLogger } from '@extension/shared/lib/logger';
-
-
 const logger = createLogger('mcpPopover');
 
 export interface MCPToggleState {
@@ -26,7 +24,6 @@ const useThemeDetector = () => {
   useEffect(() => {
     const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
     const handleChange = (e: MediaQueryListEvent) => setIsDarkMode(e.matches);
-
     mediaQuery.addEventListener('change', handleChange);
     return () => mediaQuery.removeEventListener('change', handleChange);
   }, []);
@@ -53,8 +50,7 @@ const styles = `
   border: 1px solid #dadce0;
   cursor: pointer;
   transition: all 0.2s ease;
-  color: #202124;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, sans-serif;
+  color: #202124; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, sans-serif;
   font-size: 14px;
   font-weight: 600;
   box-shadow: 0 1px 3px rgba(60,64,67,0.08);
@@ -85,8 +81,7 @@ const styles = `
   box-shadow: 0 4px 20px rgba(60,64,67,0.10), 0 2px 8px rgba(60,64,67,0.06);
   padding: 0;
   z-index: 1000;
-  border: 1px solid #dadce0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, sans-serif;
+  border: 1px solid #dadce0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, sans-serif;
   overflow: visible;
   max-height: 90vh;
   position: relative;
@@ -122,8 +117,7 @@ const styles = `
 }
 
 /* Default arrow (positioned at the bottom for popover above trigger) */
-.mcp-popover.position-above::after {
-  content: '';
+.mcp-popover.position-above::after { content: '';
   position: absolute;
   bottom: -8px;
   left: 50%;
@@ -136,8 +130,7 @@ const styles = `
 }
 
 /* Arrow for popover positioned below the trigger */
-.mcp-popover.position-below::after {
-  content: '';
+.mcp-popover.position-below::after { content: '';
   position: absolute;
   top: -8px;
   left: 50%;
@@ -537,15 +530,10 @@ interface MCPPopoverProps {
   };
   /**
    * Adapter-specific button styling configuration
-   * Allows adapters to override the default MCP button styling
-   * to match the host website's design system
+   * Allows adapters to override the default MCP button styling * to match the host website's design system
    */
   adapterButtonConfig?: {
-    className?: string;        // Main button class (e.g., 'mcp-gh-button-base')
-    contentClassName?: string; // Content wrapper class (e.g., 'mcp-gh-button-content')  
-    textClassName?: string;    // Text label class (e.g., 'mcp-gh-button-text')
-    iconClassName?: string;    // Icon class (e.g., 'mcp-gh-button-icon')
-    activeClassName?: string;  // Active state class (e.g., 'mcp-button-active')
+    className?: string; // Main button class (e.g., 'mcp-gh-button-base') contentClassName?: string; // Content wrapper class (e.g., 'mcp-gh-button-content')   textClassName?: string;    // Text label class (e.g., 'mcp-gh-button-text') iconClassName?: string;    // Icon class (e.g., 'mcp-gh-button-icon') activeClassName?: string;  // Active state class (e.g., 'mcp-button-active')
   };
   /**
    * Name of the adapter providing the styling
@@ -583,13 +571,10 @@ const ToggleItem: React.FC<ToggleItemProps> = ({ id, label, checked, disabled, o
         borderBottom: `1px solid ${toggleTheme.itemBorderColor}`,
         backgroundColor: toggleTheme.itemBackground,
       }}>
-      <div
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'flex-start',
-        }}>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start' }}>
+        {' '}
         <div style={{ width: '36px', marginRight: '10px' }}>
+          {' '}
           <label className="mcp-toggle-checkbox" style={{ display: 'block' }}>
             <input
               type="checkbox"
@@ -612,10 +597,7 @@ const ToggleItem: React.FC<ToggleItemProps> = ({ id, label, checked, disabled, o
         <label
           htmlFor={id}
           className="mcp-toggle-label"
-          style={{
-            cursor: disabled ? 'not-allowed' : 'pointer',
-            color: toggleTheme.labelColor,
-          }}>
+          style={{ cursor: disabled ? 'not-allowed' : 'pointer', color: toggleTheme.labelColor }}>
           {label}
         </label>
       </div>
@@ -629,7 +611,7 @@ export const MCPPopover: React.FC<MCPPopoverProps> = ({ toggleStateManager, adap
   // Use Zustand hooks for adapter and user preferences
   const { plugin: activePlugin, insertText, attachFile, isReady: isAdapterActive } = useCurrentAdapter();
   const { preferences, updatePreferences } = useUserPreferences();
-  
+
   // Use MCP state hook to get persistent MCP toggle state
   const { mcpEnabled: mcpEnabledFromStore, setMCPEnabled } = useMCPState();
 
@@ -643,7 +625,7 @@ export const MCPPopover: React.FC<MCPPopoverProps> = ({ toggleStateManager, adap
       hasAttachFile: !!attachFile,
       capabilities: activePlugin?.capabilities,
       adapterName,
-      hasAdapterButtonConfig: !!adapterButtonConfig
+      hasAdapterButtonConfig: !!adapterButtonConfig,
     });
   }, [isAdapterActive, activePlugin, insertText, attachFile, adapterName, adapterButtonConfig]);
 
@@ -652,30 +634,17 @@ export const MCPPopover: React.FC<MCPPopoverProps> = ({ toggleStateManager, adap
     logger.debug(`Instructions state:`, {
       hasInstructions: !!instructionsState.instructions,
       instructionsLength: instructionsState.instructions.length,
-      preferences: preferences
+      preferences: preferences,
     });
   }, [instructionsState.instructions, preferences]);
 
   // Color scheme for the popover
   const theme = {
-    // Background colors
-    mainBackground: isDarkMode ? '#2d2d2d' : '#ffffff',
-    secondaryBackground: isDarkMode ? '#2d2d2d' : '#f8f9fa',
-    buttonBackground: isDarkMode ? '#174ea6' : '#e8f0fe',
-    buttonBackgroundHover: isDarkMode ? '#8ab4f8' : '#aecbfa',
-    buttonBackgroundActive: isDarkMode ? '#8ab4f8' : '#1a73e8',
-    toggleBackground: isDarkMode ? '#444' : '#dadce0',
-    toggleBackgroundChecked: isDarkMode ? '#8ab4f8' : '#1a73e8',
-    toggleBackgroundDisabled: isDarkMode ? '#444' : '#dadce0',
+    // Background colors mainBackground: isDarkMode ? '#2d2d2d' : '#ffffff', secondaryBackground: isDarkMode ? '#2d2d2d' : '#f8f9fa', buttonBackground: isDarkMode ? '#174ea6' : '#e8f0fe', buttonBackgroundHover: isDarkMode ? '#8ab4f8' : '#aecbfa', buttonBackgroundActive: isDarkMode ? '#8ab4f8' : '#1a73e8', toggleBackground: isDarkMode ? '#444' : '#dadce0', toggleBackgroundChecked: isDarkMode ? '#8ab4f8' : '#1a73e8', toggleBackgroundDisabled: isDarkMode ? '#444' : '#dadce0',
 
-    // Text colors
-    primaryText: isDarkMode ? '#e8eaed' : '#202124',
-    secondaryText: isDarkMode ? '#9aa0a6' : '#5f6368',
-    disabledText: isDarkMode ? '#9aa0a6' : '#5f6368',
+    // Text colors primaryText: isDarkMode ? '#e8eaed' : '#202124', secondaryText: isDarkMode ? '#9aa0a6' : '#5f6368', disabledText: isDarkMode ? '#9aa0a6' : '#5f6368',
 
-    // Border colors
-    borderColor: isDarkMode ? '#444' : '#dadce0',
-    dividerColor: isDarkMode ? '#444' : '#dadce0',
+    // Border colors borderColor: isDarkMode ? '#444' : '#dadce0', dividerColor: isDarkMode ? '#444' : '#dadce0',
 
     // Shadow
     boxShadow: isDarkMode
@@ -689,14 +658,10 @@ export const MCPPopover: React.FC<MCPPopoverProps> = ({ toggleStateManager, adap
     const initialState = toggleStateManager.getState();
     return {
       ...initialState,
-      mcpEnabled: mcpEnabledFromStore // Use the persistent MCP state from store
+      mcpEnabled: mcpEnabledFromStore, // Use the persistent MCP state from store
     };
   });
-  // Instructions come directly from the global state (managed by Instructions panel in sidebar)
-  const [instructions, setInstructions] = useState(instructionsState.instructions || '');
-  const [copyStatus, setCopyStatus] = useState<'Copy' | 'Copied!' | 'Error'>('Copy');
-  const [insertStatus, setInsertStatus] = useState<'Insert' | 'Inserted!' | 'No Adapter' | 'No Content' | 'Failed'>('Insert');
-  const [attachStatus, setAttachStatus] = useState<'Attach' | 'Attached!' | 'No File' |'Not Supported'| 'Error'>('Attach');
+  // Instructions come directly from the global state (managed by Instructions panel in sidebar) const [instructions, setInstructions] = useState(instructionsState.instructions || ''); const [copyStatus, setCopyStatus] = useState<'Copy' | 'Copied!' | 'Error'>('Copy'); const [insertStatus, setInsertStatus] = useState<'Insert' | 'Inserted!' | 'No Adapter' | 'No Content' | 'Failed'>('Insert'); const [attachStatus, setAttachStatus] = useState<'Attach' | 'Attached!' | 'No File' |'Not Supported'| 'Error'>('Attach');
   const [isPopoverOpen, setIsPopoverOpen] = useState(false);
   const [isHoverOverlayVisible, setIsHoverOverlayVisible] = useState(false);
   const [hoverOverlayPosition, setHoverOverlayPosition] = useState({ x: 0, y: 0 });
@@ -711,7 +676,7 @@ export const MCPPopover: React.FC<MCPPopoverProps> = ({ toggleStateManager, adap
     const currentState = toggleStateManager.getState();
     setState(prevState => ({
       ...currentState,
-      mcpEnabled: mcpEnabledFromStore // Always sync with persistent MCP state from store
+      mcpEnabled: mcpEnabledFromStore, // Always sync with persistent MCP state from store
     }));
   }, [toggleStateManager, mcpEnabledFromStore]);
 
@@ -721,7 +686,7 @@ export const MCPPopover: React.FC<MCPPopoverProps> = ({ toggleStateManager, adap
     setState(prevState => {
       const newState = {
         ...prevState,
-        mcpEnabled: mcpEnabledFromStore
+        mcpEnabled: mcpEnabledFromStore,
       };
       logger.debug(`State updated:`, newState);
       return newState;
@@ -730,9 +695,8 @@ export const MCPPopover: React.FC<MCPPopoverProps> = ({ toggleStateManager, adap
 
   // Subscribe to global instructions state changes (Instructions panel is source of truth)
   useEffect(() => {
-    // Initial sync
-    setInstructions(instructionsState.instructions || '');
-    
+    // Initial sync setInstructions(instructionsState.instructions || '');
+
     // Subscribe to changes in the global instructions state
     const unsubscribe = instructionsState.subscribe(newInstructions => {
       setInstructions(newInstructions);
@@ -748,7 +712,9 @@ export const MCPPopover: React.FC<MCPPopoverProps> = ({ toggleStateManager, adap
   useEffect(() => {
     // Force initial state sync to ensure popover reflects current persistent MCP state
     const currentToggleState = toggleStateManager.getState();
-    logger.debug(`Initial state sync - toggleManager: ${currentToggleState.mcpEnabled}, store MCP: ${mcpEnabledFromStore}`);
+    logger.debug(
+      `Initial state sync - toggleManager: ${currentToggleState.mcpEnabled}, store MCP: ${mcpEnabledFromStore}`,
+    );
 
     // Sync automation state from user preferences
     const syncedState = {
@@ -765,7 +731,13 @@ export const MCPPopover: React.FC<MCPPopoverProps> = ({ toggleStateManager, adap
     toggleStateManager.setAutoInsert(preferences.autoInsert || false);
     toggleStateManager.setAutoSubmit(preferences.autoSubmit || false);
     toggleStateManager.setAutoExecute(preferences.autoExecute || false);
-  }, [toggleStateManager, mcpEnabledFromStore, preferences.autoInsert, preferences.autoSubmit, preferences.autoExecute]); // Include dependencies
+  }, [
+    toggleStateManager,
+    mcpEnabledFromStore,
+    preferences.autoInsert,
+    preferences.autoSubmit,
+    preferences.autoExecute,
+  ]); // Include dependencies
 
   // Track sidebar visibility from window.activeSidebarManager and Zustand store
   useEffect(() => {
@@ -775,7 +747,6 @@ export const MCPPopover: React.FC<MCPPopoverProps> = ({ toggleStateManager, adap
       logger.debug(`Sidebar visibility changed to: ${visible}`);
       setIsSidebarVisible(visible);
     };
-
     window.addEventListener('ui:sidebar-toggle' as any, handleSidebarVisibilityChange);
 
     // Also check activeSidebarManager if available
@@ -799,54 +770,53 @@ export const MCPPopover: React.FC<MCPPopoverProps> = ({ toggleStateManager, adap
   // Handlers for toggles
   const handleMCP = (checked: boolean) => {
     logger.debug(`MCP toggle changed to: ${checked}`);
-    
-    // Update the persistent MCP state in store (this will automatically control sidebar visibility)
-    setMCPEnabled(checked, 'mcp-popover-user-toggle');
-    
+
+    // Update the persistent MCP state in store (this will automatically control sidebar visibility) setMCPEnabled(checked, 'mcp-popover-user-toggle');
+
     // Also inform the legacy toggle state manager for compatibility
     toggleStateManager.setMCPEnabled(checked);
-    
+
     // State will be updated automatically through the MCP state effect
   };
 
   const handleAutoInsert = (checked: boolean) => {
     logger.debug(`Auto Insert toggle changed to: ${checked}`);
-    
+
     // Update user preferences store
     updatePreferences({ autoInsert: checked });
-    
+
     // Also update legacy toggle state manager for compatibility
     toggleStateManager.setAutoInsert(checked);
     updateState();
-    
+
     // Update automation state on window for render_prescript access
     AutomationService.getInstance().updateAutomationStateOnWindow().catch(console.error);
   };
 
   const handleAutoSubmit = (checked: boolean) => {
     logger.debug(`Auto Submit toggle changed to: ${checked}`);
-    
+
     // Update user preferences store
     updatePreferences({ autoSubmit: checked });
-    
+
     // Also update legacy toggle state manager for compatibility
     toggleStateManager.setAutoSubmit(checked);
     updateState();
-    
+
     // Update automation state on window for render_prescript access
     AutomationService.getInstance().updateAutomationStateOnWindow().catch(console.error);
   };
 
   const handleAutoExecute = (checked: boolean) => {
     logger.debug(`Auto Execute toggle changed to: ${checked}`);
-    
+
     // Update user preferences store
     updatePreferences({ autoExecute: checked });
-    
+
     // Also update legacy toggle state manager for compatibility
     toggleStateManager.setAutoExecute(checked);
     updateState();
-    
+
     // Update automation state on window for render_prescript access
     AutomationService.getInstance().updateAutomationStateOnWindow().catch(console.error);
   };
@@ -863,7 +833,6 @@ export const MCPPopover: React.FC<MCPPopoverProps> = ({ toggleStateManager, adap
     }
   };
 
-
   const handleInsert = async () => {
     if (!instructions.trim()) {
       setInsertStatus('No Content');
@@ -872,12 +841,14 @@ export const MCPPopover: React.FC<MCPPopoverProps> = ({ toggleStateManager, adap
     }
 
     // Add more detailed debugging
-    logger.debug(`handleInsert called - isAdapterActive: ${isAdapterActive}, activePlugin: ${!!activePlugin}, insertText: ${!!insertText}`);
+    logger.debug(
+      `handleInsert called - isAdapterActive: ${isAdapterActive}, activePlugin: ${!!activePlugin}, insertText: ${!!insertText}`,
+    );
     if (activePlugin) {
       logger.debug(`Active plugin details:`, {
         name: activePlugin.name,
         capabilities: activePlugin.capabilities,
-        hasInsertText: !!activePlugin.insertText
+        hasInsertText: !!activePlugin.insertText,
       });
     }
 
@@ -904,18 +875,19 @@ export const MCPPopover: React.FC<MCPPopoverProps> = ({ toggleStateManager, adap
       }
     } else {
       setInsertStatus('No Adapter');
-      logger.warn(`No active adapter available for text insertion. isAdapterActive: ${isAdapterActive}, activePlugin: ${!!activePlugin}, insertText: ${!!insertText}`);
+      logger.warn(
+        `No active adapter available for text insertion. isAdapterActive: ${isAdapterActive}, activePlugin: ${!!activePlugin}, insertText: ${!!insertText}`,
+      );
       if (activePlugin) {
         logger.warn(`Active plugin details:`, {
           name: activePlugin.name,
           capabilities: activePlugin.capabilities,
-          hasInsertTextMethod: !!activePlugin.insertText
+          hasInsertTextMethod: !!activePlugin.insertText,
         });
       }
     }
     setTimeout(() => setInsertStatus('Insert'), 1200);
   };
-
 
   const handleToggleSidebar = async () => {
     logger.debug(`Toggle sidebar requested. Current state: ${isSidebarVisible}`);
@@ -933,8 +905,7 @@ export const MCPPopover: React.FC<MCPPopoverProps> = ({ toggleStateManager, adap
         }
       } else {
         logger.warn('[MCPPopover] activeSidebarManager not available, using fallback');
-        // Fallback: Use Zustand store directly
-        const { useUIStore } = await import('../../stores/ui.store');
+        // Fallback: Use Zustand store directly const { useUIStore } = await import('../../stores/ui.store');
         const store = useUIStore.getState();
         store.setSidebarVisibility(!isSidebarVisible, 'mcp-popover-toggle');
       }
@@ -948,13 +919,15 @@ export const MCPPopover: React.FC<MCPPopoverProps> = ({ toggleStateManager, adap
 
   const handleAttach = async () => {
     // Add more detailed debugging
-    logger.debug(`handleAttach called - isAdapterActive: ${isAdapterActive}, activePlugin: ${!!activePlugin}, attachFile: ${!!attachFile}`);
+    logger.debug(
+      `handleAttach called - isAdapterActive: ${isAdapterActive}, activePlugin: ${!!activePlugin}, attachFile: ${!!attachFile}`,
+    );
     if (activePlugin) {
       logger.debug(`Active plugin details for attach:`, {
         name: activePlugin.name,
         capabilities: activePlugin.capabilities,
         hasAttachFile: !!activePlugin.attachFile,
-        supportsFileAttachment: activePlugin.capabilities.includes('file-attachment')
+        supportsFileAttachment: activePlugin.capabilities.includes('file-attachment'),
       });
     }
 
@@ -972,40 +945,41 @@ export const MCPPopover: React.FC<MCPPopoverProps> = ({ toggleStateManager, adap
 
     if (isAdapterActive && activePlugin && attachFile) {
       if (!activePlugin.capabilities.includes('file-attachment')) {
-      setAttachStatus('Not Supported');
-      logger.warn(`File attachment not supported by ${activePlugin.name} adapter`);
-      return;
+        setAttachStatus('Not Supported');
+        logger.warn(`File attachment not supported by ${activePlugin.name} adapter`);
+        return;
       }
-
       const isPerplexity = activePlugin.name === 'Perplexity';
       const isGemini = activePlugin.name === 'Gemini';
-      let fileType = isPerplexity || isGemini ? 'text/plain' : 'text/markdown';
+      const fileType = isPerplexity || isGemini ? 'text/plain' : 'text/markdown';
       const fileExtension = fileType === 'text/plain' ? '.txt' : '.md';
-      const fileName = `mcp_superassistant_instructions${fileExtension}`;
+      const fileName = `nyx_instructions${fileExtension}`;
       const file = new File([instructions], fileName, { type: fileType });
       try {
-      logger.debug(`Attempting to attach file using ${activePlugin.name} adapter`);
-      const success = await attachFile(file);
-      if (success) {
-        setAttachStatus('Attached!');
-        logger.debug(`File attached successfully using ${activePlugin.name} adapter`);
-      } else {
-        setAttachStatus('Error');
-        logger.warn(`File attachment failed using ${activePlugin.name} adapter`);
-      }
+        logger.debug(`Attempting to attach file using ${activePlugin.name} adapter`);
+        const success = await attachFile(file);
+        if (success) {
+          setAttachStatus('Attached!');
+          logger.debug(`File attached successfully using ${activePlugin.name} adapter`);
+        } else {
+          setAttachStatus('Error');
+          logger.warn(`File attachment failed using ${activePlugin.name} adapter`);
+        }
       } catch (error) {
-      logger.error(`Error attaching file:`, error);
-      setAttachStatus('Error');
+        logger.error(`Error attaching file:`, error);
+        setAttachStatus('Error');
       }
     } else {
       setAttachStatus('No File');
-      logger.warn(`Cannot attach file. isAdapterActive: ${isAdapterActive}, activePlugin: ${!!activePlugin}, attachFile: ${!!attachFile}`);
+      logger.warn(
+        `Cannot attach file. isAdapterActive: ${isAdapterActive}, activePlugin: ${!!activePlugin}, attachFile: ${!!attachFile}`,
+      );
       if (activePlugin) {
-      logger.warn(`Active plugin details:`, {
-        name: activePlugin.name,
-        capabilities: activePlugin.capabilities,
-        hasAttachFileMethod: !!activePlugin.attachFile
-      });
+        logger.warn(`Active plugin details:`, {
+          name: activePlugin.name,
+          capabilities: activePlugin.capabilities,
+          hasAttachFileMethod: !!activePlugin.attachFile,
+        });
       }
     }
     setTimeout(() => setAttachStatus('Attach'), 1200);
@@ -1024,19 +998,19 @@ export const MCPPopover: React.FC<MCPPopoverProps> = ({ toggleStateManager, adap
 
       // Keep within viewport bounds
       const viewportWidth = window.innerWidth;
-      
+
       // Adjust horizontal position if going off screen
       if (x < 10) {
         x = 10;
       } else if (x + overlayWidth > viewportWidth - 10) {
         x = viewportWidth - overlayWidth - 10;
       }
-      
+
       // Adjust vertical position if going off screen
       if (y < 10) {
         y = rect.bottom + 10; // Position below if not enough space above
       }
-      
+
       setHoverOverlayPosition({ x, y });
     }
   }, []);
@@ -1098,14 +1072,13 @@ export const MCPPopover: React.FC<MCPPopoverProps> = ({ toggleStateManager, adap
   useEffect(() => {
     if (isHoverOverlayVisible) {
       updateHoverOverlayPosition();
-      
+
       const handleScrollResize = () => {
         updateHoverOverlayPosition();
       };
-      
       window.addEventListener('scroll', handleScrollResize, true);
       window.addEventListener('resize', handleScrollResize);
-      
+
       return () => {
         window.removeEventListener('scroll', handleScrollResize, true);
         window.removeEventListener('resize', handleScrollResize);
@@ -1135,19 +1108,19 @@ export const MCPPopover: React.FC<MCPPopoverProps> = ({ toggleStateManager, adap
 
   const buttonContent = adapterButtonConfig?.contentClassName ? (
     <span className={adapterButtonConfig.contentClassName}>
-        <img 
-          src={chrome.runtime.getURL('icon-34.png')} 
-          alt="MCP Logo" 
-          className={adapterButtonConfig.iconClassName || ''}
+      <img
+        src={chrome.runtime.getURL('icon-34.png')}
+        alt="MCP Logo"
+        className={adapterButtonConfig.iconClassName || ''}
         style={{ width: '20px', height: '20px', borderRadius: '50%' }}
-        />
+      />{' '}
       <span className={adapterButtonConfig.textClassName || ''}>MCP</span>
     </span>
   ) : (
     <>
-      <img 
-        src={chrome.runtime.getURL('icon-34.png')} 
-        alt="MCP Logo" 
+      <img
+        src={chrome.runtime.getURL('icon-34.png')}
+        alt="MCP Logo"
         style={{ width: '20px', height: '20px', marginRight: '1px', verticalAlign: 'middle', borderRadius: '50%' }}
       />
       MCP
@@ -1156,11 +1129,10 @@ export const MCPPopover: React.FC<MCPPopoverProps> = ({ toggleStateManager, adap
 
   return (
     <div className="mcp-popover-container" id="mcp-popover-container" ref={containerRef}>
-      <div 
+      <div
         style={{ position: 'relative', display: 'inline-block' }}
         onMouseEnter={handleMouseEnter}
-        onMouseLeave={handleMouseLeave}
-      >
+        onMouseLeave={handleMouseLeave}>
         <button
           className={buttonClassName}
           aria-label={`MCP Settings - ${state.mcpEnabled ? 'Active' : 'Inactive'}`}
@@ -1171,72 +1143,64 @@ export const MCPPopover: React.FC<MCPPopoverProps> = ({ toggleStateManager, adap
           {buttonContent}
         </button>
       </div>
-      
+
       {/* Hover overlay portal */}
-      {isHoverOverlayVisible && createPortal(
-        <div 
-          className={`mcp-hover-overlay ${isHoverOverlayVisible ? 'visible' : ''}`}
-          ref={hoverOverlayRef}
-          onMouseEnter={handleHoverOverlayEnter}
-          onMouseLeave={handleHoverOverlayLeave}
-          style={{
-            left: `${hoverOverlayPosition.x}px`,
-            top: `${hoverOverlayPosition.y}px`,
-          }}
-        >
-          <button
-            className="mcp-hover-button"
-            onClick={handleInsert}
-            title="Insert instructions"
-            type="button"
-          >
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style={{ flexShrink: 0 }}>
-              <path d="M9 16.17 4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
-            </svg>
-            Insert
-          </button>
-          <button
-            className="mcp-hover-button"
-            onClick={handleAttach}
-            title="Attach instructions as file"
-            type="button"
-          >
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style={{ flexShrink: 0 }}>
-              <path d="M16.5 6v11.5c0 2.21-1.79 4-4 4s-4-1.79-4-4V5c0-1.38 1.12-2.5 2.5-2.5s2.5 1.12 2.5 2.5v10.5c0 .55-.45 1-1 1s-1-.45-1-1V6H10v9.5c0 1.38 1.12 2.5 2.5 2.5s2.5-1.12 2.5-2.5V5c0-2.21-1.79-4-4-4S7 2.79 7 5v12.5c0 3.04 2.46 5.5 5.5 5.5s5.5-2.46 5.5-5.5V6h-1.5z"/>
-            </svg>
-            Attach
-          </button>
-          <button
-            className="mcp-hover-button"
-            onClick={handleToggleSidebar}
-            title={isSidebarVisible ? "Hide sidebar" : "Show sidebar"}
-            type="button"
-          >
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style={{ flexShrink: 0 }}>
-              {isSidebarVisible ? (
-                // Eye-off icon (hide)
-                <path d="M12 7c2.76 0 5 2.24 5 5 0 .65-.13 1.26-.36 1.83l2.92 2.92c1.51-1.26 2.7-2.89 3.43-4.75-1.73-4.39-6-7.5-11-7.5-1.4 0-2.74.25-3.98.7l2.16 2.16C10.74 7.13 11.35 7 12 7zM2 4.27l2.28 2.28.46.46C3.08 8.3 1.78 10.02 1 12c1.73 4.39 6 7.5 11 7.5 1.55 0 3.03-.3 4.38-.84l.42.42L19.73 22 21 20.73 3.27 3 2 4.27zM7.53 9.8l1.55 1.55c-.05.21-.08.43-.08.65 0 1.66 1.34 3 3 3 .22 0 .44-.03.65-.08l1.55 1.55c-.67.33-1.41.53-2.2.53-2.76 0-5-2.24-5-5 0-.79.2-1.53.53-2.2zm4.31-.78l3.15 3.15.02-.16c0-1.66-1.34-3-3-3l-.17.01z"/>
-              ) : (
-                // Eye icon (show)
-                <path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/>
-              )}
-            </svg>
-            {isSidebarVisible ? 'Hide Sidebar' : 'Show Sidebar'}
-          </button>
-          <button
-            className="mcp-hover-button"
-            onClick={() => setIsPopoverOpen(!isPopoverOpen)}
-            title="Configure MCP settings"
-            type="button"
-          >
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style={{ flexShrink: 0 }}>
-              <path d="M19.14,12.94c0.04-0.3,0.06-0.61,0.06-0.94c0-0.32-0.02-0.64-0.07-0.94l2.03-1.58c0.18-0.14,0.23-0.41,0.12-0.61 l-1.92-3.32c-0.12-0.22-0.37-0.29-0.59-0.22l-2.39,0.96c-0.5-0.38-1.03-0.7-1.62-0.94L14.4,2.81c-0.04-0.24-0.24-0.41-0.48-0.41 h-3.84c-0.24,0-0.43,0.17-0.47,0.41L9.25,5.35C8.66,5.59,8.12,5.92,7.63,6.29L5.24,5.33c-0.22-0.08-0.47,0-0.59,0.22L2.74,8.87 C2.62,9.08,2.66,9.34,2.86,9.48l2.03,1.58C4.84,11.36,4.82,11.69,4.82,12s0.02,0.64,0.07,0.94l-2.03,1.58 c-0.18,0.14-0.23,0.41-0.12,0.61l1.92,3.32c0.12,0.22,0.37,0.29,0.59,0.22l2.39-0.96c0.5,0.38,1.03,0.7,1.62,0.94l0.36,2.54 c0.05,0.24,0.24,0.41,0.48,0.41h3.84c0.24,0,0.44-0.17,0.47-0.41l0.36-2.54c0.59-0.24,1.13-0.56,1.62-0.94l2.39,0.96 c0.22,0.08,0.47,0,0.59-0.22l1.92-3.32c0.12-0.22,0.07-0.47-0.12-0.61L19.14,12.94z M12,15.6c-1.98,0-3.6-1.62-3.6-3.6 s1.62-3.6,3.6-3.6s3.6,1.62,3.6,3.6S13.98,15.6,12,15.6z"/>
-            </svg>
-            Configure
-          </button>
-        </div>,
-        document.body
-      )}
+      {isHoverOverlayVisible &&
+        createPortal(
+          <div
+            className={`mcp-hover-overlay ${isHoverOverlayVisible ? 'visible' : ''}`}
+            ref={hoverOverlayRef}
+            onMouseEnter={handleHoverOverlayEnter}
+            onMouseLeave={handleHoverOverlayLeave}
+            style={{
+              left: `${hoverOverlayPosition.x}px`,
+              top: `${hoverOverlayPosition.y}px`,
+            }}>
+            <button className="mcp-hover-button" onClick={handleInsert} title="Insert instructions" type="button">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style={{ flexShrink: 0 }}>
+                <path d="M9 16.17 4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" />
+              </svg>
+              Insert
+            </button>
+            <button
+              className="mcp-hover-button"
+              onClick={handleAttach}
+              title="Attach instructions as file"
+              type="button">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style={{ flexShrink: 0 }}>
+                <path d="M16.5 6v11.5c0 2.21-1.79 4-4 4s-4-1.79-4-4V5c0-1.38 1.12-2.5 2.5-2.5s2.5 1.12 2.5 2.5v10.5c0 .55-.45 1-1 1s-1-.45-1-1V6H10v9.5c0 1.38 1.12 2.5 2.5 2.5s2.5-1.12 2.5-2.5V5c0-2.21-1.79-4-4-4S7 2.79 7 5v12.5c0 3.04 2.46 5.5 5.5 5.5s5.5-2.46 5.5-5.5V6h-1.5z" />
+              </svg>
+              Attach
+            </button>
+            <button
+              className="mcp-hover-button"
+              onClick={handleToggleSidebar}
+              title={isSidebarVisible ? 'Hide sidebar' : 'Show sidebar'}
+              type="button">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style={{ flexShrink: 0 }}>
+                {isSidebarVisible ? (
+                  // Eye-off icon (hide)
+                  <path d="M12 7c2.76 0 5 2.24 5 5 0 .65-.13 1.26-.36 1.83l2.92 2.92c1.51-1.26 2.7-2.89 3.43-4.75-1.73-4.39-6-7.5-11-7.5-1.4 0-2.74.25-3.98.7l2.16 2.16C10.74 7.13 11.35 7 12 7zM2 4.27l2.28 2.28.46.46C3.08 8.3 1.78 10.02 1 12c1.73 4.39 6 7.5 11 7.5 1.55 0 3.03-.3 4.38-.84l.42.42L19.73 22 21 20.73 3.27 3 2 4.27zM7.53 9.8l1.55 1.55c-.05.21-.08.43-.08.65 0 1.66 1.34 3 3 3 .22 0 .44-.03.65-.08l1.55 1.55c-.67.33-1.41.53-2.2.53-2.76 0-5-2.24-5-5 0-.79.2-1.53.53-2.2zm4.31-.78l3.15 3.15.02-.16c0-1.66-1.34-3-3-3l-.17.01z" />
+                ) : (
+                  // Eye icon (show)
+                  <path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z" />
+                )}
+              </svg>{' '}
+              {isSidebarVisible ? 'Hide Sidebar' : 'Show Sidebar'}
+            </button>
+            <button
+              className="mcp-hover-button"
+              onClick={() => setIsPopoverOpen(!isPopoverOpen)}
+              title="Configure MCP settings"
+              type="button">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style={{ flexShrink: 0 }}>
+                <path d="M19.14,12.94c0.04-0.3,0.06-0.61,0.06-0.94c0-0.32-0.02-0.64-0.07-0.94l2.03-1.58c0.18-0.14,0.23-0.41,0.12-0.61 l-1.92-3.32c-0.12-0.22-0.37-0.29-0.59-0.22l-2.39,0.96c-0.5-0.38-1.03-0.7-1.62-0.94L14.4,2.81c-0.04-0.24-0.24-0.41-0.48-0.41 h-3.84c-0.24,0-0.43,0.17-0.47,0.41L9.25,5.35C8.66,5.59,8.12,5.92,7.63,6.29L5.24,5.33c-0.22-0.08-0.47,0-0.59,0.22L2.74,8.87 C2.62,9.08,2.66,9.34,2.86,9.48l2.03,1.58C4.84,11.36,4.82,11.69,4.82,12s0.02,0.64,0.07,0.94l-2.03,1.58 c-0.18,0.14-0.23,0.41-0.12,0.61l1.92,3.32c0.12,0.22,0.37,0.29,0.59,0.22l2.39-0.96c0.5,0.38,1.03,0.7,1.62,0.94l0.36,2.54 c0.05,0.24,0.24,0.41,0.48,0.41h3.84c0.24,0,0.44-0.17,0.47-0.41l0.36-2.54c0.59-0.24,1.13-0.56,1.62-0.94l2.39,0.96 c0.22,0.08,0.47,0,0.59-0.22l1.92-3.32c0.12-0.22,0.07-0.47-0.12-0.61L19.14,12.94z M12,15.6c-1.98,0-3.6-1.62-3.6-3.6 s1.62-3.6,3.6-3.6s3.6,1.62,3.6,3.6S13.98,15.6,12,15.6z" />
+              </svg>
+              Configure
+            </button>
+          </div>,
+          document.body,
+        )}
       <PopoverPortal isOpen={isPopoverOpen} triggerRef={buttonRef}>
         <div
           className="mcp-popover position-above"
@@ -1341,16 +1305,14 @@ export const MCPPopover: React.FC<MCPPopoverProps> = ({ toggleStateManager, adap
                 boxShadow: theme.innerShadow,
               }}>
               {instructions || (
-                <div style={{ 
-                  color: theme.secondaryText, 
-                  fontStyle: 'italic',
-                  padding: '10px',
-                  textAlign: 'center' 
-                }}>
-                  {!instructionsState.instructions 
-                    ? 'Loading instructions...' 
-                    : 'Generating instructions...'
-                  }
+                <div
+                  style={{
+                    color: theme.secondaryText,
+                    fontStyle: 'italic',
+                    padding: '10px',
+                    textAlign: 'center',
+                  }}>
+                  {!instructionsState.instructions ? 'Loading instructions...' : 'Generating instructions...'}
                 </div>
               )}
             </div>

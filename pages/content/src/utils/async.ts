@@ -6,12 +6,9 @@
  * @param delay - The delay in milliseconds.
  * @returns A debounced version of the function.
  */
-export function debounce<T extends (...args: any[]) => any>(
-  func: T,
-  delay: number
-): T {
+export function debounce<T extends (...args: any[]) => any>(func: T, delay: number): T {
   let timeoutId: ReturnType<typeof setTimeout> | null = null;
-  return function(this: any, ...args: Parameters<T>) {
+  return function (this: any, ...args: Parameters<T>) {
     if (timeoutId) {
       clearTimeout(timeoutId);
     }
@@ -27,14 +24,11 @@ export function debounce<T extends (...args: any[]) => any>(
  * @param delay - The time window in milliseconds.
  * @returns A throttled version of the function.
  */
-export function throttle<T extends (...args: any[]) => any>(
-  func: T,
-  delay: number
-): T {
+export function throttle<T extends (...args: any[]) => any>(func: T, delay: number): T {
   let lastCallTime = 0;
   let timeoutId: ReturnType<typeof setTimeout> | null = null;
 
-  return function(this: any, ...args: Parameters<T>) {
+  return function (this: any, ...args: Parameters<T>) {
     const now = Date.now();
     const remainingTime = delay - (now - lastCallTime);
 

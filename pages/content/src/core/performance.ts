@@ -7,16 +7,13 @@
 
 import { eventBus } from '../events/event-bus';
 import { createLogger } from '@extension/shared/lib/logger';
-
-
-const logger = createLogger('PerformanceMonitor');
+ const logger = createLogger('PerformanceMonitor');
 
 export interface PerformanceMeasurement {
   name: string;
   duration: number;
   timestamp: number;
-  context?: Record<string, any>;
-  type: 'sync' | 'async';
+  context?: Record<string, any>; type: 'sync' | 'async';
 }
 
 export interface MemoryUsage {
@@ -46,8 +43,7 @@ class PerformanceMonitor {
    * Initialize the performance monitor
    */
   initialize(eventBusInstance: typeof eventBus): void {
-    if (this.initialized) {
-      logger.warn('[PerformanceMonitor] Already initialized');
+    if (this.initialized) { logger.warn('[PerformanceMonitor] Already initialized');
       return;
     }
 
@@ -60,25 +56,21 @@ class PerformanceMonitor {
     // Set up event bus integration
     this.setupEventBusIntegration();
 
-    this.initialized = true;
-    logger.debug('[PerformanceMonitor] Initialized successfully');
+    this.initialized = true; logger.debug('[PerformanceMonitor] Initialized successfully');
   }
 
   /**
    * Set up Performance Observer for browser performance metrics
    */
-  private setupPerformanceObserver(): void {
-    if (typeof PerformanceObserver !== 'undefined') {
+  private setupPerformanceObserver(): void { if (typeof PerformanceObserver !== 'undefined') {
       try {
         this.performanceObserver = new PerformanceObserver((list) => {
           const entries = list.getEntries();
           entries.forEach(entry => {
             if (entry.duration > 0) {
-              this.recordMeasurement({
-                name: entry.name || 'browser-performance',
+              this.recordMeasurement({ name: entry.name || 'browser-performance',
                 duration: entry.duration,
-                timestamp: entry.startTime + performance.timeOrigin,
-                type: 'async',
+                timestamp: entry.startTime + performance.timeOrigin, type: 'async',
                 context: {
                   entryType: entry.entryType,
                   startTime: entry.startTime,
@@ -88,10 +80,9 @@ class PerformanceMonitor {
           });
         });
 
-        // Observe different types of performance entries
-        this.performanceObserver.observe({ entryTypes: ['measure', 'navigation', 'resource'] });
+        // Observe different types of performance entries this.performanceObserver.observe({ entryTypes: ['measure', 'navigation', 'resource'] });
       } catch (error) {
-        logger.warn('[PerformanceMonitor] Failed to set up PerformanceObserver:', error);
+       logger.warn('[PerformanceMonitor] Failed to set up PerformanceObserver:', error);
       }
     }
   }
@@ -99,8 +90,7 @@ class PerformanceMonitor {
   /**
    * Set up memory monitoring
    */
-  private setupMemoryMonitoring(): void {
-    if (typeof performance !== 'undefined' && 'memory' in performance) {
+  private setupMemoryMonitoring(): void { if (typeof performance !== 'undefined' && 'memory' in performance) {
       this.memoryCheckInterval = setInterval(() => {
         this.captureMemorySnapshot();
       }, 30000); // Every 30 seconds
@@ -111,13 +101,9 @@ class PerformanceMonitor {
    * Set up event bus integration
    */
   private setupEventBusIntegration(): void {
-    // Listen for events that might indicate performance issues
-    eventBus.on('error:unhandled', ({ error, context }) => {
-      this.mark('error-occurred', { error: error.message, context });
+    // Listen for events that might indicate performance issues eventBus.on('error:unhandled', ({ error, context }) => { this.mark('error-occurred', { error: error.message, context });
     });
-
-    eventBus.on('plugin:activation-failed', ({ name, error }) => {
-      this.mark('plugin-activation-failed', { plugin: name, error: String(error) });
+ eventBus.on('plugin:activation-failed', ({ name, error }) => { this.mark('plugin-activation-failed', { plugin: name, error: String(error) });
     });
   }
 
@@ -136,8 +122,7 @@ class PerformanceMonitor {
           this.recordMeasurement({
             name,
             duration,
-            timestamp: Date.now(),
-            type: 'async',
+            timestamp: Date.now(), type: 'async',
             context,
           });
         }) as T;
@@ -146,8 +131,7 @@ class PerformanceMonitor {
         this.recordMeasurement({
           name,
           duration,
-          timestamp: Date.now(),
-          type: 'sync',
+          timestamp: Date.now(), type: 'sync',
           context,
         });
         return result;
@@ -157,8 +141,7 @@ class PerformanceMonitor {
       this.recordMeasurement({
         name: `${name}_error`,
         duration,
-        timestamp: Date.now(),
-        type: 'sync',
+        timestamp: Date.now(), type: 'sync',
         context: { ...context, error: String(error) },
       });
       throw error;
@@ -172,8 +155,7 @@ class PerformanceMonitor {
     this.recordMeasurement({
       name,
       duration: 0,
-      timestamp: Date.now(),
-      type: 'sync',
+      timestamp: Date.now(), type: 'sync',
       context,
     });
   }
@@ -185,8 +167,7 @@ class PerformanceMonitor {
     const measurements = this.measurements;
     const startEntry = measurements.find(m => m.name === startMark);
     
-    if (!startEntry) {
-      logger.warn(`Start mark '${startMark}' not found`);
+    if (!startEntry) { logger.warn(`Start mark '${startMark}' not found`);
       return null;
     }
 
@@ -194,16 +175,14 @@ class PerformanceMonitor {
       measurements.find(m => m.name === endMark) : 
       { timestamp: Date.now() };
 
-    if (!endEntry) {
-      logger.warn(`End mark '${endMark}' not found`);
+    if (!endEntry) { logger.warn(`End mark '${endMark}' not found`);
       return null;
     }
 
     const measurement: PerformanceMeasurement = {
       name,
       duration: endEntry.timestamp - startEntry.timestamp,
-      timestamp: startEntry.timestamp,
-      type: 'sync',
+      timestamp: startEntry.timestamp, type: 'sync',
       context: {
         startMark,
         endMark,
@@ -217,8 +196,7 @@ class PerformanceMonitor {
   /**
    * Get current memory usage
    */
-  getMemoryUsage(): MemoryUsage | null {
-    if (typeof performance !== 'undefined' && 'memory' in performance) {
+  getMemoryUsage(): MemoryUsage | null { if (typeof performance !== 'undefined' && 'memory' in performance) {
       const memory = (performance as any).memory;
       return {
         usedJSHeapSize: memory.usedJSHeapSize,
@@ -241,8 +219,7 @@ class PerformanceMonitor {
         this.memorySnapshots.shift();
       }
 
-      // Emit memory usage event
-      eventBus.emit('performance:memory-usage', memoryUsage);
+      // Emit memory usage event eventBus.emit('performance:memory-usage', memoryUsage);
 
       // Check for memory leaks
       this.checkMemoryLeaks();
@@ -264,9 +241,7 @@ class PerformanceMonitor {
       if (trend[i] > trend[i - 1]) increasing++;
     }
 
-    if (increasing >= 4) {
-      logger.warn('[PerformanceMonitor] Potential memory leak detected');
-      eventBus.emit('performance:memory-leak-detected', {
+    if (increasing >= 4) { logger.warn('[PerformanceMonitor] Potential memory leak detected'); eventBus.emit('performance:memory-leak-detected', {
         snapshots: recent,
         trend,
       });
@@ -284,13 +259,11 @@ class PerformanceMonitor {
       this.measurements.shift();
     }
 
-    // Emit performance event
-    eventBus.emit('performance:measurement', measurement);
+    // Emit performance event eventBus.emit('performance:measurement', measurement);
 
     // Check if this is a slow operation
     if (measurement.duration > this.slowThreshold) {
-      // logger.warn(`Slow operation detected: ${measurement.name} took ${measurement.duration}ms`);
-      eventBus.emit('performance:slow-operation', measurement);
+      // logger.warn(`Slow operation detected: ${measurement.name} took ${measurement.duration}ms`); eventBus.emit('performance:slow-operation', measurement);
     }
   }
 
@@ -327,8 +300,7 @@ class PerformanceMonitor {
    */
   clear(): void {
     this.measurements = [];
-    this.memorySnapshots = [];
-    logger.debug('[PerformanceMonitor] Performance data cleared');
+    this.memorySnapshots = []; logger.debug('[PerformanceMonitor] Performance data cleared');
   }
 
   /**
@@ -337,8 +309,7 @@ class PerformanceMonitor {
   getReport(): string {
     const stats = this.getStats();
     const totalMeasurements = stats.measurements.length;
-    const slowOperationsCount = stats.slowOperations.length;
-    const slowPercentage = totalMeasurements > 0 ? (slowOperationsCount / totalMeasurements * 100).toFixed(2) : '0';
+    const slowOperationsCount = stats.slowOperations.length; const slowPercentage = totalMeasurements > 0 ? (slowOperationsCount / totalMeasurements * 100).toFixed(2) : '0';
 
     let report = `Performance Report:\n`;
     report += `Total measurements: ${totalMeasurements}\n`;
@@ -372,8 +343,7 @@ class PerformanceMonitor {
 
     this.measurements = [];
     this.memorySnapshots = [];
-    this.initialized = false;
-    logger.debug('[PerformanceMonitor] Cleaned up');
+    this.initialized = false; logger.debug('[PerformanceMonitor] Cleaned up');
   }
 }
 

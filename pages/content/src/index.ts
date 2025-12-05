@@ -14,9 +14,7 @@ import { useConnectionStore } from './stores/connection.store';
 import { useUIStore } from './stores/ui.store';
 import { useConfigStore } from './stores/config.store';
 import { useAdapterStore } from './stores/adapter.store';
-import { initializeLogger } from '@extension/shared/lib/logger';
-
-// Import the new initialization system
+import { initializeLogger } from '@extension/shared/lib/logger'; // Import the new initialization system
 import { applicationInit, applicationCleanup, initializationUtils } from './core/main-initializer';
 
 // Import the render script functions
@@ -29,15 +27,11 @@ import {
   configureFunctionCallRenderer,
 } from '@src/render_prescript/src/index';
 
-// Legacy adapter registry has been removed - functionality moved to new architecture
-
-// Import the automation service
+// Legacy adapter registry has been removed - functionality moved to new architecture // Import the automation service
 import { initializeAllServices, cleanupAllServices } from './services';
 import { createLogger } from '@extension/shared/lib/logger';
 
-// Add this as a global recovery mechanism for the sidebar
-
-const logger = createLogger('content_script');
+// Add this as a global recovery mechanism for the sidebar const logger = createLogger('content_script');
 
 function setupSidebarRecovery(): void {
   // Watch for the case where push mode is enabled but sidebar isn't visible
@@ -66,7 +60,6 @@ function setupSidebarRecovery(): void {
             shadowHost.style.display = 'block';
             shadowHost.style.opacity = '1';
             shadowHost.classList.add('initialized');
-
             // OPTIMIZATION: Don't force a re-render unless absolutely necessary
             // The sidebar content should automatically update through React state management
             logMessage(
@@ -92,15 +85,12 @@ function setupSidebarRecovery(): void {
   window.addEventListener('unload', () => {
     clearInterval(recoveryInterval);
   });
-
   logMessage('[SidebarRecovery] Sidebar recovery mechanism set up');
 }
 
 /**
  * Content Script Entry Point - Session 10 Implementation
- */
-
-// Initialize the centralized logger system
+ */ // Initialize the centralized logger system
 // Logs are automatically controlled by environment:
 // - Development (import.meta.env.DEV): All logs enabled (DEBUG level)
 // - Production (import.meta.env.PROD): Only errors enabled (ERROR level)
@@ -169,8 +159,7 @@ try {
     },
   });
 } catch (error) {
-  // This catch block is primarily for the rare case where the background script context is invalidated
-  // during the sendMessage call (e.g., extension update/reload). It won't catch errors in the background handler.
+  // This catch block is primarily for the rare case where the background script context is invalidated // during the sendMessage call (e.g., extension update/reload). It won't catch errors in the background handler.
   logger.error(
     '[ContentScript] Error sending analytics tracking message:',
     error instanceof Error ? error.message : String(error),
@@ -180,8 +169,7 @@ try {
 // Add this call right before your existing script loads
 setupSidebarRecovery();
 
-/**
- * Collects demographic data about the user's environment.
+/** * Collects demographic data about the user's environment.
  * This includes browser info, OS, language, screen size, and device type.
  */
 function collectDemographicData(): { [key: string]: any } {
@@ -281,9 +269,7 @@ function collectDemographicData(): { [key: string]: any } {
     };
   } catch (error) {
     logger.error('[Analytics] Error collecting demographic data:', error);
-    return {
-      error: 'Failed to collect demographic data',
-    };
+    return { error: 'Failed to collect demographic data' };
   }
 }
 
@@ -346,7 +332,6 @@ function collectDemographicData(): { [key: string]: any } {
       (window as any).appInitUtils = initializationUtils;
       logMessage('Initialization utilities exposed on window.appInitUtils');
     }
-
   } catch (error) {
     logger.error('Failed to initialize application with Session 10 architecture:', error);
 
@@ -372,9 +357,9 @@ eventBus.on('connection:status-changed', ({ status }: { status: ConnectionStatus
   const currentAdapterReg = adapterStore.getActiveAdapter();
   if (currentAdapterReg && currentAdapterReg.instance) {
     // Emit adapter connection status update event
-    eventBus.emit('adapter:connection-status-changed', { 
-      isConnected, 
-      adapterId: adapterStore.activeAdapterName 
+    eventBus.emit('adapter:connection-status-changed', {
+      isConnected,
+      adapterId: adapterStore.activeAdapterName,
     });
     (window as any).mcpAdapter = currentAdapterReg.instance;
   }
@@ -433,76 +418,73 @@ if (document.readyState === 'loading') {
 // Remote Config message handler
 function handleRemoteConfigMessage(message: any, sendResponse: (response: any) => void): void {
   logger.debug(`Processing Remote Config message: ${message.type}`);
-  
+
   try {
     switch (message.type) {
       case 'remote-config:feature-flags-updated': {
         const { flags, timestamp } = message.data;
         logger.debug(`Received feature flags update: ${Object.keys(flags).length} flags`);
-        
+
         // Update config store
         const configStore = useConfigStore.getState();
         configStore.updateFeatureFlags(flags);
-        
+
         // Emit event
         eventBus.emit('feature-flags:updated', { flags, timestamp });
-        
+
         sendResponse({ success: true, timestamp: Date.now() });
         break;
       }
-      
       case 'remote-config:notifications-received': {
         const { notifications, timestamp } = message.data;
         logger.debug(`Received notifications: ${notifications.length} notifications`);
-        
+
         // Process notifications through the UI store
         const uiStore = useUIStore.getState();
         const configStore = useConfigStore.getState();
-        
+
         for (const notification of notifications) {
           if (configStore.canShowNotification(notification)) {
             uiStore.addRemoteNotification(notification);
           }
         }
-        
+
         sendResponse({ success: true, processed: notifications.length, timestamp: Date.now() });
         break;
       }
-      
       case 'remote-config:version-config-updated': {
         const { config, timestamp } = message.data;
         logger.debug('[Content] Received version-specific config update');
-        
+
         // Emit event for version config update
-        eventBus.emit('remote-config:updated', { 
-          changes: ['version_config'], 
-          timestamp 
+        eventBus.emit('remote-config:updated', {
+          changes: ['version_config'],
+          timestamp,
         });
-        
+
         sendResponse({ success: true, timestamp: Date.now() });
         break;
       }
-      
       case 'remote-config:adapter-configs-updated': {
         const { adapterConfigs, timestamp } = message.data;
         logger.debug(`Received adapter configs update: ${Object.keys(adapterConfigs).length} adapters`);
-        
+
         // Emit event for adapter config updates
-        eventBus.emit('remote-config:adapter-configs-updated', { 
-          adapterConfigs, 
-          timestamp 
+        eventBus.emit('remote-config:adapter-configs-updated', {
+          adapterConfigs,
+          timestamp,
         });
-        
+
         // Also emit general remote config updated event for backward compatibility
-        eventBus.emit('remote-config:updated', { 
-          changes: Object.keys(adapterConfigs).map(name => `${name}_adapter_config`), 
-          timestamp 
+        eventBus.emit('remote-config:updated', {
+          changes: Object.keys(adapterConfigs).map(name => `${name}_adapter_config`),
+          timestamp,
         });
-        
+
         sendResponse({ success: true, timestamp: Date.now() });
         break;
       }
-      
+
       default:
         logger.warn(`Unknown remote config message type: ${message.type}`);
         sendResponse({ success: false, error: `Unknown message type: ${message.type}` });
@@ -519,17 +501,17 @@ function handleVersionUpdate(message: any, sendResponse: (response: any) => void
   try {
     const { oldVersion, newVersion, timestamp } = message.data;
     logger.debug(`Extension updated from ${oldVersion} to ${newVersion}`);
-    
+
     // Update config store with new version
     const configStore = useConfigStore.getState();
-    configStore.setUserProperties({ 
+    configStore.setUserProperties({
       extensionVersion: newVersion,
-      lastActiveDate: new Date().toISOString()
+      lastActiveDate: new Date().toISOString(),
     });
-    
+
     // Emit version update event
     eventBus.emit('app:version-updated', { oldVersion, newVersion, timestamp });
-    
+
     sendResponse({ success: true, timestamp: Date.now() });
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : String(error);
@@ -541,7 +523,7 @@ function handleVersionUpdate(message: any, sendResponse: (response: any) => void
 // Listen for messages from the background script
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   logMessage(`Message received in content script: ${JSON.stringify(message)}`); // Log all incoming messages
-  
+
   // Use the new plugin system to get current adapter
   const adapterStore = useAdapterStore.getState();
   const currentAdapterReg = adapterStore.getActiveAdapter();
@@ -556,12 +538,10 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       },
     });
   } else if (message.command === 'toggleSidebar') {
-    // Use the sidebar plugin events since adapters may not have direct sidebar methods
-    eventBus.emit('sidebar:toggle-requested', {});
+    // Use the sidebar plugin events since adapters may not have direct sidebar methods eventBus.emit('sidebar:toggle-requested', {});
     sendResponse({ success: true });
   } else if (message.command === 'showSidebarWithToolOutputs') {
-    // Use the sidebar plugin events since adapters may not have direct sidebar methods
-    eventBus.emit('sidebar:show-with-outputs', {});
+    // Use the sidebar plugin events since adapters may not have direct sidebar methods eventBus.emit('sidebar:show-with-outputs', {});
     sendResponse({ success: true });
   } else if (message.command === 'callMcpTool') {
     // Handle MCP tool call requests from popup
@@ -581,8 +561,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       sendResponse({ success: false, error: 'Invalid tool call request' });
     }
   } else if (message.command === 'refreshSidebarContent') {
-    // Use the sidebar plugin events since adapters may not have direct sidebar methods
-    eventBus.emit('sidebar:refresh-content', {});
+    // Use the sidebar plugin events since adapters may not have direct sidebar methods eventBus.emit('sidebar:refresh-content', {});
     sendResponse({ success: true });
   } else if (message.command === 'setFunctionCallRendering') {
     // Handle toggling function call rendering
@@ -624,43 +603,38 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       logMessage('Cannot configure renderer: Not initialized.');
       sendResponse({ success: false, error: 'Renderer not initialized' });
     }
-  } 
-  // Remote Config message handling
-  else if (message.type && message.type.startsWith('remote-config:')) {
+  }
+  // Remote Config message handling else if (message.type && message.type.startsWith('remote-config:')) {
+  {
     handleRemoteConfigMessage(message, sendResponse);
     return true; // Async response
   }
-  // App version update handling
-  else if (message.type === 'app:version-updated') {
+  // App version update handling else if (message.type === 'app:version-updated') {
+  {
     handleVersionUpdate(message, sendResponse);
     return true; // Async response
   }
 
   // Always return true if you want to use sendResponse asynchronously
   return true;
-});
-
-// Handle page unload to clean up resources (Session 10)
+}); // Handle page unload to clean up resources (Session 10)
 window.addEventListener('beforeunload', async () => {
   logMessage('Page unloading - starting comprehensive cleanup...');
-  
+
   try {
     // Cleanup all services first
     await cleanupAllServices();
-    
+
     // Use the comprehensive cleanup from Session 10
     await applicationCleanup();
-    
+
     // Legacy adapter cleanup is now handled by the plugin system cleanup
     // The applicationCleanup() already handles all plugin cleanup
-    
     logMessage('Comprehensive cleanup completed');
   } catch (error) {
     logger.error('Error during comprehensive cleanup:', error);
   }
-});
-
-// Expose mcpClient to the global window object for renderer or debugging access
+}); // Expose mcpClient to the global window object for renderer or debugging access
 (window as any).mcpClient = mcpClient;
 logger.debug('[Content Script] mcpClient exposed to window object for renderer use.');
 

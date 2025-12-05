@@ -6,7 +6,6 @@
 
 // Define the interface for stored function execution data
 import { createLogger } from '@extension/shared/lib/logger';
-
 const logger = createLogger('STORAGE_KEY');
 
 export interface ExecutedFunction {
@@ -20,9 +19,7 @@ export interface ExecutedFunction {
 // Define the URL-based storage structure
 interface URLBasedFunctionHistory {
   [url: string]: Record<string, ExecutedFunction>; // Key is functionName:callId:contentSignature
-}
-
-// Storage key for the executed functions
+} // Storage key for the executed functions
 const STORAGE_KEY = 'mcp_url_based_function_history';
 
 /**
@@ -152,7 +149,6 @@ export const getExecutedFunctions = (): (ExecutedFunction & { url: string })[] =
 export const getExecutedFunctionsForCurrentUrl = (): ExecutedFunction[] => {
   const currentUrl = window.location.href;
   const storage = getURLBasedStorage();
-
   // Direct access to current URL's functions
   if (!storage[currentUrl]) {
     return [];

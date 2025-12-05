@@ -2,12 +2,8 @@
  * Gemini Chat Input Handler
  *
  * This file implements functions for interacting with Gemini's chat input field
- */
-
-import { logMessage } from '@src/utils/helpers';
-import { createLogger } from '@extension/shared/lib/logger';
-
-// CSS selectors for Gemini's UI elements
+ */ import { logMessage } from '@src/utils/helpers';
+import { createLogger } from '@extension/shared/lib/logger'; // CSS selectors for Gemini's UI elements
 
 const logger = createLogger('GeminiChatInputHandler');
 
@@ -44,12 +40,9 @@ export function insertTextToChatInput(text: string): boolean {
     inputElem.focus();
 
     // Insert the text by updating the value and dispatching appropriate events
-    //append the text to the original value  in new line
-    inputElem.textContent = originalValue ? originalValue + '\n' + text : text;
+    //append the text to the original value  in new line inputElem.textContent = originalValue ? originalValue + '\n' + text : text;
 
-    // Dispatch events to simulate user typing
-    inputElem.dispatchEvent(new Event('input', { bubbles: true }));
-    inputElem.dispatchEvent(new Event('change', { bubbles: true }));
+    // Dispatch events to simulate user typing inputElem.dispatchEvent(new Event('input', { bubbles: true })); inputElem.dispatchEvent(new Event('change', { bubbles: true }));
 
     // Log the result
     logMessage(
@@ -119,9 +112,7 @@ export function supportsFileUpload(): boolean {
 export async function attachFileToChatInput(file: File): Promise<boolean> {
   logMessage(`Attaching file: ${file.name}`);
   try {
-    // Load drop listener script into page context
-    const listenerUrl = chrome.runtime.getURL('dragDropListener.js');
-    const scriptEl = document.createElement('script');
+    // Load drop listener script into page context const listenerUrl = chrome.runtime.getURL('dragDropListener.js'); const scriptEl = document.createElement('script');
     scriptEl.src = listenerUrl;
     await new Promise<void>((resolve, reject) => {
       scriptEl.onload = () => resolve();

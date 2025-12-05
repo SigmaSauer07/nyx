@@ -6,24 +6,20 @@ import {
   monitorNode,
   streamingObservers,
   updateQueue,
-  streamingLastUpdated,
-  startProgressiveUpdates,
+  streamingLastUpdated, startProgressiveUpdates,
 } from './streamObserver';
 import type { StabilizedBlock } from '../core/types';
 import { streamingContentLengths } from '../parser/index';
 import {
   preExistingIncompleteBlocks,
-  startStalledStreamDetection,
-  stopStalledStreamDetection,
+  startStalledStreamDetection, stopStalledStreamDetection,
 } from './stalledStreamHandler';
 import { createLogger } from '@extension/shared/lib/logger';
 
 // State for processing and observers
 let isProcessing = false;
 let functionCallObserver: MutationObserver | null = null;
-let updateThrottleTimer: ReturnType<typeof setTimeout> | null = null;
-
-const logger = createLogger('MutationObserver');
+let updateThrottleTimer: ReturnType<typeof setTimeout> | null = null; const logger = createLogger('MutationObserver');
 
 // Extend window type
 declare global {
@@ -97,8 +93,8 @@ export const processUpdateQueue = (): void => {
     //         }
     //     });
     // }
-
-    updateQueue.forEach((node, blockId) => {
+  
+      updateQueue.forEach((node, blockId) => {
       if (CONFIG.debug) logger.debug(`Processing update for block: ${blockId}`);
       renderFunctionCall(node as HTMLPreElement, { current: isProcessing });
     });
@@ -113,7 +109,7 @@ export const processUpdateQueue = (): void => {
       startProgressiveUpdates();
     }
   } catch (e) {
-    logger.error('Error processing update queue:', e);
+       logger.error('Error processing update queue:', e);
   } finally {
     // if (stabilizedBlocks.size > 0) {
     //     setTimeout(() => {
@@ -125,9 +121,7 @@ export const processUpdateQueue = (): void => {
     isProcessing = false;
     window._isProcessing = false;
   }
-};
-
-// Expose shared state to window
+}; // Expose shared state to window
 if (typeof window !== 'undefined') {
   window._isProcessing = isProcessing;
   window._updateQueue = updateQueue;
@@ -163,10 +157,8 @@ export const checkForUnprocessedFunctionCalls = (): number => {
 
   // Process each target element
   const elements = getTargetElements();
-  for (const element of elements) {
-    if (!processedElements.has(element) && !element.closest('.function-block')) {
-      const blockId =
-        element.getAttribute('data-block-id') || `block-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`;
+  for (const element of elements) { if (!processedElements.has(element) && !element.closest('.function-block')) {
+      const blockId = element.getAttribute('data-block-id') || `block-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`;
 
       const result = renderFunctionCall(element as HTMLPreElement, { current: false });
       if (result) {
@@ -210,34 +202,26 @@ export const startDirectMonitoring = (): void => {
     let potentialFunctionCall = false;
 
     for (const mutation of mutations) {
-      // Check if any added nodes might contain function calls
-      if (mutation.type === 'childList' && mutation.addedNodes.length > 0) {
+      // Check if any added nodes might contain function calls if (mutation.type === 'childList' && mutation.addedNodes.length > 0) {
         for (const node of Array.from(mutation.addedNodes)) {
           if (node.nodeType === Node.ELEMENT_NODE) {
             const element = node as Element;
 
             // Check for target elements or containers
             const isTargetElement = CONFIG.targetSelectors.some(selector => element.matches(selector));
-
-            const hasTargetElements = element.querySelectorAll(CONFIG.targetSelectors.join(',')).length > 0;
+ const hasTargetElements = element.querySelectorAll(CONFIG.targetSelectors.join(',')).length > 0;
 
             // Check for streaming container elements
             const isStreamingContainer = CONFIG.streamingContainerSelectors.some(selector => element.matches(selector));
 
-            const hasStreamingContainers =
-              element.querySelectorAll(CONFIG.streamingContainerSelectors.join(',')).length > 0;
+            const hasStreamingContainers = element.querySelectorAll(CONFIG.streamingContainerSelectors.join(',')).length > 0;
 
             // Also check if the content of any text nodes might contain function call patterns (XML or JSON)
             if (element.textContent) {
-              const hasXMLPattern =
-                element.textContent.includes('<function_calls>') ||
-                element.textContent.includes('<invoke');
+              const hasXMLPattern = element.textContent.includes('<function_calls>') || element.textContent.includes('<invoke');
 
-              // Be lenient for JSON - allow partial/streaming content
-              const looksLikeJSONStart = element.textContent.trim().startsWith('{');
-              const hasJSONPattern =
-                (element.textContent.includes('"type"') &&
-                  (element.textContent.includes('function_call') || element.textContent.includes('parameter'))) ||
+              // Be lenient for JSON - allow partial/streaming content const looksLikeJSONStart = element.textContent.trim().startsWith('{');
+              const hasJSONPattern = (element.textContent.includes('"type"') && (element.textContent.includes('function_call') || element.textContent.includes('parameter'))) ||
                 (looksLikeJSONStart && element.textContent.length < 50);
 
               if (hasXMLPattern || hasJSONPattern) {
@@ -256,18 +240,12 @@ export const startDirectMonitoring = (): void => {
               break;
             }
           } else if (node.nodeType === Node.TEXT_NODE) {
-            // Also check text nodes for function call patterns (XML or JSON)
-            const textContent = node.textContent || '';
+            // Also check text nodes for function call patterns (XML or JSON) const textContent = node.textContent || '';
+  
+              const hasXMLPattern = textContent.includes('<function_calls>') || textContent.includes('<invoke');
 
-            const hasXMLPattern =
-              textContent.includes('<function_calls>') ||
-              textContent.includes('<invoke');
-
-            // Be lenient for JSON - allow partial/streaming content
-            const looksLikeJSONStart = textContent.trim().startsWith('{');
-            const hasJSONPattern =
-              (textContent.includes('"type"') &&
-                (textContent.includes('function_call') || textContent.includes('parameter'))) ||
+            // Be lenient for JSON - allow partial/streaming content const looksLikeJSONStart = textContent.trim().startsWith('{');
+            const hasJSONPattern = (textContent.includes('"type"') && (textContent.includes('function_call') || textContent.includes('parameter'))) ||
               (looksLikeJSONStart && textContent.length < 50);
 
             if (hasXMLPattern || hasJSONPattern) {
@@ -276,24 +254,17 @@ export const startDirectMonitoring = (): void => {
               break;
             }
           }
-        }
-      } else if (mutation.type === 'characterData') {
-        // Check if the characterData mutation might be adding function call content (XML or JSON)
-        const textContent = mutation.target.textContent || '';
-
-        const hasXMLPattern =
-          textContent.includes('<function_calls>') ||
-          textContent.includes('<invoke');
+        } } else if (mutation.type === 'characterData') {
+        // Check if the characterData mutation might be adding function call content (XML or JSON) const textContent = mutation.target.textContent || '';
+  
+          const hasXMLPattern = textContent.includes('<function_calls>') || textContent.includes('<invoke');
 
         // Be lenient for JSON detection - allow partial/streaming content
-        // Check if it looks like JSON start, not just complete patterns
-        const looksLikeJSONStart = textContent.trim().startsWith('{') || textContent.trim().startsWith('[');
-        const hasJSONPattern =
-          (textContent.includes('"type"') &&
-            (textContent.includes('function_call') || textContent.includes('parameter'))) ||
+        // Check if it looks like JSON start, not just complete patterns const looksLikeJSONStart = textContent.trim().startsWith('{') || textContent.trim().startsWith('[');
+        const hasJSONPattern = (textContent.includes('"type"') && (textContent.includes('function_call') || textContent.includes('parameter'))) ||
           (looksLikeJSONStart && textContent.length < 50); // Allow short JSON-like content
-
-        if (hasXMLPattern || hasJSONPattern) {
+  
+          if (hasXMLPattern || hasJSONPattern) {
           potentialFunctionCall = true;
           shouldProcess = true;
         }
@@ -303,8 +274,7 @@ export const startDirectMonitoring = (): void => {
     }
 
     if (shouldProcess) {
-      if (potentialFunctionCall && CONFIG.debug) {
-        logger.debug('Potential function call detected, processing DOM changes');
+      if (potentialFunctionCall && CONFIG.debug) { logger.debug('Potential function call detected, processing DOM changes');
       }
       handleDomChanges();
     }
@@ -317,8 +287,7 @@ export const startDirectMonitoring = (): void => {
     characterData: true, // Also watch for text content changes
     characterDataOldValue: true, // Keep old values for comparison
   });
-
-  if (CONFIG.debug) logger.debug('Direct monitoring started for function calls');
+ if (CONFIG.debug) logger.debug('Direct monitoring started for function calls');
 };
 
 /**
@@ -343,8 +312,7 @@ export const stopDirectMonitoring = (): void => {
 
   // Stop stalled stream detection
   stopStalledStreamDetection();
-
-  if (CONFIG.debug) logger.debug('Direct monitoring stopped for function calls');
+ if (CONFIG.debug) logger.debug('Direct monitoring stopped for function calls');
 };
 
 /**

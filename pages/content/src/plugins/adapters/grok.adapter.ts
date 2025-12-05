@@ -4,8 +4,7 @@ import { createLogger } from '@extension/shared/lib/logger';
 
 /**
  * Grok Adapter for X.com/Grok (x.com, grok.com)
- *
- * This adapter provides specialized functionality for interacting with Grok's
+ * * This adapter provides specialized functionality for interacting with Grok's
  * chat interface, including text insertion, form submission, and file attachment capabilities.
  *
  * Migrated from the legacy adapter system to the new plugin architecture.
@@ -14,41 +13,24 @@ import { createLogger } from '@extension/shared/lib/logger';
 
 const logger = createLogger('GrokAdapter');
 
-export class GrokAdapter extends BaseAdapterPlugin {
-  readonly name = 'GrokAdapter';
-  readonly version = '2.0.0'; // Incremented for new architecture
-  readonly hostnames = ['x.com', 'grok.com'];
-  readonly capabilities: AdapterCapability[] = [
-    'text-insertion',
-    'form-submission',
-    'file-attachment',
-    'dom-manipulation'
+export class GrokAdapter extends BaseAdapterPlugin { readonly name = 'GrokAdapter'; readonly version = '2.0.0'; // Incremented for new architecture readonly hostnames = ['x.com', 'grok.com'];
+  readonly capabilities: AdapterCapability[] = [ 'text-insertion', 'form-submission', 'file-attachment', 'dom-manipulation'
   ];
-
-  // CSS selectors for Grok's UI elements
+ // CSS selectors for Grok's UI elements
   // Updated selectors based on current Grok interface
   private readonly selectors = {
     // Primary chat input selector
     CHAT_INPUT: 'textarea[aria-label="Ask Grok anything"], textarea[placeholder="Ask anything"], textarea[placeholder], textarea[spellcheck="false"], textarea[data-gramm="false"], div.css-146c3p1 textarea, textarea.r-30o5oe, div[contenteditable="true"]',
-    // Submit button selectors (multiple fallbacks)
-    SUBMIT_BUTTON: 'button[aria-label="Submit"], button.send-button, button[aria-label="Send message"], button.chat-submit, button[data-testid="send-button"], svg.send-icon, button.submit-button',
-    // File upload related selectors
-    FILE_UPLOAD_BUTTON: 'button[aria-label*="attach"], button[aria-label*="file"], button[data-testid="file-upload"]',
-    FILE_INPUT: 'input[type="file"]',
-    // Main panel and container selectors
-    MAIN_PANEL: '.chat-container, .grok-chat, .main-content',
-    // Drop zones for file attachment
-    DROP_ZONE: '.chat-input-container, .input-area, textarea, div[contenteditable="true"]',
-    // File preview elements
-    FILE_PREVIEW: '.file-preview, .attachment-preview, .file-attachment',
-    // Button insertion points (for MCP popover)
-    BUTTON_INSERTION_CONTAINER: '.chat-input-actions, .input-actions, .chat-controls',
-    // Alternative insertion points
-    FALLBACK_INSERTION: '.chat-input-container, .input-area, .chat-interface'
+    // Submit button selectors (multiple fallbacks) SUBMIT_BUTTON: 'button[aria-label="Submit"], button.send-button, button[aria-label="Send message"], button.chat-submit, button[data-testid="send-button"], svg.send-icon, button.submit-button',
+    // File upload related selectors FILE_UPLOAD_BUTTON: 'button[aria-label*="attach"], button[aria-label*="file"], button[data-testid="file-upload"]', FILE_INPUT: 'input[type="file"]',
+    // Main panel and container selectors MAIN_PANEL: '.chat-container, .grok-chat, .main-content',
+    // Drop zones for file attachment DROP_ZONE: '.chat-input-container, .input-area, textarea, div[contenteditable="true"]',
+    // File preview elements FILE_PREVIEW: '.file-preview, .attachment-preview, .file-attachment',
+    // Button insertion points (for MCP popover) BUTTON_INSERTION_CONTAINER: '.chat-input-actions, .input-actions, .chat-controls',
+    // Alternative insertion points FALLBACK_INSERTION: '.chat-input-container, .input-area, .chat-interface'
   };
 
-  // URL patterns for navigation tracking
-  private lastUrl: string = '';
+  // URL patterns for navigation tracking private lastUrl: string = '';
   private urlCheckInterval: NodeJS.Timeout | null = null;
 
   // State management integration
@@ -76,8 +58,7 @@ export class GrokAdapter extends BaseAdapterPlugin {
   }
 
   async initialize(context: PluginContext): Promise<void> {
-    // Guard against multiple initialization
-    if (this.currentStatus === 'initializing' || this.currentStatus === 'active') {
+    // Guard against multiple initialization if (this.currentStatus === 'initializing' || this.currentStatus === 'active') {
       this.context?.logger.warn(`Grok adapter instance #${this.instanceId} already initialized or active, skipping re-initialization`);
       return;
     }
@@ -94,8 +75,7 @@ export class GrokAdapter extends BaseAdapterPlugin {
   }
 
   async activate(): Promise<void> {
-    // Guard against multiple activation
-    if (this.currentStatus === 'active') {
+    // Guard against multiple activation if (this.currentStatus === 'active') {
       this.context?.logger.warn(`Grok adapter instance #${this.instanceId} already active, skipping re-activation`);
       return;
     }
@@ -110,22 +90,18 @@ export class GrokAdapter extends BaseAdapterPlugin {
     this.setupDOMObservers();
     this.setupUIIntegration();
 
-    // Emit activation event for store synchronization
-    this.context.eventBus.emit('adapter:activated', {
+    // Emit activation event for store synchronization this.context.eventBus.emit('adapter:activated', {
       pluginName: this.name,
       timestamp: Date.now()
     });
   }
 
   async deactivate(): Promise<void> {
-    // Guard against double deactivation
-    if (this.currentStatus === 'inactive' || this.currentStatus === 'disabled') {
-      this.context?.logger.warn('Grok adapter already inactive, skipping deactivation');
+    // Guard against double deactivation if (this.currentStatus === 'inactive' || this.currentStatus === 'disabled') { this.context?.logger.warn('Grok adapter already inactive, skipping deactivation');
       return;
     }
 
-    await super.deactivate();
-    this.context.logger.debug('Deactivating Grok adapter...');
+    await super.deactivate(); this.context.logger.debug('Deactivating Grok adapter...');
 
     // Clean up UI integration
     this.cleanupUIIntegration();
@@ -136,16 +112,14 @@ export class GrokAdapter extends BaseAdapterPlugin {
     this.domObserversSetup = false;
     this.uiIntegrationSetup = false;
 
-    // Emit deactivation event
-    this.context.eventBus.emit('adapter:deactivated', {
+    // Emit deactivation event this.context.eventBus.emit('adapter:deactivated', {
       pluginName: this.name,
       timestamp: Date.now()
     });
   }
 
   async cleanup(): Promise<void> {
-    await super.cleanup();
-    this.context.logger.debug('Cleaning up Grok adapter...');
+    await super.cleanup(); this.context.logger.debug('Cleaning up Grok adapter...');
 
     // Clear URL tracking interval
     if (this.urlCheckInterval) {
@@ -159,8 +133,7 @@ export class GrokAdapter extends BaseAdapterPlugin {
       this.popoverCheckInterval = null;
     }
 
-    // Remove injected adapter styles
-    const styleElement = document.getElementById('mcp-grok-button-styles');
+    // Remove injected adapter styles const styleElement = document.getElementById('mcp-grok-button-styles');
     if (styleElement) {
       styleElement.remove();
       this.adapterStylesInjected = false;
@@ -180,16 +153,14 @@ export class GrokAdapter extends BaseAdapterPlugin {
    * Insert text into the Grok chat input field
    * Enhanced with better selector handling and event integration
    */
-  async insertText(text: string, options?: { targetElement?: HTMLElement }): Promise<boolean> {
-    this.context.logger.debug(`Attempting to insert text into Grok chat input: ${text.substring(0, 50)}${text.length > 50 ? '...' : ''}`);
+  async insertText(text: string, options?: { targetElement?: HTMLElement }): Promise<boolean> { this.context.logger.debug(`Attempting to insert text into Grok chat input: ${text.substring(0, 50)}${text.length > 50 ? '...' : ''}`);
 
     let targetElement: HTMLElement | null = null;
 
     if (options?.targetElement) {
       targetElement = options.targetElement;
     } else {
-      // Try multiple selectors for better compatibility
-      const selectors = this.selectors.CHAT_INPUT.split(', ');
+      // Try multiple selectors for better compatibility const selectors = this.selectors.CHAT_INPUT.split(', ');
       for (const selector of selectors) {
         targetElement = document.querySelector(selector.trim()) as HTMLElement;
         if (targetElement) {
@@ -199,32 +170,24 @@ export class GrokAdapter extends BaseAdapterPlugin {
       }
     }
 
-    if (!targetElement) {
-      this.context.logger.error('Could not find Grok chat input element');
-      this.emitExecutionFailed('insertText', 'Chat input element not found');
+    if (!targetElement) { this.context.logger.error('Could not find Grok chat input element'); this.emitExecutionFailed('insertText', 'Chat input element not found');
       return false;
     }
 
     try {
       // Focus the input element
       targetElement.focus();
-
-      if (targetElement.tagName === 'TEXTAREA') {
+ if (targetElement.tagName === 'TEXTAREA') {
         // Handle textarea elements
         const textarea = targetElement as HTMLTextAreaElement;
-        const currentText = textarea.value;
-        const newContent = currentText ? currentText + '\n\n' + text : text;
+        const currentText = textarea.value; const newContent = currentText ? currentText + '\n\n' + text : text;
         
         textarea.value = newContent;
         textarea.selectionStart = textarea.selectionEnd = textarea.value.length;
 
-        // Dispatch events
-        textarea.dispatchEvent(new InputEvent('input', { bubbles: true }));
-        textarea.dispatchEvent(new Event('change', { bubbles: true }));
-        
-      } else if (targetElement.getAttribute('contenteditable') === 'true') {
-        // Handle contenteditable elements
-        const currentText = targetElement.textContent || '';
+        // Dispatch events textarea.dispatchEvent(new InputEvent('input', { bubbles: true })); textarea.dispatchEvent(new Event('change', { bubbles: true }));
+         } else if (targetElement.getAttribute('contenteditable') === 'true') {
+        // Handle contenteditable elements const currentText = targetElement.textContent || '';
         
         // Move cursor to end and insert text
         const selection = window.getSelection();
@@ -233,31 +196,22 @@ export class GrokAdapter extends BaseAdapterPlugin {
         range.collapse(false);
         selection?.removeAllRanges();
         selection?.addRange(range);
-
-        // Insert newlines if there's existing content
-        if (currentText && currentText.trim() !== '') {
-          document.execCommand('insertText', false, '\n\n');
+ // Insert newlines if there's existing content
+        if (currentText && currentText.trim() !== '') { document.execCommand('insertText', false, '\n\n');
         }
 
-        // Insert the new text
-        document.execCommand('insertText', false, text);
+        // Insert the new text document.execCommand('insertText', false, text);
 
-        // Dispatch events
-        targetElement.dispatchEvent(new InputEvent('input', { bubbles: true }));
+        // Dispatch events targetElement.dispatchEvent(new InputEvent('input', { bubbles: true }));
         
       } else {
-        // Fallback for other element types
-        const currentText = targetElement.textContent || '';
-        const newContent = currentText ? currentText + '\n\n' + text : text;
+        // Fallback for other element types const currentText = targetElement.textContent || ''; const newContent = currentText ? currentText + '\n\n' + text : text;
         targetElement.textContent = newContent;
 
-        // Dispatch events
-        targetElement.dispatchEvent(new InputEvent('input', { bubbles: true }));
-        targetElement.dispatchEvent(new Event('change', { bubbles: true }));
+        // Dispatch events targetElement.dispatchEvent(new InputEvent('input', { bubbles: true })); targetElement.dispatchEvent(new Event('change', { bubbles: true }));
       }
 
-      // Emit success event
-      this.emitExecutionCompleted('insertText', { text }, {
+      // Emit success event this.emitExecutionCompleted('insertText', { text }, {
         success: true,
         textLength: text.length,
         elementType: targetElement.tagName.toLowerCase()
@@ -267,8 +221,7 @@ export class GrokAdapter extends BaseAdapterPlugin {
       return true;
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : String(error);
-      this.context.logger.error(`Error inserting text into Grok chat input: ${errorMessage}`);
-      this.emitExecutionFailed('insertText', errorMessage);
+      this.context.logger.error(`Error inserting text into Grok chat input: ${errorMessage}`); this.emitExecutionFailed('insertText', errorMessage);
       return false;
     }
   }
@@ -277,13 +230,11 @@ export class GrokAdapter extends BaseAdapterPlugin {
    * Submit the current text in the Grok chat input
    * Enhanced with multiple selector fallbacks and better error handling
    */
-  async submitForm(options?: { formElement?: HTMLFormElement }): Promise<boolean> {
-    this.context.logger.debug('Attempting to submit Grok chat input');
+  async submitForm(options?: { formElement?: HTMLFormElement }): Promise<boolean> { this.context.logger.debug('Attempting to submit Grok chat input');
 
     let submitButton: HTMLButtonElement | null = null;
 
-    // Try multiple selectors for better compatibility
-    const selectors = this.selectors.SUBMIT_BUTTON.split(', ');
+    // Try multiple selectors for better compatibility const selectors = this.selectors.SUBMIT_BUTTON.split(', ');
     for (const selector of selectors) {
       submitButton = document.querySelector(selector.trim()) as HTMLButtonElement;
       if (submitButton) {
@@ -295,52 +246,38 @@ export class GrokAdapter extends BaseAdapterPlugin {
     if (submitButton) {
       try {
         // Check if the button is disabled
-        if (submitButton.disabled) {
-          this.context.logger.warn('Grok submit button is disabled');
-          this.emitExecutionFailed('submitForm', 'Submit button is disabled');
+        if (submitButton.disabled) { this.context.logger.warn('Grok submit button is disabled'); this.emitExecutionFailed('submitForm', 'Submit button is disabled');
           return false;
         }
 
         // Check if the button is visible and clickable
         const rect = submitButton.getBoundingClientRect();
-        if (rect.width === 0 || rect.height === 0) {
-          this.context.logger.warn('Grok submit button is not visible');
-          this.emitExecutionFailed('submitForm', 'Submit button is not visible');
+        if (rect.width === 0 || rect.height === 0) { this.context.logger.warn('Grok submit button is not visible'); this.emitExecutionFailed('submitForm', 'Submit button is not visible');
           return false;
         }
 
         // Click the submit button
         submitButton.click();
-
-        this.emitExecutionCompleted('submitForm', {
-          formElement: options?.formElement?.tagName || 'unknown'
+ this.emitExecutionCompleted('submitForm', { formElement: options?.formElement?.tagName || 'unknown'
         }, {
-          success: true,
-          method: 'submitButton.click',
+          success: true, method: 'submitButton.click',
           buttonSelector: selectors.find(s => document.querySelector(s.trim()) === submitButton)
         });
-
-        this.context.logger.debug('Grok chat input submitted successfully via button click');
+ this.context.logger.debug('Grok chat input submitted successfully via button click');
         return true;
       } catch (error) {
         const errorMessage = error instanceof Error ? error.message : String(error);
-        this.context.logger.error(`Error clicking Grok submit button: ${errorMessage}`);
-        this.emitExecutionFailed('submitForm', errorMessage);
+        this.context.logger.error(`Error clicking Grok submit button: ${errorMessage}`); this.emitExecutionFailed('submitForm', errorMessage);
         return false;
       }
     }
 
-    // Fallback: Try Enter key press
-    this.context.logger.debug('No submit button found, trying Enter key press');
-    
-    try {
-      const chatInput = document.querySelector(this.selectors.CHAT_INPUT.split(', ')[0]) as HTMLElement;
+    // Fallback: Try Enter key press this.context.logger.debug('No submit button found, trying Enter key press');
+      
+      try { const chatInput = document.querySelector(this.selectors.CHAT_INPUT.split(', ')[0]) as HTMLElement;
       if (chatInput) {
         chatInput.focus();
-        
-        const enterEvent = new KeyboardEvent('keydown', {
-          key: 'Enter',
-          code: 'Enter',
+         const enterEvent = new KeyboardEvent('keydown', { key: 'Enter', code: 'Enter',
           keyCode: 13,
           which: 13,
           bubbles: true,
@@ -348,24 +285,18 @@ export class GrokAdapter extends BaseAdapterPlugin {
         });
 
         chatInput.dispatchEvent(enterEvent);
-
-        this.emitExecutionCompleted('submitForm', {}, {
-          success: true,
-          method: 'enterKey',
+ this.emitExecutionCompleted('submitForm', {}, {
+          success: true, method: 'enterKey',
           fallback: true
         });
-
-        this.context.logger.debug('Grok chat input submitted successfully via Enter key');
+ this.context.logger.debug('Grok chat input submitted successfully via Enter key');
         return true;
-      } else {
-        this.context.logger.error('Could not find chat input for Enter key fallback');
-        this.emitExecutionFailed('submitForm', 'Chat input not found for Enter key fallback');
+      } else { this.context.logger.error('Could not find chat input for Enter key fallback'); this.emitExecutionFailed('submitForm', 'Chat input not found for Enter key fallback');
         return false;
       }
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : String(error);
-      this.context.logger.error(`Error with Enter key fallback: ${errorMessage}`);
-      this.emitExecutionFailed('submitForm', errorMessage);
+      this.context.logger.error(`Error with Enter key fallback: ${errorMessage}`); this.emitExecutionFailed('submitForm', errorMessage);
       return false;
     }
   }
@@ -379,14 +310,12 @@ export class GrokAdapter extends BaseAdapterPlugin {
 
     try {
       // Validate file before attempting attachment
-      if (!file || file.size === 0) {
-        this.emitExecutionFailed('attachFile', 'Invalid file: file is empty or null');
+      if (!file || file.size === 0) { this.emitExecutionFailed('attachFile', 'Invalid file: file is empty or null');
         return false;
       }
 
       // Check if file upload is supported on current page
-      if (!this.supportsFileUpload()) {
-        this.emitExecutionFailed('attachFile', 'File upload not supported on current page');
+      if (!this.supportsFileUpload()) { this.emitExecutionFailed('attachFile', 'File upload not supported on current page');
         return false;
       }
 
@@ -399,9 +328,7 @@ export class GrokAdapter extends BaseAdapterPlugin {
         fileInput = document.querySelector(this.selectors.FILE_INPUT) as HTMLInputElement;
       }
 
-      if (!fileInput) {
-        this.context.logger.error('Could not find file input element');
-        this.emitExecutionFailed('attachFile', 'File input element not found');
+      if (!fileInput) { this.context.logger.error('Could not find file input element'); this.emitExecutionFailed('attachFile', 'File input element not found');
         return false;
       }
 
@@ -410,44 +337,37 @@ export class GrokAdapter extends BaseAdapterPlugin {
       dataTransfer.items.add(file);
       fileInput.files = dataTransfer.files;
 
-      // Trigger change event
-      const changeEvent = new Event('change', { bubbles: true });
+      // Trigger change event const changeEvent = new Event('change', { bubbles: true });
       fileInput.dispatchEvent(changeEvent);
 
       // Check for file preview to confirm success
       const previewFound = await this.checkFilePreview();
 
-      if (previewFound) {
-        this.emitExecutionCompleted('attachFile', {
+      if (previewFound) { this.emitExecutionCompleted('attachFile', {
           fileName: file.name,
           fileType: file.type,
-          fileSize: file.size,
-          inputElement: options?.inputElement?.tagName || 'unknown'
+          fileSize: file.size, inputElement: options?.inputElement?.tagName || 'unknown'
         }, {
           success: true,
-          previewFound: true,
-          method: 'file-input'
+          previewFound: true, method: 'file-input'
         });
         this.context.logger.debug(`File attached successfully: ${file.name}`);
         return true;
       } else {
-        // Still consider it successful even if preview not found (optimistic)
-        this.emitExecutionCompleted('attachFile', {
+        // Still consider it successful even if preview not found (optimistic) this.emitExecutionCompleted('attachFile', {
           fileName: file.name,
           fileType: file.type,
           fileSize: file.size
         }, {
           success: true,
-          previewFound: false,
-          method: 'file-input'
+          previewFound: false, method: 'file-input'
         });
         this.context.logger.debug(`File attachment initiated (preview not confirmed): ${file.name}`);
         return true;
       }
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : String(error);
-      this.context.logger.error(`Error attaching file to Grok: ${errorMessage}`);
-      this.emitExecutionFailed('attachFile', errorMessage);
+      this.context.logger.error(`Error attaching file to Grok: ${errorMessage}`); this.emitExecutionFailed('attachFile', errorMessage);
       return false;
     }
   }
@@ -463,11 +383,9 @@ export class GrokAdapter extends BaseAdapterPlugin {
     this.context.logger.debug(`Checking if Grok adapter supports: ${currentUrl}`);
 
     // Check hostname first
-    const isGrokHost = this.hostnames.some(hostname => {
-      if (typeof hostname === 'string') {
+    const isGrokHost = this.hostnames.some(hostname => { if (typeof hostname === 'string') {
         return currentHost.includes(hostname);
-      }
-      // hostname is RegExp if it's not a string
+      } // hostname is RegExp if it's not a string
       return (hostname as RegExp).test(currentHost);
     });
 
@@ -497,18 +415,15 @@ export class GrokAdapter extends BaseAdapterPlugin {
    * Check if file upload is supported on the current page
    * Enhanced with multiple selector checking and better detection
    */
-  supportsFileUpload(): boolean {
-    this.context.logger.debug('Checking file upload support for Grok');
+  supportsFileUpload(): boolean { this.context.logger.debug('Checking file upload support for Grok');
 
     // Check for file input elements
     const fileInput = document.querySelector(this.selectors.FILE_INPUT);
-    if (fileInput) {
-      this.context.logger.debug('Found file input element');
+    if (fileInput) { this.context.logger.debug('Found file input element');
       return true;
     }
 
-    // Check for file upload buttons
-    const uploadButtonSelectors = this.selectors.FILE_UPLOAD_BUTTON.split(', ');
+    // Check for file upload buttons const uploadButtonSelectors = this.selectors.FILE_UPLOAD_BUTTON.split(', ');
     for (const selector of uploadButtonSelectors) {
       const uploadButton = document.querySelector(selector.trim());
       if (uploadButton) {
@@ -517,8 +432,7 @@ export class GrokAdapter extends BaseAdapterPlugin {
       }
     }
 
-    // Check for drop zones
-    const dropZoneSelectors = this.selectors.DROP_ZONE.split(', ');
+    // Check for drop zones const dropZoneSelectors = this.selectors.DROP_ZONE.split(', ');
     for (const selector of dropZoneSelectors) {
       const dropZone = document.querySelector(selector.trim());
       if (dropZone) {
@@ -526,14 +440,13 @@ export class GrokAdapter extends BaseAdapterPlugin {
         return true;
       }
     }
-
-    this.context.logger.debug('No file upload support detected');
+ this.context.logger.debug('No file upload support detected');
     return false;
   }
 
   // Private helper methods
-
-  private setupUrlTracking(): void {
+  
+    private setupUrlTracking(): void {
     if (!this.urlCheckInterval) {
       this.urlCheckInterval = setInterval(() => {
         const currentUrl = window.location.href;
@@ -554,8 +467,7 @@ export class GrokAdapter extends BaseAdapterPlugin {
   // Grok-specific button styling methods
 
   /**
-   * Get Grok-specific button styles that match the design system
-   * Based on the reference button styling from Grok's interface
+   * Get Grok-specific button styles that match the design system * Based on the reference button styling from Grok's interface
    */
   private getGrokButtonStyles(): string {
     return `
@@ -678,8 +590,7 @@ export class GrokAdapter extends BaseAdapterPlugin {
       .mcp-grok-button-base + .mcp-grok-button-base {
         margin-left: 4px;
       }
-
-      /* Ensure proper stacking context - higher than Grok's z-20 elements */
+ /* Ensure proper stacking context - higher than Grok's z-20 elements */
       .mcp-grok-button-base {
         z-index: 25;
       }
@@ -704,26 +615,23 @@ export class GrokAdapter extends BaseAdapterPlugin {
   private injectGrokButtonStyles(): void {
     if (this.adapterStylesInjected) return;
 
-    try {
-      const styleId = 'mcp-grok-button-styles';
+    try { const styleId = 'mcp-grok-button-styles';
       const existingStyles = document.getElementById(styleId);
       if (existingStyles) existingStyles.remove();
-
-      const styleElement = document.createElement('style');
+ const styleElement = document.createElement('style');
       styleElement.id = styleId;
       styleElement.textContent = this.getGrokButtonStyles();
       document.head.appendChild(styleElement);
 
-      this.adapterStylesInjected = true;
-      this.context.logger.debug('Grok button styles injected successfully');
+      this.adapterStylesInjected = true; this.context.logger.debug('Grok button styles injected successfully');
     } catch (error) {
-      this.context.logger.error('Failed to inject Grok button styles:', error);
+       this.context.logger.error('Failed to inject Grok button styles:', error);
     }
   }
 
   // New architecture integration methods
-
-  private setupStoreEventListeners(): void {
+  
+    private setupStoreEventListeners(): void {
     if (this.storeEventListenersSetup) {
       this.context.logger.warn(`Store event listeners already set up for instance #${this.instanceId}, skipping`);
       return;
@@ -731,16 +639,12 @@ export class GrokAdapter extends BaseAdapterPlugin {
 
     this.context.logger.debug(`Setting up store event listeners for Grok adapter instance #${this.instanceId}`);
 
-    // Listen for tool execution events from the store
-    this.context.eventBus.on('tool:execution-completed', (data) => {
-      this.context.logger.debug('Tool execution completed:', data);
+    // Listen for tool execution events from the store this.context.eventBus.on('tool:execution-completed', (data) => { this.context.logger.debug('Tool execution completed:', data);
       // Handle auto-actions based on store state
       this.handleToolExecutionCompleted(data);
     });
 
-    // Listen for UI state changes
-    this.context.eventBus.on('ui:sidebar-toggle', (data) => {
-      this.context.logger.debug('Sidebar toggled:', data);
+    // Listen for UI state changes this.context.eventBus.on('ui:sidebar-toggle', (data) => { this.context.logger.debug('Sidebar toggled:', data);
     });
 
     this.storeEventListenersSetup = true;
@@ -758,10 +662,8 @@ export class GrokAdapter extends BaseAdapterPlugin {
     this.mutationObserver = new MutationObserver((mutations) => {
       let shouldReinject = false;
 
-      mutations.forEach((mutation) => {
-        if (mutation.type === 'childList') {
-          // Check if our MCP popover was removed
-          if (!document.getElementById('mcp-popover-container')) {
+      mutations.forEach((mutation) => { if (mutation.type === 'childList') {
+          // Check if our MCP popover was removed if (!document.getElementById('mcp-popover-container')) {
             shouldReinject = true;
           }
         }
@@ -770,8 +672,7 @@ export class GrokAdapter extends BaseAdapterPlugin {
       if (shouldReinject) {
         // Only attempt re-injection if we can find an insertion point
         const insertionPoint = this.findButtonInsertionPoint();
-        if (insertionPoint) {
-          this.context.logger.debug('MCP popover removed, attempting to re-inject');
+        if (insertionPoint) { this.context.logger.debug('MCP popover removed, attempting to re-inject');
           this.setupUIIntegration();
         }
       }
@@ -799,9 +700,7 @@ export class GrokAdapter extends BaseAdapterPlugin {
     // Wait for page to be ready, then inject MCP popover
     this.waitForPageReady().then(() => {
       this.injectMCPPopoverWithRetry();
-    }).catch((error) => {
-      this.context.logger.warn('Failed to wait for page ready:', error);
-      // Don't retry if we can't find insertion point
+    }).catch((error) => { this.context.logger.warn('Failed to wait for page ready:', error); // Don't retry if we can't find insertion point
     });
 
     // Set up periodic check to ensure popover stays injected
@@ -812,16 +711,13 @@ export class GrokAdapter extends BaseAdapterPlugin {
     return new Promise((resolve, reject) => {
       let attempts = 0;
       const maxAttempts = 5; // Maximum 10 seconds (20 * 500ms)
-      
-      const checkReady = () => {
+        
+        const checkReady = () => {
         attempts++;
         const insertionPoint = this.findButtonInsertionPoint();
-        if (insertionPoint) {
-          this.context.logger.debug('Page ready for MCP popover injection');
+        if (insertionPoint) { this.context.logger.debug('Page ready for MCP popover injection');
           resolve();
-        } else if (attempts >= maxAttempts) {
-          this.context.logger.warn('Page ready check timed out - no insertion point found');
-          reject(new Error('No insertion point found after maximum attempts'));
+        } else if (attempts >= maxAttempts) { this.context.logger.warn('Page ready check timed out - no insertion point found'); reject(new Error('No insertion point found after maximum attempts'));
         } else {
           setTimeout(checkReady, 500);
         }
@@ -834,9 +730,7 @@ export class GrokAdapter extends BaseAdapterPlugin {
     const attemptInjection = (attempt: number) => {
       this.context.logger.debug(`Attempting MCP popover injection (attempt ${attempt}/${maxRetries})`);
 
-      // Check if popover already exists
-      if (document.getElementById('mcp-popover-container')) {
-        this.context.logger.debug('MCP popover already exists');
+      // Check if popover already exists if (document.getElementById('mcp-popover-container')) { this.context.logger.debug('MCP popover already exists');
         return;
       }
 
@@ -848,8 +742,7 @@ export class GrokAdapter extends BaseAdapterPlugin {
         // Retry after delay
         this.context.logger.debug(`Insertion point not found, retrying in 1 second (attempt ${attempt}/${maxRetries})`);
         setTimeout(() => attemptInjection(attempt + 1), 1000);
-      } else {
-        this.context.logger.warn('Failed to inject MCP popover after maximum retries');
+      } else { this.context.logger.warn('Failed to inject MCP popover after maximum retries');
       }
     };
 
@@ -859,12 +752,10 @@ export class GrokAdapter extends BaseAdapterPlugin {
   private setupPeriodicPopoverCheck(): void {
     // Check every 5 seconds if the popover is still there
     if (!this.popoverCheckInterval) {
-      this.popoverCheckInterval = setInterval(() => {
-        if (!document.getElementById('mcp-popover-container')) {
+      this.popoverCheckInterval = setInterval(() => { if (!document.getElementById('mcp-popover-container')) {
           // Only attempt re-injection if we can find an insertion point
           const insertionPoint = this.findButtonInsertionPoint();
-          if (insertionPoint) {
-            this.context.logger.debug('MCP popover missing, attempting to re-inject');
+          if (insertionPoint) { this.context.logger.debug('MCP popover missing, attempting to re-inject');
             this.injectMCPPopoverWithRetry(3); // Fewer retries for periodic checks
           }
         }
@@ -872,8 +763,7 @@ export class GrokAdapter extends BaseAdapterPlugin {
     }
   }
 
-  private cleanupDOMObservers(): void {
-    this.context.logger.debug('Cleaning up DOM observers for Grok adapter');
+  private cleanupDOMObservers(): void { this.context.logger.debug('Cleaning up DOM observers for Grok adapter');
 
     if (this.mutationObserver) {
       this.mutationObserver.disconnect();
@@ -881,11 +771,9 @@ export class GrokAdapter extends BaseAdapterPlugin {
     }
   }
 
-  private cleanupUIIntegration(): void {
-    this.context.logger.debug('Cleaning up UI integration for Grok adapter');
+  private cleanupUIIntegration(): void { this.context.logger.debug('Cleaning up UI integration for Grok adapter');
 
-    // Remove MCP popover if it exists
-    const popoverContainer = document.getElementById('mcp-popover-container');
+    // Remove MCP popover if it exists const popoverContainer = document.getElementById('mcp-popover-container');
     if (popoverContainer) {
       popoverContainer.remove();
     }
@@ -893,64 +781,50 @@ export class GrokAdapter extends BaseAdapterPlugin {
     this.mcpPopoverContainer = null;
   }
 
-  private handleToolExecutionCompleted(data: any): void {
-    this.context.logger.debug('Handling tool execution completion in Grok adapter:', data);
+  private handleToolExecutionCompleted(data: any): void { this.context.logger.debug('Handling tool execution completion in Grok adapter:', data);
 
     // Use the base class method to check if we should handle events
-    if (!this.shouldHandleEvents()) {
-      this.context.logger.debug('Grok adapter should not handle events, ignoring tool execution event');
+    if (!this.shouldHandleEvents()) { this.context.logger.debug('Grok adapter should not handle events, ignoring tool execution event');
       return;
     }
 
     // Get current UI state from stores to determine auto-actions
     const uiState = this.context.stores.ui;
     if (uiState && data.execution) {
-      // Handle auto-insert, auto-submit based on store state
-      // This integrates with the new architecture's state management
+      // Handle auto-insert, auto-submit based on store state // This integrates with the new architecture's state management
       this.context.logger.debug('Tool execution handled with new architecture integration');
     }
   }
 
-  private findButtonInsertionPoint(): { container: Element; insertAfter: Element | null } | null {
-    this.context.logger.debug('Finding button insertion point for MCP popover');
+  private findButtonInsertionPoint(): { container: Element; insertAfter: Element | null } | null { this.context.logger.debug('Finding button insertion point for MCP popover');
 
-    // First priority: Find the submit button container and insert before it
-    const submitButton = document.querySelector('button[aria-label="Submit"], button[type="submit"], button[aria-label="Enter voice mode"]');
+    // First priority: Find the submit button container and insert before it const submitButton = document.querySelector('button[aria-label="Submit"], button[type="submit"], button[aria-label="Enter voice mode"]');
     if (submitButton) {
-      // Look for the flex container that holds the submit button
-      const submitContainer = submitButton.closest('.ml-auto.flex.flex-row.items-end.gap-1') || 
-                             submitButton.closest('.flex.flex-row.items-end') ||
-                             submitButton.closest('.flex.items-end') ||
+      // Look for the flex container that holds the submit button const submitContainer = submitButton.closest('.ml-auto.flex.flex-row.items-end.gap-1') ||  submitButton.closest('.flex.flex-row.items-end') || submitButton.closest('.flex.items-end') ||
                              submitButton.parentElement;
       
-      if (submitContainer) {
-        this.context.logger.debug('Found insertion point: submit button container');
+      if (submitContainer) { this.context.logger.debug('Found insertion point: submit button container');
         // Insert before the submit button (insertAfter: null means insert at beginning)
         return { container: submitContainer, insertAfter: null };
       }
     }
 
-    // Second priority: Try to find the Think button in the bottom control bar (Grok-specific)
-    const thinkButton = document.querySelector('button[aria-label="Think"]');
-    if (thinkButton && thinkButton.parentElement) {
-      this.context.logger.debug('Found insertion point relative to Think button');
+    // Second priority: Try to find the Think button in the bottom control bar (Grok-specific) const thinkButton = document.querySelector('button[aria-label="Think"]');
+    if (thinkButton && thinkButton.parentElement) { this.context.logger.debug('Found insertion point relative to Think button');
       return { container: thinkButton.parentElement, insertAfter: thinkButton };
     }
 
-    // Third priority: Try primary selector first
-    const primarySelectors = this.selectors.BUTTON_INSERTION_CONTAINER.split(', ');
+    // Third priority: Try primary selector first const primarySelectors = this.selectors.BUTTON_INSERTION_CONTAINER.split(', ');
     for (const selector of primarySelectors) {
       const container = document.querySelector(selector.trim());
       if (container) {
-        this.context.logger.debug(`Found insertion point: ${selector.trim()}`);
-        const buttons = container.querySelectorAll('button');
+        this.context.logger.debug(`Found insertion point: ${selector.trim()}`); const buttons = container.querySelectorAll('button');
         const insertAfter = buttons.length > 0 ? buttons[buttons.length - 1] : null;
         return { container, insertAfter };
       }
     }
 
-    // Fourth priority: Try fallback selectors
-    const fallbackSelectors = this.selectors.FALLBACK_INSERTION.split(', ');
+    // Fourth priority: Try fallback selectors const fallbackSelectors = this.selectors.FALLBACK_INSERTION.split(', ');
     for (const selector of fallbackSelectors) {
       const container = document.querySelector(selector.trim());
       if (container) {
@@ -958,26 +832,18 @@ export class GrokAdapter extends BaseAdapterPlugin {
         return { container, insertAfter: null };
       }
     }
-
-    this.context.logger.debug('Could not find suitable insertion point for MCP popover');
+ this.context.logger.debug('Could not find suitable insertion point for MCP popover');
     return null;
   }
 
-  private injectMCPPopover(insertionPoint: { container: Element; insertAfter: Element | null }): void {
-    this.context.logger.debug('Injecting MCP popover into Grok interface');
+  private injectMCPPopover(insertionPoint: { container: Element; insertAfter: Element | null }): void { this.context.logger.debug('Injecting MCP popover into Grok interface');
 
     try {
-      // Check if popover already exists
-      if (document.getElementById('mcp-popover-container')) {
-        this.context.logger.debug('MCP popover already exists, skipping injection');
+      // Check if popover already exists if (document.getElementById('mcp-popover-container')) { this.context.logger.debug('MCP popover already exists, skipping injection');
         return;
       }
 
-      // Create container for the popover
-      const reactContainer = document.createElement('div');
-      reactContainer.id = 'mcp-popover-container';
-      reactContainer.style.display = 'inline-block';
-      reactContainer.style.margin = '0 4px';
+      // Create container for the popover const reactContainer = document.createElement('div'); reactContainer.id = 'mcp-popover-container'; reactContainer.style.display = 'inline-block'; reactContainer.style.margin = '0 4px';
 
       // Insert at appropriate location
       const { container, insertAfter } = insertionPoint;
@@ -986,18 +852,14 @@ export class GrokAdapter extends BaseAdapterPlugin {
         // Insert at the beginning of the container (before submit button)
         const firstChild = container.firstChild;
         if (firstChild) {
-          container.insertBefore(reactContainer, firstChild);
-          this.context.logger.debug('Inserted popover container at beginning (before submit button)');
+          container.insertBefore(reactContainer, firstChild); this.context.logger.debug('Inserted popover container at beginning (before submit button)');
         } else {
-          container.appendChild(reactContainer);
-          this.context.logger.debug('Appended popover container to empty container');
+          container.appendChild(reactContainer); this.context.logger.debug('Appended popover container to empty container');
         }
       } else if (insertAfter && insertAfter.parentNode === container) {
-        container.insertBefore(reactContainer, insertAfter.nextSibling);
-        this.context.logger.debug('Inserted popover container after specified element');
+        container.insertBefore(reactContainer, insertAfter.nextSibling); this.context.logger.debug('Inserted popover container after specified element');
       } else {
-        container.appendChild(reactContainer);
-        this.context.logger.debug('Appended popover container to container element');
+        container.appendChild(reactContainer); this.context.logger.debug('Appended popover container to container element');
       }
 
       // Store reference
@@ -1005,31 +867,21 @@ export class GrokAdapter extends BaseAdapterPlugin {
 
       // Render the React MCP Popover using the new architecture
       this.renderMCPPopover(reactContainer);
-
-      this.context.logger.debug('MCP popover injected and rendered successfully');
+ this.context.logger.debug('MCP popover injected and rendered successfully');
     } catch (error) {
-      this.context.logger.error('Failed to inject MCP popover:', error);
+       this.context.logger.error('Failed to inject MCP popover:', error);
     }
   }
 
-  private renderMCPPopover(container: HTMLElement): void {
-    this.context.logger.debug('Rendering MCP popover with new architecture integration');
+  private renderMCPPopover(container: HTMLElement): void { this.context.logger.debug('Rendering MCP popover with new architecture integration');
 
     try {
-      // Import React and ReactDOM dynamically to avoid bundling issues
-      import('react').then(React => {
-        import('react-dom/client').then(ReactDOM => {
-          import('../../components/mcpPopover/mcpPopover').then(({ MCPPopover }) => {
+      // Import React and ReactDOM dynamically to avoid bundling issues import('react').then(React => { import('react-dom/client').then(ReactDOM => { import('../../components/mcpPopover/mcpPopover').then(({ MCPPopover }) => {
             // Create toggle state manager that integrates with new stores
             const toggleStateManager = this.createToggleStateManager();
 
             // Create adapter button configuration with Grok-specific styling
-            const adapterButtonConfig = {
-              className: 'mcp-grok-button-base',
-              contentClassName: 'mcp-grok-button-content',
-              textClassName: 'mcp-grok-button-text',
-              iconClassName: 'mcp-grok-button-icon',
-              activeClassName: 'mcp-button-active'
+            const adapterButtonConfig = { className: 'mcp-grok-button-base', contentClassName: 'mcp-grok-button-content', textClassName: 'mcp-grok-button-text', iconClassName: 'mcp-grok-button-icon', activeClassName: 'mcp-button-active'
             };
 
             // Create React root and render
@@ -1041,19 +893,15 @@ export class GrokAdapter extends BaseAdapterPlugin {
                 adapterName: this.name
               })
             );
-
-            this.context.logger.debug('MCP popover rendered successfully with new architecture');
-          }).catch(error => {
-            this.context.logger.error('Failed to import MCPPopover component:', error);
+ this.context.logger.debug('MCP popover rendered successfully with new architecture');
+          }).catch(error => { this.context.logger.error('Failed to import MCPPopover component:', error);
           });
-        }).catch(error => {
-          this.context.logger.error('Failed to import ReactDOM:', error);
+        }).catch(error => { this.context.logger.error('Failed to import ReactDOM:', error);
         });
-      }).catch(error => {
-        this.context.logger.error('Failed to import React:', error);
+      }).catch(error => { this.context.logger.error('Failed to import React:', error);
       });
     } catch (error) {
-      this.context.logger.error('Failed to render MCP popover:', error);
+       this.context.logger.error('Failed to render MCP popover:', error);
     }
   }
 
@@ -1081,7 +929,7 @@ export class GrokAdapter extends BaseAdapterPlugin {
             autoExecute: false // Default for now, can be extended
           };
         } catch (error) {
-          context.logger.error('Error getting toggle state:', error);
+       context.logger.error('Error getting toggle state:', error);
           // Return safe defaults in case of error
           return {
             mcpEnabled: false,
@@ -1092,20 +940,16 @@ export class GrokAdapter extends BaseAdapterPlugin {
         }
       },
 
-      setMCPEnabled: (enabled: boolean) => {
-        context.logger.debug(`Setting MCP ${enabled ? 'enabled' : 'disabled'} - controlling sidebar visibility via MCP state`);
+      setMCPEnabled: (enabled: boolean) => { context.logger.debug(`Setting MCP ${enabled ? 'enabled' : 'disabled'} - controlling sidebar visibility via MCP state`);
 
         try {
           // Primary method: Control MCP state through UI store (which will automatically control sidebar)
-          if (context.stores.ui?.setMCPEnabled) {
-            context.stores.ui.setMCPEnabled(enabled, 'mcp-popover-toggle');
+          if (context.stores.ui?.setMCPEnabled) { context.stores.ui.setMCPEnabled(enabled, 'mcp-popover-toggle');
             context.logger.debug(`MCP state set to: ${enabled} via UI store`);
-          } else {
-            context.logger.warn('UI store setMCPEnabled method not available');
+          } else { context.logger.warn('UI store setMCPEnabled method not available');
             
             // Fallback: Control sidebar visibility directly if MCP state setter not available
-            if (context.stores.ui?.setSidebarVisibility) {
-              context.stores.ui.setSidebarVisibility(enabled, 'mcp-popover-toggle-fallback');
+            if (context.stores.ui?.setSidebarVisibility) { context.stores.ui.setSidebarVisibility(enabled, 'mcp-popover-toggle-fallback');
               context.logger.debug(`Sidebar visibility set to: ${enabled} via UI store fallback`);
             }
           }
@@ -1113,31 +957,24 @@ export class GrokAdapter extends BaseAdapterPlugin {
           // Secondary method: Control through global sidebar manager as additional safeguard
           const sidebarManager = (window as any).activeSidebarManager;
           if (sidebarManager) {
-            if (enabled) {
-              context.logger.debug('Showing sidebar via activeSidebarManager');
-              sidebarManager.show().catch((error: any) => {
-                context.logger.error('Error showing sidebar:', error);
+            if (enabled) { context.logger.debug('Showing sidebar via activeSidebarManager');
+              sidebarManager.show().catch((error: any) => { context.logger.error('Error showing sidebar:', error);
               });
-            } else {
-              context.logger.debug('Hiding sidebar via activeSidebarManager');
-              sidebarManager.hide().catch((error: any) => {
-                context.logger.error('Error hiding sidebar:', error);
+            } else { context.logger.debug('Hiding sidebar via activeSidebarManager');
+              sidebarManager.hide().catch((error: any) => { context.logger.error('Error hiding sidebar:', error);
               });
             }
-          } else {
-            context.logger.warn('activeSidebarManager not available on window - will rely on UI store only');
+          } else { context.logger.warn('activeSidebarManager not available on window - will rely on UI store only');
           }
-
-          context.logger.debug(`MCP toggle completed: MCP ${enabled ? 'enabled' : 'disabled'}, sidebar ${enabled ? 'shown' : 'hidden'}`);
+ context.logger.debug(`MCP toggle completed: MCP ${enabled ? 'enabled' : 'disabled'}, sidebar ${enabled ? 'shown' : 'hidden'}`);
         } catch (error) {
-          context.logger.error('Error in setMCPEnabled:', error);
+       context.logger.error('Error in setMCPEnabled:', error);
         }
 
         stateManager.updateUI();
       },
 
-      setAutoInsert: (enabled: boolean) => {
-        context.logger.debug(`Setting Auto Insert ${enabled ? 'enabled' : 'disabled'}`);
+      setAutoInsert: (enabled: boolean) => { context.logger.debug(`Setting Auto Insert ${enabled ? 'enabled' : 'disabled'}`);
 
         // Update preferences through store
         if (context.stores.ui?.updatePreferences) {
@@ -1147,8 +984,7 @@ export class GrokAdapter extends BaseAdapterPlugin {
         stateManager.updateUI();
       },
 
-      setAutoSubmit: (enabled: boolean) => {
-        context.logger.debug(`Setting Auto Submit ${enabled ? 'enabled' : 'disabled'}`);
+      setAutoSubmit: (enabled: boolean) => { context.logger.debug(`Setting Auto Submit ${enabled ? 'enabled' : 'disabled'}`);
 
         // Update preferences through store
         if (context.stores.ui?.updatePreferences) {
@@ -1158,20 +994,16 @@ export class GrokAdapter extends BaseAdapterPlugin {
         stateManager.updateUI();
       },
 
-      setAutoExecute: (enabled: boolean) => {
-        context.logger.debug(`Setting Auto Execute ${enabled ? 'enabled' : 'disabled'}`);
+      setAutoExecute: (enabled: boolean) => { context.logger.debug(`Setting Auto Execute ${enabled ? 'enabled' : 'disabled'}`);
         // Can be extended to handle auto execute functionality
         stateManager.updateUI();
       },
 
-      updateUI: () => {
-        context.logger.debug('Updating MCP popover UI');
+      updateUI: () => { context.logger.debug('Updating MCP popover UI');
 
-        // Dispatch custom event to update the popover
-        const popoverContainer = document.getElementById('mcp-popover-container');
+        // Dispatch custom event to update the popover const popoverContainer = document.getElementById('mcp-popover-container');
         if (popoverContainer) {
-          const currentState = stateManager.getState();
-          const event = new CustomEvent('mcp:update-toggle-state', {
+          const currentState = stateManager.getState(); const event = new CustomEvent('mcp:update-toggle-state', {
             detail: { toggleState: currentState }
           });
           popoverContainer.dispatchEvent(event);
@@ -1185,26 +1017,22 @@ export class GrokAdapter extends BaseAdapterPlugin {
   /**
    * Public method to manually inject MCP popover (for debugging or external calls)
    */
-  public injectMCPPopoverManually(): void {
-    this.context.logger.debug('Manual MCP popover injection requested');
+  public injectMCPPopoverManually(): void { this.context.logger.debug('Manual MCP popover injection requested');
     this.injectMCPPopoverWithRetry();
   }
 
   /**
    * Check if MCP popover is currently injected
    */
-  public isMCPPopoverInjected(): boolean {
-    return !!document.getElementById('mcp-popover-container');
+  public isMCPPopoverInjected(): boolean { return !!document.getElementById('mcp-popover-container');
   }
 
   /**
    * Check if the sidebar is properly available after navigation
    */
-  private checkAndRestoreSidebar(): void {
-    this.context.logger.debug('Checking sidebar state after page navigation');
+  private checkAndRestoreSidebar(): void { this.context.logger.debug('Checking sidebar state after page navigation');
 
-    try {
-      // Check if there's an active sidebar manager
+    try { // Check if there's an active sidebar manager
       const activeSidebarManager = (window as any).activeSidebarManager;
       
       if (!activeSidebarManager) {
@@ -1216,32 +1044,28 @@ export class GrokAdapter extends BaseAdapterPlugin {
       this.ensureMCPPopoverConnection();
       
     } catch (error) {
-      this.context.logger.error('Error checking sidebar state after navigation:', error);
+       this.context.logger.error('Error checking sidebar state after navigation:', error);
     }
   }
 
   /**
    * Ensure MCP popover is properly connected to the sidebar after navigation
    */
-  private ensureMCPPopoverConnection(): void {
-    this.context.logger.debug('Ensuring MCP popover connection after navigation');
+  private ensureMCPPopoverConnection(): void { this.context.logger.debug('Ensuring MCP popover connection after navigation');
     
     try {
       // Check if MCP popover is still injected
-      if (!this.isMCPPopoverInjected()) {
-        this.context.logger.debug('MCP popover missing after navigation, re-injecting');
+      if (!this.isMCPPopoverInjected()) { this.context.logger.debug('MCP popover missing after navigation, re-injecting');
         this.injectMCPPopoverWithRetry(3);
-      } else {
-        this.context.logger.debug('MCP popover is still present after navigation');
+      } else { this.context.logger.debug('MCP popover is still present after navigation');
       }
     } catch (error) {
-      this.context.logger.error('Error ensuring MCP popover connection:', error);
+       this.context.logger.error('Error ensuring MCP popover connection:', error);
     }
   }
 
   // Event handlers - Enhanced for new architecture integration
-  onPageChanged?(url: string, oldUrl?: string): void {
-    this.context.logger.debug(`Grok page changed: from ${oldUrl || 'N/A'} to ${url}`);
+  onPageChanged?(url: string, oldUrl?: string): void { this.context.logger.debug(`Grok page changed: from ${oldUrl || 'N/A'} to ${url}`);
 
     // Update URL tracking
     this.lastUrl = url;
@@ -1263,26 +1087,21 @@ export class GrokAdapter extends BaseAdapterPlugin {
       setTimeout(() => {
         this.checkAndRestoreSidebar();
       }, 1500); // Additional delay to ensure page is fully loaded
-    } else {
-      this.context.logger.warn('Page no longer supported after navigation');
+    } else { this.context.logger.warn('Page no longer supported after navigation');
     }
 
-    // Emit page change event to stores
-    this.context.eventBus.emit('app:site-changed', {
+    // Emit page change event to stores this.context.eventBus.emit('app:site-changed', {
       site: url,
       hostname: window.location.hostname
     });
   }
 
-  onHostChanged?(newHost: string, oldHost?: string): void {
-    this.context.logger.debug(`Grok host changed: from ${oldHost || 'N/A'} to ${newHost}`);
+  onHostChanged?(newHost: string, oldHost?: string): void { this.context.logger.debug(`Grok host changed: from ${oldHost || 'N/A'} to ${newHost}`);
 
     // Re-check if the adapter is still supported
     const stillSupported = this.isSupported();
-    if (!stillSupported) {
-      this.context.logger.warn('Grok adapter no longer supported on this host/page');
-      // Emit deactivation event using available event type
-      this.context.eventBus.emit('adapter:deactivated', {
+    if (!stillSupported) { this.context.logger.warn('Grok adapter no longer supported on this host/page');
+      // Emit deactivation event using available event type this.context.eventBus.emit('adapter:deactivated', {
         pluginName: this.name,
         timestamp: Date.now()
       });
@@ -1302,36 +1121,33 @@ export class GrokAdapter extends BaseAdapterPlugin {
   }
 
   // Helper methods for event emission and file checking
-
-  private emitExecutionCompleted(operation: string, params: any, result: any): void {
+  
+    private emitExecutionCompleted(operation: string, params: any, result: any): void {
     if (this.context.eventBus) {
-      try {
-        this.context.eventBus.emit('tool:execution-completed', {
+      try { this.context.eventBus.emit('tool:execution-completed', {
           execution: {
             id: this.generateCallId(),
             toolName: operation,
             parameters: params,
             result,
-            timestamp: Date.now(),
-            status: 'success'
+            timestamp: Date.now(), status: 'success'
           }
         });
       } catch (error) {
-        this.context.logger.warn('Failed to emit execution completed event:', error);
+       this.context.logger.warn('Failed to emit execution completed event:', error);
       }
     }
   }
 
   private emitExecutionFailed(operation: string, error: string): void {
     if (this.context.eventBus) {
-      try {
-        this.context.eventBus.emit('tool:execution-failed', {
+      try { this.context.eventBus.emit('tool:execution-failed', {
           toolName: operation,
           error,
           callId: this.generateCallId()
         });
       } catch (error) {
-        this.context.logger.warn('Failed to emit execution failed event:', error);
+       this.context.logger.warn('Failed to emit execution failed event:', error);
       }
     }
   }
@@ -1344,11 +1160,9 @@ export class GrokAdapter extends BaseAdapterPlugin {
     return new Promise(resolve => {
       setTimeout(() => {
         const filePreview = document.querySelector(this.selectors.FILE_PREVIEW);
-        if (filePreview) {
-          this.context.logger.debug('File preview element found after attachment');
+        if (filePreview) { this.context.logger.debug('File preview element found after attachment');
           resolve(true);
-        } else {
-          this.context.logger.warn('File preview element not found after attachment');
+        } else { this.context.logger.warn('File preview element not found after attachment');
           resolve(false);
         }
       }, 500);

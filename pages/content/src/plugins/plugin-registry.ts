@@ -12,9 +12,7 @@ import { useConfigStore } from '../stores/config.store';
 import type { AdapterPlugin, PluginRegistration, PluginContext, AdapterConfig, AdapterCapability, PluginType } from './plugin-types';
 import { createLogger } from '@extension/shared/lib/logger';
 import { DefaultAdapter } from './adapters/default.adapter';
-
-
-// import { ExampleForumAdapter } from './adapters/example-forum.adapter';
+ // import { ExampleForumAdapter } from './adapters/example-forum.adapter';
 import { GeminiAdapter } from './adapters/gemini.adapter';
 import { GitHubCopilotAdapter } from './adapters/ghcopilot.adapter';
 import { DeepSeekAdapter } from './adapters/deepseek.adapter';
@@ -30,9 +28,7 @@ import { KimiAdapter } from './adapters/kimi.adapter';
 import { ZAdapter } from './adapters/z.adapter';
 import { QwenAdapter } from './adapters/qwenchat.adapter';
 import { RemoteConfigPlugin } from './remote-config.plugin';
-
-
-const logger = createLogger('PluginRegistry');
+ const logger = createLogger('PluginRegistry');
 
 // Types for lazy initialization
 interface AdapterFactory {
@@ -79,22 +75,16 @@ class PluginRegistry {
 
       // Register built-in adapters
       await this.registerBuiltInAdapters();
-
-      eventBus.emit('plugin:registry-initialized', { registeredPlugins: this.plugins.size, timestamp: Date.now() });
-
-      logger.debug('[PluginRegistry] Initialized with', this.plugins.size, 'plugins');
+ eventBus.emit('plugin:registry-initialized', { registeredPlugins: this.plugins.size, timestamp: Date.now() });
+ logger.debug('[PluginRegistry] Initialized with', this.plugins.size, 'plugins');
     } catch (error) {
       // Reset initialization flag on error
       this.isInitialized = false;
       this.context = null;
-
-      const errorMessage = error instanceof Error ? error.message : 'Unknown initialization error';
+ const errorMessage = error instanceof Error ? error.message : 'Unknown initialization error';
       globalErrorHandler.handleError(
         error as Error,
-        {
-          component: 'plugin-registry',
-          operation: 'initialization',
-          source: '[PluginRegistry]',
+        { component: 'plugin-registry', operation: 'initialization', source: '[PluginRegistry]',
           details: { pluginCount: this.plugins.size, errorMessage }
         }
       );
@@ -105,11 +95,9 @@ class PluginRegistry {
   private setupEventListeners(): void {
     if (!this.context) return;
 
-    // Listen for site changes to auto-activate plugins
-    const unsubscribeSiteChange = eventBus.on('app:site-changed', async ({ hostname }: EventMap['app:site-changed']) => {
+    // Listen for site changes to auto-activate plugins const unsubscribeSiteChange = eventBus.on('app:site-changed', async ({ hostname }: EventMap['app:site-changed']) => {
       logger.debug(` Site change event received for ${hostname}, initial activation flag: ${this.isPerformingInitialActivation}`);
-      
-      // Skip if we're in the middle of initial activation to prevent race conditions
+       // Skip if we're in the middle of initial activation to prevent race conditions
       if (this.isPerformingInitialActivation) {
         logger.debug(` Skipping site-change activation for ${hostname} (initial activation in progress)`);
         return;
@@ -124,8 +112,7 @@ class PluginRegistry {
       await this.activatePlugin(pluginName);
     });
 
-    // Listen for plugin deactivation requests
-    const unsubscribeDeactivation = eventBus.on('plugin:deactivation-requested', async ({ pluginName }: EventMap['plugin:deactivation-requested']) => {
+    // Listen for plugin deactivation requests const unsubscribeDeactivation = eventBus.on('plugin:deactivation-requested', async ({ pluginName }: EventMap['plugin:deactivation-requested']) => {
       if (this.activePlugin?.name === pluginName) {
         await this.deactivateCurrentPlugin();
       }
@@ -137,8 +124,7 @@ class PluginRegistry {
   }
 
   async register(plugin: AdapterPlugin, config?: Partial<AdapterConfig>): Promise<void> {
-    if (!this.isInitialized || !this.context) {
-      throw new Error('Plugin registry not initialized');
+    if (!this.isInitialized || !this.context) { throw new Error('Plugin registry not initialized');
     }
 
     const pluginName = plugin.name;
@@ -157,8 +143,7 @@ class PluginRegistry {
         plugin,
         config: this.createPluginConfig(plugin, config),
         registeredAt: Date.now(),
-        lastUsedAt: undefined, // Initialize lastUsedAt
-        status: 'registered',
+        lastUsedAt: undefined, // Initialize lastUsedAt status: 'registered',
       };
 
       // Initialize plugin
@@ -181,8 +166,7 @@ class PluginRegistry {
         });
         logger.debug(` Also registered ${pluginName} in AdapterStore for React integration`);
       } catch (adapterStoreError) {
-        logger.warn(` Failed to register ${pluginName} in AdapterStore:`, adapterStoreError);
-        // Don't fail the entire registration if AdapterStore registration fails
+        logger.warn(` Failed to register ${pluginName} in AdapterStore:`, adapterStoreError); // Don't fail the entire registration if AdapterStore registration fails
       }
 
       eventBus.emit('plugin:registered', { name: pluginName, version: plugin.version });
@@ -190,17 +174,13 @@ class PluginRegistry {
       logger.debug(` Registered plugin: ${pluginName} v${plugin.version}`);
 
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Unknown registration error';
+       const errorMessage = error instanceof Error ? error.message : 'Unknown registration error';
       globalErrorHandler.handleError(
         error as Error,
-        { 
-          component: 'plugin-registry',
-          operation: 'registration', 
-          source: '[PluginRegistry]',
+        {  component: 'plugin-registry', operation: 'registration',  source: '[PluginRegistry]',
           details: { pluginName, error: errorMessage } 
         }
-      );
-      eventBus.emit('adapter:error', { name: pluginName, error: errorMessage });
+      ); eventBus.emit('adapter:error', { name: pluginName, error: errorMessage });
 
       throw new Error(`Failed to register plugin ${pluginName}: ${errorMessage}`);
     }
@@ -210,8 +190,7 @@ class PluginRegistry {
    * Register an adapter factory for lazy initialization
    */
   registerAdapterFactory(factory: AdapterFactory): void {
-    if (!this.isInitialized) {
-      throw new Error('Plugin registry not initialized');
+    if (!this.isInitialized) { throw new Error('Plugin registry not initialized');
     }
 
     const factoryName = factory.name;
@@ -239,7 +218,7 @@ class PluginRegistry {
       logger.debug(` Registered adapter factory: ${factoryName} v${factory.version}`);
 
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Unknown factory registration error';
+       const errorMessage = error instanceof Error ? error.message : 'Unknown factory registration error';
       logger.error(` Failed to register adapter factory ${factoryName}:`, errorMessage);
       throw new Error(`Failed to register adapter factory ${factoryName}: ${errorMessage}`);
     }
@@ -261,8 +240,7 @@ class PluginRegistry {
       
       // Register the initialized adapter
       await this.register(adapter, factoryRegistration.factory.config);
-      
-      // Remove from factory registry since it's now initialized
+       // Remove from factory registry since it's now initialized
       this.adapterFactories.delete(factoryName);
       
       logger.debug(` Successfully initialized adapter: ${factoryName}`);
@@ -273,10 +251,7 @@ class PluginRegistry {
       logger.error(` Failed to initialize adapter ${factoryName}:`, errorMessage);
       globalErrorHandler.handleError(
         error as Error,
-        {
-          component: 'plugin-registry',
-          operation: 'lazy-initialization',
-          source: '[PluginRegistry]',
+        { component: 'plugin-registry', operation: 'lazy-initialization', source: '[PluginRegistry]',
           details: { factoryName, error: errorMessage }
         }
       );
@@ -302,19 +277,15 @@ class PluginRegistry {
 
       // Remove from registry
       this.plugins.delete(pluginName);
-
-      eventBus.emit('plugin:unregistered', { name: pluginName });
+ eventBus.emit('plugin:unregistered', { name: pluginName });
 
       logger.debug(` Unregistered plugin: ${pluginName}`);
 
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Unknown unregistration error';
+       const errorMessage = error instanceof Error ? error.message : 'Unknown unregistration error';
       globalErrorHandler.handleError(
         error as Error,
-        { 
-          component: 'plugin-registry',
-          operation: 'unregistration', 
-          source: '[PluginRegistry]',
+        {  component: 'plugin-registry', operation: 'unregistration',  source: '[PluginRegistry]',
           details: { pluginName, error: errorMessage } 
         }
       );
@@ -327,8 +298,7 @@ class PluginRegistry {
       this.isPerformingInitialActivation = true;
     }
     
-    try {
-      logger.debug(` activatePluginForHostname called for: ${hostname}${isInitialActivation ? ' (initial)' : ''}`);
+    try { logger.debug(` activatePluginForHostname called for: ${hostname}${isInitialActivation ? ' (initial)' : ''}`);
       
       const plugin = await this.findOrInitializePluginForHostname(hostname);
       
@@ -339,8 +309,7 @@ class PluginRegistry {
         }
         return;
       }
-
-      // Don't reactivate if already active
+ // Don't reactivate if already active
       if (this.activePlugin?.name === plugin.name) {
         logger.debug(` Plugin ${plugin.name} already active for ${hostname}, skipping activation`);
         return;
@@ -370,8 +339,7 @@ class PluginRegistry {
     try {
       // Deactivate current plugin first (but never deactivate sidebar-plugin)
       if (this.activePlugin && this.activePlugin.name !== pluginName) {
-        // Skip deactivation if current plugin is sidebar-plugin (it should persist)
-        if (this.activePlugin.name !== 'sidebar-plugin') {
+        // Skip deactivation if current plugin is sidebar-plugin (it should persist) if (this.activePlugin.name !== 'sidebar-plugin') {
           await this.deactivateCurrentPlugin();
         }
       }
@@ -382,14 +350,12 @@ class PluginRegistry {
       await performanceMonitor.time(`plugin-activation-${pluginName}`, async () => {
         await pluginInstance.activate();
       });
-
-      // Only set as activePlugin if it's not sidebar-plugin
+ // Only set as activePlugin if it's not sidebar-plugin
       // Sidebar-plugin persists alongside site adapters
       if (pluginName !== 'sidebar-plugin') {
         this.activePlugin = pluginInstance;
       }
-      registration.instance = pluginInstance;
-      registration.status = 'active';
+      registration.instance = pluginInstance; registration.status = 'active';
       registration.lastUsedAt = Date.now(); // Update last used timestamp
 
       // Also activate in the AdapterStore for React component integration
@@ -398,8 +364,7 @@ class PluginRegistry {
         await adapterStore.activateAdapter(pluginName);
         logger.debug(` Also activated ${pluginName} in AdapterStore for React integration`);
       } catch (adapterStoreError) {
-        logger.warn(` Failed to activate ${pluginName} in AdapterStore:`, adapterStoreError);
-        // Don't fail the entire activation if AdapterStore activation fails
+        logger.warn(` Failed to activate ${pluginName} in AdapterStore:`, adapterStoreError); // Don't fail the entire activation if AdapterStore activation fails
       }
 
       eventBus.emit('adapter:activated', {
@@ -410,19 +375,15 @@ class PluginRegistry {
       logger.debug(` Activated plugin: ${pluginName}`);
 
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Unknown activation error';
+       const errorMessage = error instanceof Error ? error.message : 'Unknown activation error';
       
       globalErrorHandler.handleError(
         error as Error,
-        { 
-          component: 'plugin-registry',
-          operation: 'activation', 
-          source: '[PluginRegistry]',
+        {  component: 'plugin-registry', operation: 'activation',  source: '[PluginRegistry]',
           details: { pluginName, error: errorMessage } 
         }
       );
-
-      eventBus.emit('plugin:activation-failed', { name: pluginName, error: errorMessage });
+ eventBus.emit('plugin:activation-failed', { name: pluginName, error: errorMessage });
 
       throw new Error(`Failed to activate plugin ${pluginName}: ${errorMessage}`);
     }
@@ -440,16 +401,13 @@ class PluginRegistry {
 
       // Also deactivate in the AdapterStore for React component integration
       try {
-        const adapterStore = useAdapterStore.getState();
-        await adapterStore.deactivateAdapter(pluginName, 'manual-deactivation');
+        const adapterStore = useAdapterStore.getState(); await adapterStore.deactivateAdapter(pluginName, 'manual-deactivation');
         logger.debug(` Also deactivated ${pluginName} in AdapterStore`);
       } catch (adapterStoreError) {
         logger.warn(` Failed to deactivate ${pluginName} in AdapterStore:`, adapterStoreError);
       }
-
-      eventBus.emit('adapter:deactivated', {
-        pluginName: pluginName,
-        reason: 'manual-deactivation',
+ eventBus.emit('adapter:deactivated', {
+        pluginName: pluginName, reason: 'manual-deactivation',
         timestamp: Date.now()
       });
 
@@ -457,18 +415,14 @@ class PluginRegistry {
       logger.debug(` Deactivated plugin: ${pluginName}`);
 
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Unknown deactivation error';
+       const errorMessage = error instanceof Error ? error.message : 'Unknown deactivation error';
       
-      globalErrorHandler.handleError(error as Error, { 
-        component: 'plugin-registry',
-        operation: 'deactivation', 
-        source: '[PluginRegistry]',
+      globalErrorHandler.handleError(error as Error, {  component: 'plugin-registry', operation: 'deactivation',  source: '[PluginRegistry]',
         details: { pluginName, error: errorMessage } 
       });
       // Force deactivation even on error
       this.activePlugin = null;
-      
-      eventBus.emit('adapter:error', { name: pluginName, error: errorMessage });
+       eventBus.emit('adapter:error', { name: pluginName, error: errorMessage });
     }
   }
 
@@ -486,24 +440,19 @@ class PluginRegistry {
         continue;
       }
       
-      // Special handling for SidebarPlugin - exclude it from hostname matching
-      if (plugin.name === 'sidebar-plugin') {
+      // Special handling for SidebarPlugin - exclude it from hostname matching if (plugin.name === 'sidebar-plugin') {
         logger.debug(` Skipping sidebar plugin: ${plugin.name}`);
         continue;
       }
-      
-      // Default to 'website-adapter' if type is not specified, filter out 'sidebar' and 'core-ui'
-      const pluginType = plugin.type || 'website-adapter';
-      logger.debug(` Checking plugin: ${plugin.name} (type: ${pluginType})`);
-      if (pluginType !== 'website-adapter') {
+       // Default to 'website-adapter' if type is not specified, filter out 'sidebar' and 'core-ui' const pluginType = plugin.type || 'website-adapter';
+      logger.debug(` Checking plugin: ${plugin.name} (type: ${pluginType})`); if (pluginType !== 'website-adapter') {
         logger.debug(` Skipping non-website-adapter plugin: ${plugin.name} (type: ${pluginType})`);
         continue; // Filter by plugin type
       }
 
       for (const ph of plugin.hostnames) {
         let match = false;
-        let matchLength = 0;
-        if (typeof ph === 'string') {
+        let matchLength = 0; if (typeof ph === 'string') {
           logger.debug(` Checking string hostname: ${ph} against ${hostname}`);
           if (hostname.includes(ph)) {
             match = true;
@@ -529,8 +478,7 @@ class PluginRegistry {
         }
       }
     }
-
-    logger.debug(` Best plugin match for ${hostname}:`, bestMatch?.name || 'none');
+ logger.debug(` Best plugin match for ${hostname}:`, bestMatch?.name || 'none');
     return bestMatch;
   }
 
@@ -543,16 +491,14 @@ class PluginRegistry {
     for (const [, factoryRegistration] of this.adapterFactories) {
       const { factory } = factoryRegistration;
       logger.debug(` Checking factory: ${factory.name} (type: ${factory.type}) with hostnames:`, factory.hostnames);
-      
-      if (factory.type !== 'website-adapter') {
+       if (factory.type !== 'website-adapter') {
         logger.debug(` Skipping factory ${factory.name} - not a website-adapter (type: ${factory.type})`);
         continue; // Filter by plugin type
       }
 
       for (const ph of factory.hostnames) {
         let match = false;
-        let matchLength = 0;
-        if (typeof ph === 'string') {
+        let matchLength = 0; if (typeof ph === 'string') {
           logger.debug(` Checking string hostname: ${ph} against ${hostname}`);
           if (hostname.includes(ph)) {
             match = true;
@@ -579,8 +525,7 @@ class PluginRegistry {
         }
       }
     }
-
-    logger.debug(` Best factory match for ${hostname}:`, bestMatchFactory?.name || 'none');
+ logger.debug(` Best factory match for ${hostname}:`, bestMatchFactory?.name || 'none');
     return bestMatchFactory;
   }
 
@@ -609,8 +554,7 @@ class PluginRegistry {
     return null;
   }
 
-  private validatePlugin(plugin: AdapterPlugin): void {
-    const required = ['name', 'version', 'hostnames', 'capabilities', 'initialize', 'activate', 'deactivate', 'cleanup'];
+  private validatePlugin(plugin: AdapterPlugin): void { const required = ['name', 'version', 'hostnames', 'capabilities', 'initialize', 'activate', 'deactivate', 'cleanup'];
     
     for (const prop of required) {
       if (!(prop in plugin)) {
@@ -618,16 +562,13 @@ class PluginRegistry {
       }
     }
 
-    if (!Array.isArray(plugin.hostnames) || plugin.hostnames.length === 0) {
-      throw new Error('Plugin must specify at least one hostname');
+    if (!Array.isArray(plugin.hostnames) || plugin.hostnames.length === 0) { throw new Error('Plugin must specify at least one hostname');
     }
 
-    if (!Array.isArray(plugin.capabilities) || plugin.capabilities.length === 0) {
-      throw new Error('Plugin must specify at least one capability');
+    if (!Array.isArray(plugin.capabilities) || plugin.capabilities.length === 0) { throw new Error('Plugin must specify at least one capability');
     }
 
-    // Type is optional, but if provided, it should be valid
-    if (plugin.type && !['sidebar', 'website-adapter', 'core-ui', 'extension'].includes(plugin.type)) {
+    // Type is optional, but if provided, it should be valid if (plugin.type && !['sidebar', 'website-adapter', 'core-ui', 'extension'].includes(plugin.type)) {
       throw new Error(`Plugin has invalid type: ${plugin.type}`);
     }
 
@@ -636,8 +577,7 @@ class PluginRegistry {
     // as they are optional in the AdapterPlugin interface.
   }
 
-  private validateAdapterFactory(factory: AdapterFactory): void {
-    const required = ['name', 'version', 'type', 'hostnames', 'capabilities', 'create'];
+  private validateAdapterFactory(factory: AdapterFactory): void { const required = ['name', 'version', 'type', 'hostnames', 'capabilities', 'create'];
     
     for (const prop of required) {
       if (!(prop in factory)) {
@@ -645,16 +585,12 @@ class PluginRegistry {
       }
     }
 
-    if (!Array.isArray(factory.hostnames) || factory.hostnames.length === 0) {
-      throw new Error('Adapter factory must specify at least one hostname');
+    if (!Array.isArray(factory.hostnames) || factory.hostnames.length === 0) { throw new Error('Adapter factory must specify at least one hostname');
     }
 
-    if (!Array.isArray(factory.capabilities) || factory.capabilities.length === 0) {
-      throw new Error('Adapter factory must specify at least one capability');
+    if (!Array.isArray(factory.capabilities) || factory.capabilities.length === 0) { throw new Error('Adapter factory must specify at least one capability');
     }
-
-    if (typeof factory.create !== 'function') {
-      throw new Error('Adapter factory must have a create function');
+ if (typeof factory.create !== 'function') { throw new Error('Adapter factory must have a create function');
     }
   }
 
@@ -686,30 +622,20 @@ class PluginRegistry {
 
             // Register Remote Config Plugin (core extension functionality) - EAGERLY INITIALIZED
       const remoteConfigPlugin = new RemoteConfigPlugin();
-      await this.register(remoteConfigPlugin, {
-        id: 'remote-config-plugin',
-        name: 'Remote Config Plugin',
-        description: 'Firebase Remote Config integration for feature flags and notifications',
-        version: '1.0.0',
+      await this.register(remoteConfigPlugin, { id: 'remote-config-plugin', name: 'Remote Config Plugin', description: 'Firebase Remote Config integration for feature flags and notifications', version: '1.0.0',
         enabled: true,
         priority: 2, // High priority for core functionality
-        settings: {
-          logLevel: 'info',
+        settings: { logLevel: 'info',
           autoActivate: true,
         },
       });
 
       // Register SidebarPlugin first (highest priority core functionality) - EAGERLY INITIALIZED
       const sidebarPlugin = new SidebarPlugin();
-      await this.register(sidebarPlugin, {
-        id: 'sidebar-plugin',
-        name: 'Sidebar Plugin',
-        description: 'Universal sidebar management plugin that auto-shows on page load',
-        version: '1.0.0',
+      await this.register(sidebarPlugin, { id: 'sidebar-plugin', name: 'Sidebar Plugin', description: 'Universal sidebar management plugin that auto-shows on page load', version: '1.0.0',
         enabled: true,
         priority: 1, // Highest priority for core UI functionality
-        settings: {
-          logLevel: 'info',
+        settings: { logLevel: 'info',
           autoShow: true,
           showDelay: 1000,
         },
@@ -719,221 +645,120 @@ class PluginRegistry {
       // Only initialize these adapters when their hostname is visited
 
       // Register GeminiAdapter factory for Google Gemini
-      this.registerAdapterFactory({
-        name: 'gemini-adapter',
-        version: '1.0.0',
-        type: 'website-adapter',
-        hostnames: ['gemini.google.com'],
-        capabilities: ['text-insertion', 'form-submission', 'file-attachment'],
+      this.registerAdapterFactory({ name: 'gemini-adapter', version: '1.0.0', type: 'website-adapter', hostnames: ['gemini.google.com'], capabilities: ['text-insertion', 'form-submission', 'file-attachment'],
         create: () => new GeminiAdapter(),
-        config: {
-          id: 'gemini-adapter',
-          name: 'Gemini Adapter',
-          description: 'Specialized adapter for Google Gemini with chat input, form submission, and file attachment support',
-          version: '1.0.0',
+        config: { id: 'gemini-adapter', name: 'Gemini Adapter', description: 'Specialized adapter for Google Gemini with chat input, form submission, and file attachment support', version: '1.0.0',
           enabled: true,
           priority: 5,
-          settings: {
-            logLevel: 'info',
+          settings: { logLevel: 'info',
             urlCheckInterval: 1000,
           },
         },
       });
 
       // Register GitHubCopilotAdapter factory for GitHub Copilot
-      this.registerAdapterFactory({
-        name: 'github-copilot-adapter',
-        version: '2.0.0',
-        type: 'website-adapter',
-        hostnames: ['github.com'],
-        // capabilities: ['text-insertion', 'form-submission', 'file-attachment'],
-        capabilities: ['text-insertion', 'form-submission'],
+      this.registerAdapterFactory({ name: 'github-copilot-adapter', version: '2.0.0', type: 'website-adapter', hostnames: ['github.com'], // capabilities: ['text-insertion', 'form-submission', 'file-attachment'], capabilities: ['text-insertion', 'form-submission'],
         create: () => new GitHubCopilotAdapter(),
-        config: {
-          id: 'github-copilot-adapter',
-          name: 'GitHub Copilot Adapter',
-          description: 'Specialized adapter for GitHub Copilot with chat input, form submission, and file attachment support',
-          version: '2.0.0',
+        config: { id: 'github-copilot-adapter', name: 'GitHub Copilot Adapter', description: 'Specialized adapter for GitHub Copilot with chat input, form submission, and file attachment support', version: '2.0.0',
           enabled: true,
           priority: 5,
-          settings: {
-            logLevel: 'info',
+          settings: { logLevel: 'info',
             urlCheckInterval: 1000,
           },
         },
       });
 
       // Register ChatGPTAdapter factory for OpenAI ChatGPT
-      this.registerAdapterFactory({
-        name: 'chatgpt-adapter',
-        version: '2.0.0',
-        type: 'website-adapter',
-        hostnames: ['chatgpt.com'],
-        capabilities: ['text-insertion', 'form-submission', 'file-attachment'],
+      this.registerAdapterFactory({ name: 'chatgpt-adapter', version: '2.0.0', type: 'website-adapter', hostnames: ['chatgpt.com'], capabilities: ['text-insertion', 'form-submission', 'file-attachment'],
         create: () => new ChatGPTAdapter(),
-        config: {
-          id: 'chatgpt-adapter',
-          name: 'ChatGPT Adapter',
-          description: 'Specialized adapter for OpenAI ChatGPT with chat input, form submission, and file attachment support',
-          version: '2.0.0',
+        config: { id: 'chatgpt-adapter', name: 'ChatGPT Adapter', description: 'Specialized adapter for OpenAI ChatGPT with chat input, form submission, and file attachment support', version: '2.0.0',
           enabled: true,
           priority: 5,
-          settings: {
-            logLevel: 'info',
+          settings: { logLevel: 'info',
             urlCheckInterval: 1000,
           },
         },
       });
 
       // Register DeepSeekAdapter factory for DeepSeek Chat
-      this.registerAdapterFactory({
-        name: 'deepseek-adapter',
-        version: '2.0.0',
-        type: 'website-adapter',
-        hostnames: ['chat.deepseek.com'],
-        capabilities: ['text-insertion', 'form-submission', 'file-attachment'],
+      this.registerAdapterFactory({ name: 'deepseek-adapter', version: '2.0.0', type: 'website-adapter', hostnames: ['chat.deepseek.com'], capabilities: ['text-insertion', 'form-submission', 'file-attachment'],
         create: () => new DeepSeekAdapter(),
-        config: {
-          id: 'deepseek-adapter',
-          name: 'DeepSeek Adapter',
-          description: 'Specialized adapter for DeepSeek Chat with chat input, form submission, and file attachment support',
-          version: '2.0.0',
+        config: { id: 'deepseek-adapter', name: 'DeepSeek Adapter', description: 'Specialized adapter for DeepSeek Chat with chat input, form submission, and file attachment support', version: '2.0.0',
           enabled: true,
           priority: 5,
-          settings: {
-            logLevel: 'info',
+          settings: { logLevel: 'info',
             urlCheckInterval: 1000,
           },
         },
       });
 
       // Register GrokAdapter factory for Grok (X.com/Grok.com)
-      this.registerAdapterFactory({
-        name: 'grok-adapter',
-        version: '2.0.0',
-        type: 'website-adapter',
-        hostnames: ['grok.com', /x\.com.*grok/, /twitter\.com.*grok/],
-        capabilities: ['text-insertion', 'form-submission', 'file-attachment'],
+      this.registerAdapterFactory({ name: 'grok-adapter', version: '2.0.0', type: 'website-adapter', hostnames: ['grok.com', /x\.com.*grok/, /twitter\.com.*grok/], capabilities: ['text-insertion', 'form-submission', 'file-attachment'],
         create: () => new GrokAdapter(),
-        config: {
-          id: 'grok-adapter',
-          name: 'Grok Adapter',
-          description: 'Specialized adapter for Grok (X.com/Grok.com) with chat input, form submission, and file attachment support',
-          version: '2.0.0',
+        config: { id: 'grok-adapter', name: 'Grok Adapter', description: 'Specialized adapter for Grok (X.com/Grok.com) with chat input, form submission, and file attachment support', version: '2.0.0',
           enabled: true,
           priority: 5,
-          settings: {
-            logLevel: 'info',
+          settings: { logLevel: 'info',
             urlCheckInterval: 1000,
           },
         },
       });
 
       // Register PerplexityAdapter factory for Perplexity AI
-      this.registerAdapterFactory({
-        name: 'perplexity-adapter',
-        version: '2.0.0',
-        type: 'website-adapter',
-        hostnames: ['perplexity.ai'],
-        capabilities: ['text-insertion', 'form-submission', 'file-attachment'],
+      this.registerAdapterFactory({ name: 'perplexity-adapter', version: '2.0.0', type: 'website-adapter', hostnames: ['perplexity.ai'], capabilities: ['text-insertion', 'form-submission', 'file-attachment'],
         create: () => new PerplexityAdapter(),
-        config: {
-          id: 'perplexity-adapter',
-          name: 'Perplexity Adapter',
-          description: 'Specialized adapter for Perplexity AI with chat input, form submission, and file attachment support',
-          version: '2.0.0',
+        config: { id: 'perplexity-adapter', name: 'Perplexity Adapter', description: 'Specialized adapter for Perplexity AI with chat input, form submission, and file attachment support', version: '2.0.0',
           enabled: true,
           priority: 5,
-          settings: {
-            logLevel: 'info',
+          settings: { logLevel: 'info',
             urlCheckInterval: 1000,
           },
         },
       });
 
       // Register AIStudioAdapter factory for Google AI Studio
-      this.registerAdapterFactory({
-        name: 'aistudio-adapter',
-        version: '2.0.0',
-        type: 'website-adapter',
-        hostnames: ['aistudio.google.com'],
-        capabilities: ['text-insertion', 'form-submission', 'file-attachment'],
+      this.registerAdapterFactory({ name: 'aistudio-adapter', version: '2.0.0', type: 'website-adapter', hostnames: ['aistudio.google.com'], capabilities: ['text-insertion', 'form-submission', 'file-attachment'],
         create: () => new AIStudioAdapter(),
-        config: {
-          id: 'aistudio-adapter',
-          name: 'AI Studio Adapter',
-          description: 'Specialized adapter for Google AI Studio with chat input, form submission, and file attachment support',
-          version: '2.0.0',
+        config: { id: 'aistudio-adapter', name: 'AI Studio Adapter', description: 'Specialized adapter for Google AI Studio with chat input, form submission, and file attachment support', version: '2.0.0',
           enabled: true,
           priority: 5,
-          settings: {
-            logLevel: 'info',
+          settings: { logLevel: 'info',
             urlCheckInterval: 1000,
           },
         },
       });
 
       // Register OpenRouterAdapter factory for OpenRouter
-      this.registerAdapterFactory({
-        name: 'openrouter-adapter',
-        version: '2.0.0',
-        type: 'website-adapter',
-        hostnames: ['openrouter.ai'],
-        capabilities: ['text-insertion', 'form-submission', 'file-attachment'],
+      this.registerAdapterFactory({ name: 'openrouter-adapter', version: '2.0.0', type: 'website-adapter', hostnames: ['openrouter.ai'], capabilities: ['text-insertion', 'form-submission', 'file-attachment'],
         create: () => new OpenRouterAdapter(),
-        config: {
-          id: 'openrouter-adapter',
-          name: 'OpenRouter Adapter',
-          description: 'Specialized adapter for OpenRouter with chat input, form submission, and file attachment support',
-          version: '2.0.0',
+        config: { id: 'openrouter-adapter', name: 'OpenRouter Adapter', description: 'Specialized adapter for OpenRouter with chat input, form submission, and file attachment support', version: '2.0.0',
           enabled: true,
           priority: 5,
-          settings: {
-            logLevel: 'info',
+          settings: { logLevel: 'info',
             urlCheckInterval: 1000,
           },
         },
       });
 
       // Register T3ChatAdapter factory for T3 Chat
-      this.registerAdapterFactory({
-        name: 't3chat-adapter',
-        version: '2.0.0',
-        type: 'website-adapter',
-        hostnames: ['t3.chat'],
-        capabilities: ['text-insertion', 'form-submission', 'file-attachment'],
+      this.registerAdapterFactory({ name: 't3chat-adapter', version: '2.0.0', type: 'website-adapter', hostnames: ['t3.chat'], capabilities: ['text-insertion', 'form-submission', 'file-attachment'],
         create: () => new T3ChatAdapter(),
-        config: {
-          id: 't3chat-adapter',
-          name: 'T3Chat Adapter',
-          description: 'Specialized adapter for T3 Chat with chat input, form submission, and file attachment support',
-          version: '2.0.0',
+        config: { id: 't3chat-adapter', name: 'T3Chat Adapter', description: 'Specialized adapter for T3 Chat with chat input, form submission, and file attachment support', version: '2.0.0',
           enabled: true,
           priority: 5,
-          settings: {
-            logLevel: 'info',
+          settings: { logLevel: 'info',
             urlCheckInterval: 1000,
           },
         },
       });
 
       // Register MistralAdapter factory for Mistral Chat
-      this.registerAdapterFactory({
-        name: 'mistralchat-adapter',
-        version: '2.0.0',
-        type: 'website-adapter',
-        hostnames: ['chat.mistral.ai'],
-        capabilities: ['text-insertion', 'form-submission', 'file-attachment'],
+      this.registerAdapterFactory({ name: 'mistralchat-adapter', version: '2.0.0', type: 'website-adapter', hostnames: ['chat.mistral.ai'], capabilities: ['text-insertion', 'form-submission', 'file-attachment'],
         create: () => new MistralAdapter(),
-        config: {
-          id: 'mistralchat-adapter',
-          name: 'Mistral Adapter',
-          description: 'Specialized adapter for Mistral chat with chat input, form submission, and file attachment support',
-          version: '2.0.0',
+        config: { id: 'mistralchat-adapter', name: 'Mistral Adapter', description: 'Specialized adapter for Mistral chat with chat input, form submission, and file attachment support', version: '2.0.0',
           enabled: true,
           priority: 5,
-          settings: {
-            logLevel: 'info',
+          settings: { logLevel: 'info',
             urlCheckInterval: 1000,
           },
         },
@@ -941,22 +766,12 @@ class PluginRegistry {
 
 
       // Register KimiAdapter factory for Kimi AI
-      this.registerAdapterFactory({
-        name: 'kimi-adapter',
-        version: '2.0.0',
-        type: 'website-adapter',
-        hostnames: ['kimi.com'],
-        capabilities: ['text-insertion', 'form-submission', 'file-attachment'],
+      this.registerAdapterFactory({ name: 'kimi-adapter', version: '2.0.0', type: 'website-adapter', hostnames: ['kimi.com'], capabilities: ['text-insertion', 'form-submission', 'file-attachment'],
         create: () => new KimiAdapter(),
-        config: {
-          id: 'kimi-adapter',
-          name: 'Kimi Adapter',
-          description: 'Specialized adapter for Kimi AI with chat input, form submission, and file attachment support',
-          version: '2.0.0',
+        config: { id: 'kimi-adapter', name: 'Kimi Adapter', description: 'Specialized adapter for Kimi AI with chat input, form submission, and file attachment support', version: '2.0.0',
           enabled: true,
           priority: 5,
-          settings: {
-            logLevel: 'info',
+          settings: { logLevel: 'info',
             urlCheckInterval: 1000,
           },
         },
@@ -964,44 +779,24 @@ class PluginRegistry {
 
       
     // Register ZAdapter factory for z AI
-      this.registerAdapterFactory({
-        name: 'z-adapter',
-        version: '2.0.0',
-        type: 'website-adapter',
-        hostnames: ['z.ai'],
-        capabilities: ['text-insertion', 'form-submission', 'file-attachment'],
+      this.registerAdapterFactory({ name: 'z-adapter', version: '2.0.0', type: 'website-adapter', hostnames: ['z.ai'], capabilities: ['text-insertion', 'form-submission', 'file-attachment'],
         create: () => new ZAdapter(),
-        config: {
-          id: 'z-adapter',
-          name: 'Z Adapter',
-          description: 'Specialized adapter for Z (GLM) AI with chat input, form submission, and file attachment support',
-          version: '1.0.0',
+        config: { id: 'z-adapter', name: 'Z Adapter', description: 'Specialized adapter for Z (GLM) AI with chat input, form submission, and file attachment support', version: '1.0.0',
           enabled: true,
           priority: 5,
-          settings: {
-            logLevel: 'info',
+          settings: { logLevel: 'info',
             urlCheckInterval: 1000,
           },
         },
       });
 
       // Register QwenAdapter factory for Qwen AI
-      this.registerAdapterFactory({
-        name: 'qwen-adapter',
-        version: '2.0.0',
-        type: 'website-adapter',
-        hostnames: ['chat.qwen.ai'],
-        capabilities: ['text-insertion', 'form-submission', 'file-attachment'],
+      this.registerAdapterFactory({ name: 'qwen-adapter', version: '2.0.0', type: 'website-adapter', hostnames: ['chat.qwen.ai'], capabilities: ['text-insertion', 'form-submission', 'file-attachment'],
         create: () => new QwenAdapter(),
-        config: {
-          id: 'qwen-adapter',
-          name: 'Qwen Adapter',
-          description: 'Specialized adapter for Qwen AI with chat input, form submission, and file attachment support',
-          version: '2.0.0',
+        config: { id: 'qwen-adapter', name: 'Qwen Adapter', description: 'Specialized adapter for Qwen AI with chat input, form submission, and file attachment support', version: '2.0.0',
           enabled: true,
           priority: 5,
-          settings: {
-            logLevel: 'info',
+          settings: { logLevel: 'info',
             urlCheckInterval: 1000,
           },
         },
@@ -1009,8 +804,7 @@ class PluginRegistry {
 
       logger.debug(` Successfully registered SidebarPlugin (initialized) and ${this.adapterFactories.size} adapter factories (lazy)`);
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Unknown registration error';
-      logger.error('[PluginRegistry] Failed to register built-in adapters:', errorMessage);
+       const errorMessage = error instanceof Error ? error.message : 'Unknown registration error'; logger.error('[PluginRegistry] Failed to register built-in adapters:', errorMessage);
       throw new Error(`Built-in adapter registration failed: ${errorMessage}`);
     }
   }
@@ -1056,8 +850,7 @@ class PluginRegistry {
 
     const updatedConfig = { ...registration.config, ...config };
     registration.config = updatedConfig;
-    
-    eventBus.emit('plugin:config-updated', { name: pluginName, config: updatedConfig, timestamp: Date.now() });
+     eventBus.emit('plugin:config-updated', { name: pluginName, config: updatedConfig, timestamp: Date.now() });
   }
 
   setInitialActivationFlag(flag: boolean): void {
@@ -1090,7 +883,7 @@ class PluginRegistry {
           await registration.plugin.cleanup();
           logger.debug(` Cleaned up plugin: ${name}`);
         } catch (error) {
-          const errorMessage = error instanceof Error ? error.message : 'Unknown cleanup error';
+       const errorMessage = error instanceof Error ? error.message : 'Unknown cleanup error';
           logger.error(` Failed to cleanup plugin ${name}:`, errorMessage);
         }
       }
@@ -1105,7 +898,7 @@ class PluginRegistry {
           try {
             cleanup();
           } catch (error) {
-            logger.error('[PluginRegistry] Error during context cleanup:', error);
+       logger.error('[PluginRegistry] Error during context cleanup:', error);
           }
         }
         this.context.cleanupFunctions = [];
@@ -1115,11 +908,9 @@ class PluginRegistry {
       this.activePlugin = null;
       this.context = null;
       this.initializationPromise = null;
-      
-      logger.debug('[PluginRegistry] Cleanup completed');
+       logger.debug('[PluginRegistry] Cleanup completed');
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Unknown cleanup error';
-      logger.error('[PluginRegistry] Cleanup failed:', errorMessage);
+       const errorMessage = error instanceof Error ? error.message : 'Unknown cleanup error'; logger.error('[PluginRegistry] Cleanup failed:', errorMessage);
       throw error;
     }
   }
@@ -1149,8 +940,7 @@ export async function initializePluginRegistry(): Promise<void> {
           });
         }
         if (children) {
-          children.forEach(child => {
-            element.appendChild(typeof child === 'string' ? document.createTextNode(child) : child);
+          children.forEach(child => { element.appendChild(typeof child === 'string' ? document.createTextNode(child) : child);
           });
         }
         return element;
@@ -1179,8 +969,7 @@ export async function initializePluginRegistry(): Promise<void> {
           }, timeout);
         });
       },
-      injectCSS: (css: string, id?: string) => {
-        const style = document.createElement('style');
+      injectCSS: (css: string, id?: string) => { const style = document.createElement('style');
         style.textContent = css;
         if (id) style.id = id;
         document.head.appendChild(style);
@@ -1207,10 +996,8 @@ export async function initializePluginRegistry(): Promise<void> {
             return func(...args);
           }
         }) as T;
-      },
-      getUniqueId: (prefix: string = 'id') => `${prefix}-${Date.now()}-${Math.random().toString(36).substring(2, 11)}`,
-    },
-    chrome: typeof chrome !== 'undefined' ? {
+      }, getUniqueId: (prefix: string = 'id') => `${prefix}-${Date.now()}-${Math.random().toString(36).substring(2, 11)}`,
+    }, chrome: typeof chrome !== 'undefined' ? {
       runtime: chrome.runtime,
       storage: chrome.storage,
       tabs: chrome.tabs,
@@ -1218,11 +1005,7 @@ export async function initializePluginRegistry(): Promise<void> {
       runtime: {} as typeof chrome.runtime,
       storage: {} as typeof chrome.storage,
     },
-    logger: {
-      debug: (...args: any[]) => logger.debug('[Plugin]', ...args),
-      info: (...args: any[]) => logger.info('[Plugin]', ...args),
-      warn: (...args: any[]) => logger.warn('[Plugin]', ...args),
-      error: (...args: any[]) => logger.error('[Plugin]', ...args),
+    logger: { debug: (...args: any[]) => logger.debug('[Plugin]', ...args), info: (...args: any[]) => logger.info('[Plugin]', ...args), warn: (...args: any[]) => logger.warn('[Plugin]', ...args), error: (...args: any[]) => logger.error('[Plugin]', ...args),
     },
     cleanupFunctions: [],
   };

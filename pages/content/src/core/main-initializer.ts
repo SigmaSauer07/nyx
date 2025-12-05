@@ -1,7 +1,7 @@
 /**
  * Main Application Initializer (Session 10)
  *
- * This module orchestrates the complete initialization sequence for the MCP SuperAssistant
+ * This module orchestrates the complete initialization sequence for the Nyx
  * application, ensuring all components are initialized in the correct order with proper
  * dependency management and error handling.
  */
@@ -20,31 +20,27 @@ import { pluginRegistry, cleanupPluginSystem, createPluginContext } from '../plu
 import { initializeGlobalEventHandlers, cleanupGlobalEventHandlers } from '../events/event-handlers';
 import { logMessage } from '../utils/helpers';
 import { createLogger } from '@extension/shared/lib/logger';
-import { initializeAnalyticsListeners, startPeriodicSessionTracking, stopPeriodicSessionTracking } from '../analytics-listener';
+import {
+  initializeAnalyticsListeners,
+  startPeriodicSessionTracking,
+  stopPeriodicSessionTracking,
+} from '../analytics-listener';
 
-// Simple logger implementation
-
-const logger = createLogger('MainInitializer');
-
-// class Logger {
+// Simple logger implementation const logger = createLogger('MainInitializer'); // class Logger {
 //   constructor(private prefix: string) {}
-
 //   log(message: string, ...args: any[]): void {
 //     logMessage(`${this.prefix} ${message}`);
 //     if (args.length > 0) {
 //       logger.debug(...args);
 //     }
 //   }
-
 //   warn(message: string, ...args: any[]): void {
 //     logger.warn(`${this.prefix} ${message}`, ...args);
 //   }
-
 //   error(message: string, ...args: any[]): void {
 //     logger.error(`${this.prefix} ${message}`, ...args);
 //   }
 // }
-
 // const logger = new Logger('[MainInitializer]');
 
 let isInitialized = false;
@@ -60,6 +56,7 @@ async function initializeCoreServices(): Promise<void> {
   // 1. Environment Setup
   if (process.env.NODE_ENV === 'development') {
     logger.debug('Development mode enabled.');
+
     // Expose utilities to window for debugging if in a browser context
     if (typeof window !== 'undefined') {
       (window as any)._appDebug = {
@@ -118,24 +115,19 @@ async function initializeCoreServices(): Promise<void> {
   });
   logger.debug('All stores initialized.');
 }
-
 /**
  * Initialize plugin system with context
  */
 async function initializePluginSystem(): Promise<void> {
   logger.debug('Initializing plugin system...');
-
   await performanceMonitor.time('plugin-system-initialization', async () => {
-    // Create plugin context - the function only takes plugin name
-    const pluginContext = createPluginContext('system');
+    // Create plugin context - the function only takes plugin name const pluginContext = createPluginContext('system');
 
     // Initialize plugin registry with the context
     await pluginRegistry.initialize(pluginContext);
-
     logger.debug('Plugin system initialized successfully.');
   });
 }
-
 /**
  * Activate sidebar plugin for universal sidebar functionality
  */
@@ -144,17 +136,13 @@ async function activateSidebarPlugin(): Promise<void> {
 
   try {
     await performanceMonitor.time('sidebar-plugin-activation', async () => {
-      // Activate the sidebar plugin which will auto-show the sidebar
-      await pluginRegistry.activatePlugin('sidebar-plugin');
-      logger.debug('Sidebar plugin activated successfully.');
+      // Activate the sidebar plugin which will auto-show the sidebar await pluginRegistry.activatePlugin('sidebar-plugin'); logger.debug('Sidebar plugin activated successfully.');
     });
   } catch (error) {
-    logger.error('Failed to activate sidebar plugin:', error);
-    // Don't throw - sidebar is not critical for app functionality
+    logger.error('Failed to activate sidebar plugin:', error); // Don't throw - sidebar is not critical for app functionality
     // The app can still work without the sidebar
   }
 }
-
 /**
  * Initialize application state and trigger initial actions
  */
@@ -163,16 +151,13 @@ async function initializeApplicationState(): Promise<void> {
     logger.warn('Application state already initialized, skipping.');
     return;
   }
-  
   logger.debug('Initializing application state...');
-
   await performanceMonitor.time('app-state-initialization', async () => {
     // Initialize AppStore (loads settings, determines current site, etc.)
     if (!useAppStore.getState().isInitialized) {
       await useAppStore.getState().initialize();
       logger.debug('AppStore initialized (settings loaded, etc.).');
     }
-
     // Set current site information (if in a content script context)
     if (typeof window !== 'undefined' && window.location && window.location.hostname) {
       const hostname = window.location.hostname;
@@ -180,10 +165,10 @@ async function initializeApplicationState(): Promise<void> {
 
       // Import plugin registry first and set initial activation flag
       const { pluginRegistry } = await import('../plugins/plugin-registry');
-      
+
       // Set the flag before any operations that might trigger events
       pluginRegistry.setInitialActivationFlag(true);
-      
+
       try {
         // Update app store with current site (this will emit 'app:site-changed')
         useAppStore.getState().setCurrentSite({ site, host: hostname });
@@ -198,7 +183,6 @@ async function initializeApplicationState(): Promise<void> {
         pluginRegistry.setInitialActivationFlag(false);
       }
     }
-
     // Check for connection configuration and attempt initial connection
     const connectionStore = useConnectionStore.getState();
     const serverConfig = connectionStore.serverConfig;
@@ -212,11 +196,10 @@ async function initializeApplicationState(): Promise<void> {
       }, 'config-check');
     }
   });
-  
+
   isApplicationStateInitialized = true;
   logger.debug('Application state initialization completed.');
 }
-
 /**
  * Main application initialization function
  */
@@ -230,8 +213,7 @@ export async function applicationInit(): Promise<void> {
   logger.debug('Application initialization started...');
 
   try {
-    // Mark initialization start
-    performanceMonitor.mark('app-init-start');
+    // Mark initialization start performanceMonitor.mark('app-init-start');
 
     // Initialize core services first
     await initializeCoreServices();
@@ -254,8 +236,7 @@ export async function applicationInit(): Promise<void> {
     startPeriodicSessionTracking();
     performanceMonitor.mark('analytics-initialized');
 
-    // Mark initialization complete
-    performanceMonitor.mark('app-init-complete');
+    // Mark initialization complete performanceMonitor.mark('app-init-complete');
 
     // Measure total initialization time
     const initializationTime = performance.now() - initializationStartTime;
@@ -273,7 +254,6 @@ export async function applicationInit(): Promise<void> {
   } catch (error) {
     const initializationTime = performance.now() - initializationStartTime;
     logger.error(`Application initialization failed after ${initializationTime.toFixed(2)}ms:`, error);
-
     // The globalErrorHandler should catch this if it's set up to handle early errors
     globalErrorHandler.handleError(
       error instanceof Error ? error : new Error(String(error)),
@@ -284,7 +264,6 @@ export async function applicationInit(): Promise<void> {
       },
       'critical',
     );
-
     eventBus.emit('app:initialization-failed', {
       error: error instanceof Error ? error : new Error(String(error)),
       timestamp: Date.now(),
@@ -294,7 +273,6 @@ export async function applicationInit(): Promise<void> {
     throw error; // Re-throw to indicate failure if necessary
   }
 }
-
 /**
  * Application cleanup function
  */
@@ -303,7 +281,6 @@ export async function applicationCleanup(): Promise<void> {
     logger.warn('Application not initialized, nothing to clean up.');
     return;
   }
-
   logger.debug('Application cleanup started...');
 
   try {
@@ -328,32 +305,23 @@ export async function applicationCleanup(): Promise<void> {
     cleanupGlobalEventHandlers();
     logger.debug('Global event handlers cleaned up.');
 
-    // Clean up stores if they have cleanup methods
-    // Note: Zustand stores typically don't need explicit cleanup
+    // Clean up stores if they have cleanup methods // Note: Zustand stores typically don't need explicit cleanup
 
     performanceMonitor.mark('app-cleanup-complete');
 
     isInitialized = false;
     isApplicationStateInitialized = false;
     logger.debug('Application cleanup completed.');
-
-    eventBus.emit('app:shutdown', {
-      reason: 'Application cleanup initiated',
-      timestamp: Date.now(),
-    });
+    eventBus.emit('app:shutdown', { reason: 'Application cleanup initiated', timestamp: Date.now() });
   } catch (error) {
     logger.error('Error during application cleanup:', error);
     globalErrorHandler.handleError(
       error instanceof Error ? error : new Error(String(error)),
-      {
-        component: 'main-initializer',
-        operation: 'application-cleanup',
-      },
+      { component: 'main-initializer', operation: 'application-cleanup' },
       'high',
     );
   }
 }
-
 /**
  * Get initialization status
  */
@@ -370,7 +338,6 @@ export function getInitializationStatus(): {
     performanceStats: performanceMonitor.getStats(),
   };
 }
-
 /**
  * Force re-initialization (for development/testing)
  */
@@ -380,14 +347,11 @@ export async function forceReinitialization(): Promise<void> {
   if (isInitialized) {
     await applicationCleanup();
   }
-
   // Reset the flag
   isInitialized = false;
 
-  // Re-initialize
-  await applicationInit();
+  // Re-initialize await applicationInit();
 }
-
 // Handle script unload or extension disable for cleanup (if applicable)
 if (typeof window !== 'undefined') {
   window.addEventListener('beforeunload', () => {
@@ -396,7 +360,6 @@ if (typeof window !== 'undefined') {
     });
   });
 }
-
 // Handle Chrome extension suspension (for background scripts)
 if (typeof chrome !== 'undefined' && chrome.runtime && chrome.runtime.onSuspend) {
   chrome.runtime.onSuspend.addListener(() => {
@@ -405,7 +368,6 @@ if (typeof chrome !== 'undefined' && chrome.runtime && chrome.runtime.onSuspend)
     });
   });
 }
-
 // Export initialization status and utilities for debugging
 export const initializationUtils = {
   getStatus: getInitializationStatus,

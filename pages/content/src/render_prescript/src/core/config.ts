@@ -33,8 +33,7 @@ export const DEFAULT_CONFIG: FunctionCallRendererConfig = {
   targetSelectors: ['pre', 'code'],
   enableDirectMonitoring: true,
   streamingContainerSelectors: ['.pre', '.code'],
-  function_result_selector: [], // Empty by default, will be populated by website-specific configs
-  // streamingContainerSelectors: ['.message-content', '.chat-message', '.message-body', '.message'],
+  function_result_selector: [], // Empty by default, will be populated by website-specific configs // streamingContainerSelectors: ['.message-content', '.chat-message', '.message-body', '.message'],
   updateThrottle: 25,
   streamingMonitoringInterval: 100,
   largeContentThreshold: Number.MAX_SAFE_INTEGER,
@@ -49,7 +48,7 @@ export const DEFAULT_CONFIG: FunctionCallRendererConfig = {
   enableStalledStreamDetection: true,
   stalledStreamTimeout: 3000, // 3 seconds before marking a stream as stalled
   stalledStreamCheckInterval: 1000, // Check every 1 second
-      // CodeMirror content extraction
+  // CodeMirror content extraction
   useCodeMirrorExtraction: false, // Default to false, enabled for specific sites
 };
 
@@ -62,8 +61,7 @@ export const WEBSITE_CONFIGS: Array<{
   config: Partial<FunctionCallRendererConfig>;
 }> = [
   {
-    // AI Studio specific configuration
-    urlPattern: 'aistudio',
+    // AI Studio specific configuration urlPattern: 'aistudio',
     config: {
       targetSelectors: ['pre'],
       streamingContainerSelectors: ['.pre'],
@@ -81,11 +79,7 @@ export const WEBSITE_CONFIGS: Array<{
   {
     urlPattern: 'gemini',
     config: {
-      // targetSelectors: ['code-block'],
-      // streamingContainerSelectors: ['.code-block'],
-      targetSelectors: ['pre'],
-      streamingContainerSelectors: ['pre'],
-      function_result_selector: ['div.query-content'],
+      // targetSelectors: ['code-block'], // streamingContainerSelectors: ['.code-block'], targetSelectors: ['pre'], streamingContainerSelectors: ['pre'], function_result_selector: ['div.query-content'],
     },
   },
   {
@@ -102,105 +96,94 @@ export const WEBSITE_CONFIGS: Array<{
       targetSelectors: ['pre'],
       streamingContainerSelectors: ['pre'],
       function_result_selector: [
-        'div.min-w-0.w-full.overflow-hidden'
-        // 'div.flex.max-w-full.flex-col.relative.overflow-auto.gap-1.items-end',
-        // 'div.flex',
-        // 'div.flex.items-end',
+        'div.min-w-0.w-full.overflow-hidden', // 'div.flex.max-w-full.flex-col.relative.overflow-auto.gap-1.items-end', // 'div.flex', // 'div.flex.items-end',
       ],
-        },
-      },
-      {
-        urlPattern: 'chatgpt.com',
-        config: {
+    },
+  },
+  {
+    urlPattern: 'chatgpt.com',
+    config: {
       targetSelectors: ['pre'],
       streamingContainerSelectors: ['pre'],
       function_result_selector: ['div[data-message-author-role="user"]'],
-        },
-      },
-      {
-        urlPattern: 'chat.openai.com',
-        config: {
+    },
+  },
+  {
+    urlPattern: 'chat.openai.com',
+    config: {
       targetSelectors: ['pre'],
       streamingContainerSelectors: ['pre'],
       function_result_selector: ['div[data-message-author-role="user"]'],
-        },
-      },
-      {
-        urlPattern: 'kagi.com',
-        config: {
+    },
+  },
+  {
+    urlPattern: 'kagi.com',
+    config: {
       targetSelectors: ['.content pre', '.codehilite', 'pre'],
       streamingContainerSelectors: ['pre', '.content'],
       function_result_selector: ['div[data-author="user"]'],
-        },
-      },
-      {
-        urlPattern: 'chat.deepseek.com',
-        config: {
-      targetSelectors: ['pre','code'],
-      streamingContainerSelectors: ['pre','code'],
+    },
+  },
+  {
+    urlPattern: 'chat.deepseek.com',
+    config: {
+      targetSelectors: ['pre', 'code'],
+      streamingContainerSelectors: ['pre', 'code'],
       function_result_selector: ['div._9663006'],
-        },
-      },
-      {
-        urlPattern: 't3.chat',
-        config: {
+    },
+  },
+  {
+    urlPattern: 't3.chat',
+    config: {
       targetSelectors: ['pre'],
       streamingContainerSelectors: ['pre'],
       function_result_selector: ['div[aria-label="Your message"]'],
-        },
-      },
-      {
-        urlPattern: 'chat.mistral.ai',
-        config: {
+    },
+  },
+  {
+    urlPattern: 'chat.mistral.ai',
+    config: {
       targetSelectors: ['pre'],
       streamingContainerSelectors: ['pre'],
       function_result_selector: ['div[data-message-part-type="answer"]', '.select-text'],
-        },
-      },
-      {
-        urlPattern: 'github.com/copilot',
-        config: {
+    },
+  },
+  {
+    urlPattern: 'github.com/copilot',
+    config: {
       targetSelectors: ['pre'],
       streamingContainerSelectors: ['pre'],
-      function_result_selector: ['.UserMessage-module__container--cAvvK','.ChatMessage-module__userMessage--xvIFp'],
-        },
-      },
-      {
-        urlPattern: 'kimi.com',
-        config: {
+      function_result_selector: ['.UserMessage-module__container--cAvvK', '.ChatMessage-module__userMessage--xvIFp'],
+    },
+  },
+  {
+    urlPattern: 'kimi.com',
+    config: {
       targetSelectors: ['pre'],
       streamingContainerSelectors: ['pre'],
       function_result_selector: ['div[class*="user-content"]'],
-        },
-      },
-        {
-        urlPattern: 'chat.z.ai',
-        config: {
-      // targetSelectors: ['pre[id^="cm-hidden-pre-"]'],
-      // streamingContainerSelectors: ['pre[id^="cm-hidden-pre-"]'],
-      targetSelectors: ['pre'],
-      streamingContainerSelectors: ['pre'],
-      function_result_selector: ['div.chat-user'],
-      useCodeMirrorExtraction: true
-        },
-      },
-        {
-        urlPattern: 'chat.qwen.ai',
-        config: {
-      targetSelectors: ['pre','code',],
-      streamingContainerSelectors: ['pre','code'],
-      function_result_selector: ['.user-message-text-content', 'div.user-message-content'],
-      // function_result_selector: ['div.chat-user'],
-      useCodeMirrorExtraction: true
-        },
-      },
+    },
+  },
+  {
+    urlPattern: 'chat.z.ai',
+    config: {
+      // targetSelectors: ['pre[id^="cm-hidden-pre-"]'], // streamingContainerSelectors: ['pre[id^="cm-hidden-pre-"]'], targetSelectors: ['pre'], streamingContainerSelectors: ['pre'], function_result_selector: ['div.chat-user'],
+      useCodeMirrorExtraction: true,
+    },
+  },
+  {
+    urlPattern: 'chat.qwen.ai',
+    config: {
+      targetSelectors: ['pre', 'code'],
+      streamingContainerSelectors: ['pre', 'code'],
+      function_result_selector: ['.user-message-text-content', 'div.user-message-content'], // function_result_selector: ['div.chat-user'],
+      useCodeMirrorExtraction: true,
+    },
+  },
   // Add more website-specific configurations as needed
   // Example:
-  // {
-  //   urlPattern: 'example.com',
-  //   config: {
-  //     targetSelectors: ['.custom-selector'],
-  //     streamingContainerSelectors: ['.custom-container']
+  // { //   urlPattern: 'example.com',
+  //   config: { //     targetSelectors: ['.custom-selector'], //     streamingContainerSelectors: ['.custom-container']
   //   }
   // }
 ];
@@ -217,8 +200,7 @@ export function getConfig(): FunctionCallRendererConfig {
   for (const siteConfig of WEBSITE_CONFIGS) {
     const { urlPattern, config: overrides } = siteConfig;
 
-    // Check if URL matches the pattern
-    const matches = typeof urlPattern === 'string' ? currentUrl.includes(urlPattern) : urlPattern.test(currentUrl);
+    // Check if URL matches the pattern const matches = typeof urlPattern === 'string' ? currentUrl.includes(urlPattern) : urlPattern.test(currentUrl);
 
     if (matches) {
       // Apply overrides to the default config

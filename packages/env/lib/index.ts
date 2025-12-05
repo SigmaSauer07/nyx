@@ -5,6 +5,4 @@ export const baseEnv =
     path: `${import.meta.dirname}/../../../../.env`,
   }).parsed ?? {};
 
-export const dynamicEnvValues = {
-  CEB_NODE_ENV: baseEnv.CEB_DEV === 'true' ? 'development' : 'production',
-} as const;
+export const dynamicEnvValues = { CEB_NODE_ENV: baseEnv.CEB_DEV === 'true' ? 'development' : 'production' } as const;

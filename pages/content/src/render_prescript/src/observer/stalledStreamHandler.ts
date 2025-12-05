@@ -3,11 +3,9 @@ import { streamingLastUpdated, checkStreamingUpdates } from './streamObserver';
 import { renderedFunctionBlocks, renderFunctionCall } from '../renderer/index';
 import { createLogger } from '@extension/shared/lib/logger';
 
-// Extend Window interface to include our custom properties
-
-const logger = createLogger('StalledStreamHandler');
-
-declare global {
+// Extend Window interface to include our custom properties const logger = createLogger('StalledStreamHandler');
+  
+  declare global {
   interface Window {
     _isProcessing?: boolean;
     _stalledStreams?: Set<string>;
@@ -34,55 +32,20 @@ export let stalledStreamCheckTimer: ReturnType<typeof setInterval> | null = null
  * @returns SVG element
  */
 const createStalledSvgIcon = (isPreExisting: boolean): SVGSVGElement => {
-  // Create SVG element
-  const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-  svg.setAttribute('width', '16');
-  svg.setAttribute('height', '16');
-  svg.setAttribute('viewBox', '0 0 16 16');
-  svg.setAttribute('fill', 'none');
-
-  if (isPreExisting) {
-    // Clock icon for pre-existing incomplete blocks
-    const path1 = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-    path1.setAttribute('d', 'M8 15A7 7 0 108 1a7 7 0 000 14z');
-    path1.setAttribute('stroke', 'currentColor');
-    path1.setAttribute('stroke-opacity', '0.8');
-    path1.setAttribute('stroke-width', '1.5');
-    path1.setAttribute('fill', 'none');
-
-    const path2 = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-    path2.setAttribute('d', 'M8 4v4.5l3 1.5');
-    path2.setAttribute('stroke', 'currentColor');
-    path2.setAttribute('stroke-opacity', '0.8');
-    path2.setAttribute('stroke-width', '1.5');
-    path2.setAttribute('stroke-linecap', 'round');
-    path2.setAttribute('stroke-linejoin', 'round');
-    path2.setAttribute('fill', 'none');
-
-    svg.appendChild(path1);
+  // Create SVG element const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg'); svg.setAttribute('width', '16'); svg.setAttribute('height', '16'); svg.setAttribute('viewBox', '0 0 16 16'); svg.setAttribute('fill', 'none');
+  
+    if (isPreExisting) {
+    // Clock icon for pre-existing incomplete blocks const path1 = document.createElementNS('http://www.w3.org/2000/svg', 'path'); path1.setAttribute('d', 'M8 15A7 7 0 108 1a7 7 0 000 14z'); path1.setAttribute('stroke', 'currentColor'); path1.setAttribute('stroke-opacity', '0.8'); path1.setAttribute('stroke-width', '1.5'); path1.setAttribute('fill', 'none');
+ const path2 = document.createElementNS('http://www.w3.org/2000/svg', 'path'); path2.setAttribute('d', 'M8 4v4.5l3 1.5'); path2.setAttribute('stroke', 'currentColor'); path2.setAttribute('stroke-opacity', '0.8'); path2.setAttribute('stroke-width', '1.5'); path2.setAttribute('stroke-linecap', 'round'); path2.setAttribute('stroke-linejoin', 'round'); path2.setAttribute('fill', 'none');
+  
+      svg.appendChild(path1);
     svg.appendChild(path2);
   } else {
-    // Warning icon for stalled streams
-    const path1 = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-    path1.setAttribute('d', 'M7.5 1.5l-5.6 8.8c-.5.8.1 1.7 1 1.7h11.2c.9 0 1.5-.9 1-1.7l-5.6-8.8c-.5-.7-1.5-.7-2 0z');
-    path1.setAttribute('stroke', 'currentColor');
-    path1.setAttribute('stroke-width', '1.5');
-    path1.setAttribute('fill', 'none');
-
-    const path2 = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-    path2.setAttribute('d', 'M8 6v2.5');
-    path2.setAttribute('stroke', 'currentColor');
-    path2.setAttribute('stroke-width', '1.5');
-    path2.setAttribute('stroke-linecap', 'round');
-    path2.setAttribute('fill', 'none');
-
-    const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-    circle.setAttribute('cx', '8');
-    circle.setAttribute('cy', '11');
-    circle.setAttribute('r', '0.75');
-    circle.setAttribute('fill', 'currentColor');
-
-    svg.appendChild(path1);
+    // Warning icon for stalled streams const path1 = document.createElementNS('http://www.w3.org/2000/svg', 'path'); path1.setAttribute('d', 'M7.5 1.5l-5.6 8.8c-.5.8.1 1.7 1 1.7h11.2c.9 0 1.5-.9 1-1.7l-5.6-8.8c-.5-.7-1.5-.7-2 0z'); path1.setAttribute('stroke', 'currentColor'); path1.setAttribute('stroke-width', '1.5'); path1.setAttribute('fill', 'none');
+ const path2 = document.createElementNS('http://www.w3.org/2000/svg', 'path'); path2.setAttribute('d', 'M8 6v2.5'); path2.setAttribute('stroke', 'currentColor'); path2.setAttribute('stroke-width', '1.5'); path2.setAttribute('stroke-linecap', 'round'); path2.setAttribute('fill', 'none');
+ const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle'); circle.setAttribute('cx', '8'); circle.setAttribute('cy', '11'); circle.setAttribute('r', '0.75'); circle.setAttribute('fill', 'currentColor');
+  
+      svg.appendChild(path1);
     svg.appendChild(path2);
     svg.appendChild(circle);
   }
@@ -96,13 +59,9 @@ const createStalledSvgIcon = (isPreExisting: boolean): SVGSVGElement => {
 export const detectPreExistingIncompleteBlocks = (): void => {
   if (!document.body) return; // Guard against calling before document.body is available
 
-  // Find all function blocks that are incomplete
-  const functionBlocks = document.querySelectorAll('.function-block.function-loading');
+  // Find all function blocks that are incomplete const functionBlocks = document.querySelectorAll('.function-block.function-loading');
 
-  // Also try to find potential function call content that might not be properly marked yet
-  const potentialFunctionCalls = Array.from(document.querySelectorAll('pre, code')).filter(el => {
-    const content = el.textContent || '';
-    return content.includes('<function_calls>') || content.includes('<invoke') || content.includes('<parameter');
+  // Also try to find potential function call content that might not be properly marked yet const potentialFunctionCalls = Array.from(document.querySelectorAll('pre, code')).filter(el => { const content = el.textContent || ''; return content.includes('<function_calls>') || content.includes('<invoke') || content.includes('<parameter');
   });
 
   // Create a set of elements to process
@@ -110,32 +69,21 @@ export const detectPreExistingIncompleteBlocks = (): void => {
 
   // Mark each block as pre-existing incomplete
   for (const block of elementsToProcess) {
-    const blockId =
-      block.getAttribute('data-block-id') || `pre-existing-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`;
+    const blockId = block.getAttribute('data-block-id') || `pre-existing-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`;
 
-    // Set block ID if not already present
-    if (!block.getAttribute('data-block-id')) {
-      block.setAttribute('data-block-id', blockId);
+    // Set block ID if not already present if (!block.getAttribute('data-block-id')) { block.setAttribute('data-block-id', blockId);
     }
 
     preExistingIncompleteBlocks.add(blockId);
 
     // Add an indicator to the block if needed
-    if (!block.querySelector(`.stalled-indicator[data-pre-existing="true"]`)) {
-      const indicator = document.createElement('div');
-      indicator.className = 'stalled-indicator';
-      indicator.setAttribute('data-stalled-for', blockId);
-      indicator.setAttribute('data-pre-existing', 'true');
-
-      const message = document.createElement('div');
-      message.className = 'stalled-message';
+    if (!block.querySelector(`.stalled-indicator[data-pre-existing="true"]`)) { const indicator = document.createElement('div'); indicator.className = 'stalled-indicator'; indicator.setAttribute('data-stalled-for', blockId); indicator.setAttribute('data-pre-existing', 'true');
+ const message = document.createElement('div'); message.className = 'stalled-message';
 
       // Create the SVG icon using DOM methods
       const svg = createStalledSvgIcon(true);
 
-      // Create and append the message text
-      const span = document.createElement('span');
-      span.textContent = 'This function call was incomplete when the page loaded.';
+      // Create and append the message text const span = document.createElement('span'); span.textContent = 'This function call was incomplete when the page loaded.';
 
       // Append elements
       message.appendChild(svg);
@@ -144,8 +92,7 @@ export const detectPreExistingIncompleteBlocks = (): void => {
       block.appendChild(indicator);
     }
 
-    // Try to initiate rendering for this block
-    const event = new CustomEvent('render-function-call', {
+    // Try to initiate rendering for this block const event = new CustomEvent('render-function-call', {
       detail: { blockId, element: block },
     });
     document.dispatchEvent(event);
@@ -160,10 +107,8 @@ export const createStalledIndicator = (blockId: string, block: HTMLElement, isAb
   stalledStreams.add(blockId);
   stalledStreamRetryCount.set(blockId, 0);
 
-  // Remove the loading spinner
-  block.classList.remove('function-loading');
-  // Add a stalled class for styling
-  block.classList.add('function-stalled');
+  // Remove the loading spinner block.classList.remove('function-loading');
+  // Add a stalled class for styling block.classList.add('function-stalled');
 
   // Remove any existing stalled indicators to avoid duplicates
   const existingIndicator = block.querySelector(`.stalled-indicator[data-stalled-for="${blockId}"]`);
@@ -171,25 +116,15 @@ export const createStalledIndicator = (blockId: string, block: HTMLElement, isAb
     existingIndicator.remove();
   }
 
-  // Add visual indicator
-  const indicator = document.createElement('div');
-  indicator.className = 'stalled-indicator';
-  indicator.setAttribute('data-stalled-for', blockId);
+  // Add visual indicator const indicator = document.createElement('div'); indicator.className = 'stalled-indicator'; indicator.setAttribute('data-stalled-for', blockId);
   // Add a specific class if the stream ended abruptly
-  if (isAbrupt) {
-    indicator.classList.add('abruptly-ended-indicator');
+  if (isAbrupt) { indicator.classList.add('abruptly-ended-indicator');
   }
+ const message = document.createElement('div'); message.className = 'stalled-message';
 
-  const message = document.createElement('div');
-  message.className = 'stalled-message';
-
-  // Create the message text
-  const span = document.createElement('span');
-  span.textContent = isAbrupt
-    ? 'Stream ended abruptly. Function call may be incomplete.'
-    : 'Stream appears to be stalled. Updates may be incomplete.';
-
-  // Only add the icon if it's a stalled stream, not an abruptly ended one
+  // Create the message text const span = document.createElement('span');
+  span.textContent = isAbrupt ? 'Stream ended abruptly. Function call may be incomplete.' : 'Stream appears to be stalled. Updates may be incomplete.';
+ // Only add the icon if it's a stalled stream, not an abruptly ended one
   if (!isAbrupt) {
     const svg = createStalledSvgIcon(false); // False indicates warning icon
     message.appendChild(svg);
@@ -197,22 +132,18 @@ export const createStalledIndicator = (blockId: string, block: HTMLElement, isAb
   message.appendChild(span);
 
   // Add a retry button
-  const retryButton = document.createElement('button');
-  retryButton.className = 'stalled-retry-button';
-  retryButton.textContent = 'Check for updates';
+  const retryButton = document.createElement('button'); retryButton.className = 'stalled-retry-button'; retryButton.textContent = 'Check for updates';
   retryButton.onclick = () => {
     // Track retry attempts
     const retryCount = (stalledStreamRetryCount.get(blockId) || 0) + 1;
     stalledStreamRetryCount.set(blockId, retryCount);
 
-    // Update retry button text
-    retryButton.textContent = retryCount > 1 ? `Check again (${retryCount})` : 'Check again';
+    // Update retry button text retryButton.textContent = retryCount > 1 ? `Check again (${retryCount})` : 'Check again';
 
     // Force a check for updates
     checkStreamingUpdates();
 
-    // Try re-rendering this block
-    const event = new CustomEvent('render-function-call', {
+    // Try re-rendering this block const event = new CustomEvent('render-function-call', {
       detail: { blockId, element: block },
     });
     document.dispatchEvent(event);
@@ -234,37 +165,27 @@ export const checkStalledStreams = (): void => {
   const now = Date.now();
   const stalledTimeout = CONFIG.stalledStreamTimeout;
 
-  // Additional check for any incomplete function calls that might have been missed
-  const potentiallyMissedBlocks = Array.from(document.querySelectorAll('pre, code')).filter(el => {
-    // If already processed or part of function block, skip
-    if (el.closest('.function-block') || el.hasAttribute('data-monitored-node')) {
+  // Additional check for any incomplete function calls that might have been missed const potentiallyMissedBlocks = Array.from(document.querySelectorAll('pre, code')).filter(el => {
+    // If already processed or part of function block, skip if (el.closest('.function-block') || el.hasAttribute('data-monitored-node')) {
       return false;
     }
-
-    const content = el.textContent || '';
-    return (
-      content.includes('<function_calls>') ||
-      content.includes('<invoke') ||
-      (content.includes('<parameter') && !content.includes('</parameter>'))
+ const content = el.textContent || '';
+    return ( content.includes('<function_calls>') || content.includes('<invoke') || (content.includes('<parameter') && !content.includes('</parameter>'))
     );
   });
 
   // Process potentially missed blocks
   for (const element of potentiallyMissedBlocks) {
-    const blockId =
-      element.getAttribute('data-block-id') || `missed-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`;
+    const blockId = element.getAttribute('data-block-id') || `missed-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`;
 
-    // Set block ID if not already present
-    if (!element.getAttribute('data-block-id')) {
-      element.setAttribute('data-block-id', blockId);
+    // Set block ID if not already present if (!element.getAttribute('data-block-id')) { element.setAttribute('data-block-id', blockId);
     }
 
     if (CONFIG.debug) {
       logger.debug(`Found potentially missed function block: ${blockId}`);
     }
 
-    // Trigger a custom event to render this block
-    const event = new CustomEvent('render-function-call', {
+    // Trigger a custom event to render this block const event = new CustomEvent('render-function-call', {
       detail: { blockId, element },
     });
     document.dispatchEvent(event);
@@ -285,8 +206,7 @@ export const checkStalledStreams = (): void => {
     // Skip blocks that are pre-existing incomplete
     if (preExistingIncompleteBlocks.has(blockId)) return;
 
-    // Check if the block is complete (no longer loading)
-    if (!block.classList.contains('function-loading')) {
+    // Check if the block is complete (no longer loading) if (!block.classList.contains('function-loading')) {
       streamingLastUpdated.delete(blockId);
       return;
     }
@@ -296,13 +216,9 @@ export const checkStalledStreams = (): void => {
       if (CONFIG.debug)
         logger.debug(`Stream stalled for block: ${blockId}. No updates for ${Math.round((now - lastUpdate) / 1000)}s`);
 
-      // Verify if the block content is actually incomplete
-      const functionCallCompleteCheck = (block.textContent || '').includes('</function_calls>');
-      const invokeCompleteCheck = (block.textContent || '').includes('<invoke')
-        ? (block.textContent || '').includes('</invoke>')
+      // Verify if the block content is actually incomplete const functionCallCompleteCheck = (block.textContent || '').includes('</function_calls>'); const invokeCompleteCheck = (block.textContent || '').includes('<invoke') ? (block.textContent || '').includes('</invoke>')
         : true;
-
-      // If the function call or invoke tags are complete, don't mark as stalled
+ // If the function call or invoke tags are complete, don't mark as stalled
       if (functionCallCompleteCheck && invokeCompleteCheck) {
         if (CONFIG.debug)
           logger.debug(`Block ${blockId} appears complete despite loading status, skipping stalled indicator`);
@@ -347,8 +263,7 @@ export const startStalledStreamDetection = (): void => {
   if (typeof window !== 'undefined' && !window.hasOwnProperty('customRenderEvent')) {
     window.customRenderEvent = true;
 
-    // Event listener for render-function-call events
-    document.addEventListener('render-function-call', (event: Event) => {
+    // Event listener for render-function-call events document.addEventListener('render-function-call', (event: Event) => {
       const detail = (event as CustomEvent).detail;
       if (detail && detail.element) {
         // Attempt to render this function call directly using the imported function
@@ -356,12 +271,10 @@ export const startStalledStreamDetection = (): void => {
       }
     });
 
-    // Event listener for abruptly ended streams
-    document.addEventListener('stream-abruptly-ended', (event: Event) => {
+    // Event listener for abruptly ended streams document.addEventListener('stream-abruptly-ended', (event: Event) => {
       const detail = (event as CustomEvent).detail;
       if (detail && detail.element && detail.blockId) {
-        if (CONFIG.debug) {
-          logger.debug('Handling abruptly ended stream', detail);
+        if (CONFIG.debug) { logger.debug('Handling abruptly ended stream', detail);
         }
         // Create a stalled indicator with the abrupt message
         createStalledIndicator(detail.blockId, detail.element, true);
@@ -396,11 +309,8 @@ export const stopStalledStreamDetection = (): void => {
  * Add styles for stalled streams
  */
 const addStalledStreamStyles = (): void => {
-  // Check if styles already exist
-  if (document.getElementById('stalled-stream-styles')) return;
-
-  const styles = document.createElement('style');
-  styles.id = 'stalled-stream-styles';
+  // Check if styles already exist if (document.getElementById('stalled-stream-styles')) return;
+ const styles = document.createElement('style'); styles.id = 'stalled-stream-styles';
   styles.textContent = `
         .function-stalled .stalled-indicator {
             background-color: rgba(255, 200, 0, 0.1);

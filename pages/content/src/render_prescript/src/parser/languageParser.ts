@@ -20,8 +20,7 @@ export const extractLanguageTag = (content: string): { tag: string | null; conte
   for (const regex of langRegexes) {
     const match = content.match(regex);
     if (match) {
-      const tag = match[1].toLowerCase();
-      // Verify it's likely a language tag, not just random text in backticks
+      const tag = match[1].toLowerCase(); // Verify it's likely a language tag, not just random text in backticks
       if (CONFIG.knownLanguages.includes(tag)) {
         return { tag, content: match[2] };
       }
@@ -52,23 +51,10 @@ export const extractLanguageTag = (content: string): { tag: string | null; conte
   for (let i = 0; i < checkLines; i++) {
     const line = lines[i].trim().toLowerCase();
 
-    // Check for shebang in first line
-    if (i === 0 && line.startsWith('#!')) {
-      if (line.includes('python')) return { tag: 'python', content };
-      if (line.includes('node')) return { tag: 'javascript', content };
-      if (line.includes('bash') || line.includes('/sh')) return { tag: 'bash', content };
-      if (line.includes('ruby')) return { tag: 'ruby', content };
+    // Check for shebang in first line if (i === 0 && line.startsWith('#!')) { if (line.includes('python')) return { tag: 'python', content }; if (line.includes('node')) return { tag: 'javascript', content }; if (line.includes('bash') || line.includes('/sh')) return { tag: 'bash', content }; if (line.includes('ruby')) return { tag: 'ruby', content };
     }
 
-    // Check for language-specific patterns
-    if (line.includes('<?php')) return { tag: 'php', content };
-    if (line.includes('<!doctype html>') || line.includes('<html')) return { tag: 'html', content };
-    if (line.match(/^(import|from)\s+[\w.]+\s+import/)) return { tag: 'python', content };
-    if (line.match(/^(const|let|var)\s+\w+\s*=/)) return { tag: 'javascript', content };
-    if (line.match(/^function\s+\w+\(/)) return { tag: 'javascript', content };
-    if (line.match(/^package\s+\w+;?/)) return { tag: 'java', content };
-    if (line.match(/^using\s+[\w.]+;/)) return { tag: 'csharp', content };
-    if (line.match(/^#include\s+[<"][\w.]+[>"]/)) return { tag: 'c', content };
+    // Check for language-specific patterns if (line.includes('<?php')) return { tag: 'php', content }; if (line.includes('<!doctype html>') || line.includes('<html')) return { tag: 'html', content }; if (line.match(/^(import|from)\s+[\w.]+\s+import/)) return { tag: 'python', content }; if (line.match(/^(const|let|var)\s+\w+\s*=/)) return { tag: 'javascript', content }; if (line.match(/^function\s+\w+\(/)) return { tag: 'javascript', content }; if (line.match(/^package\s+\w+;?/)) return { tag: 'java', content }; if (line.match(/^using\s+[\w.]+;/)) return { tag: 'csharp', content }; if (line.match(/^#include\s+[<"][\w.]+[>"]/)) return { tag: 'c', content };
   }
 
   return { tag: null, content };

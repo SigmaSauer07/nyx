@@ -7,19 +7,14 @@
 
 import { SidebarManager } from './SidebarManager';
 import { BaseSidebarManager } from './base/BaseSidebarManager';
-import type { SiteType } from './base/BaseSidebarManager';
-
-// Inject React error handlers to catch and log React errors
+import type { SiteType } from './base/BaseSidebarManager'; // Inject React error handlers to catch and log React errors
 if (typeof window !== 'undefined') {
-  // Create a global error handler for React errors
-  window.addEventListener('error', event => {
+  // Create a global error handler for React errors window.addEventListener('error', event => {
     if (
       event.error &&
-      event.error.message &&
-      (event.error.message.includes('React') || event.error.message.includes('Minified React error'))
+      event.error.message && (event.error.message.includes('React') || event.error.message.includes('Minified React error'))
     ) {
-      // Log React errors for debugging
-      console.error('[Sidebar] React error caught by global handler:', event.error);
+      // Log React errors for debugging console.error('[Sidebar] React error caught by global handler:', event.error);
 
       // Prevent the sidebar from getting into an inconsistent state
       try {
@@ -29,18 +24,17 @@ if (typeof window !== 'undefined') {
           setTimeout(() => {
             try {
               // If sidebar exists but is in error state, reinitialize it
-              const hostElement = activeSidebarManager.getShadowHost();
-              if (hostElement && hostElement.style.display !== 'none') {
+              const hostElement = activeSidebarManager.getShadowHost(); if (hostElement && hostElement.style.display !== 'none') {
                 activeSidebarManager.destroy();
                 activeSidebarManager.initialize();
               }
             } catch (reinitError) {
-              console.error('[Sidebar] Error during re-initialization:', reinitError);
+       console.error('[Sidebar] Error during re-initialization:', reinitError);
             }
           }, 500);
         }
       } catch (handlerError) {
-        console.error('[Sidebar] Error in React error handler:', handlerError);
+       console.error('[Sidebar] Error in React error handler:', handlerError);
       }
     }
   });

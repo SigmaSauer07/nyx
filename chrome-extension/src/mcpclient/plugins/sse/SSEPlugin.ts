@@ -1,22 +1,20 @@
-import { Client } from '@modelcontextprotocol/sdk/client/index.js';
-import { SSEClientTransport } from '@modelcontextprotocol/sdk/client/sse.js';
-import type { Transport } from '@modelcontextprotocol/sdk/shared/transport.js';
-import { LoggingMessageNotificationSchema } from '@modelcontextprotocol/sdk/types.js';
-
-import type { ITransportPlugin, PluginMetadata, PluginConfig } from '../../types/plugin.js';
-import type { SSEPluginConfig } from '../../types/config.js';
-import { createLogger } from '@extension/shared/lib/logger';
-
-
-const logger = createLogger('SSEPlugin');
+import { Client
+} from '@modelcontextprotocol/sdk/client/index.js';
+import { SSEClientTransport
+} from '@modelcontextprotocol/sdk/client/sse.js';
+import type { Transport
+} from '@modelcontextprotocol/sdk/shared/transport.js';
+import { LoggingMessageNotificationSchema
+} from '@modelcontextprotocol/sdk/types.js'; import type { ITransportPlugin, PluginMetadata, PluginConfig
+} from '../../types/plugin.js';
+import type { SSEPluginConfig
+} from '../../types/config.js';
+import { createLogger
+} from '@extension/shared/lib/logger';
+ const logger = createLogger('SSEPlugin');
 
 export class SSEPlugin implements ITransportPlugin {
-  readonly metadata: PluginMetadata = {
-    name: 'SSE Transport Plugin',
-    version: '1.0.0',
-    transportType: 'sse',
-    description: 'Server-Sent Events transport for MCP protocol',
-    author: 'MCP SuperAssistant',
+  readonly metadata: PluginMetadata = { name: 'SSE Transport Plugin', version: '1.0.0', transportType: 'sse', description: 'Server-Sent Events transport for MCP protocol', author: 'Nyx',
   };
 
   private config: SSEPluginConfig = {};
@@ -36,15 +34,15 @@ export class SSEPlugin implements ITransportPlugin {
   }
 
   async connect(uri: string): Promise<Transport> {
-    logger.debug(`Creating transport for: ${uri}`);
+    logger.debug(`Creating transport for: ${uri
+    }`);
 
     try {
       const transport = await this.createConnection(uri);
-      this.transport = transport;
-      logger.debug('[SSEPlugin] Transport created successfully');
+      this.transport = transport; logger.debug('[SSEPlugin] Transport created successfully');
       return transport;
     } catch (error) {
-      logger.error('[SSEPlugin] Transport creation failed:', error);
+       logger.error('[SSEPlugin] Transport creation failed:', error);
       throw error;
     }
   }
@@ -53,55 +51,46 @@ export class SSEPlugin implements ITransportPlugin {
     try {
       // Validate and parse URI
       const url = new URL(uri);
-      logger.debug(`Creating SSE transport for: ${url.toString()}`);
+      logger.debug(`Creating SSE transport for: ${url.toString()
+      }`);
 
       // Create SSE transport
       const transport = new SSEClientTransport(url);
 
       // Return the transport without testing
-      // The main client will handle the connection test
-      logger.debug('[SSEPlugin] SSE transport created successfully');
+      // The main client will handle the connection test logger.debug('[SSEPlugin] SSE transport created successfully');
       return transport;
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : String(error);
 
       // Enhanced error messages for SSE-specific issues
-      let enhancedError = errorMessage;
-      if (errorMessage.includes('404')) {
-        enhancedError = 'SSE endpoint not found (404). Verify the server URL and SSE endpoint path.';
-      } else if (errorMessage.includes('timeout')) {
-        enhancedError = 'SSE connection timeout. The server may be slow or the endpoint may not support SSE.';
-      } else if (errorMessage.includes('Failed to fetch')) {
-        enhancedError = 'SSE connection failed. Check if the server is running and accessible.';
+      let enhancedError = errorMessage; if (errorMessage.includes('404')) { enhancedError = 'SSE endpoint not found (404). Verify the server URL and SSE endpoint path.'; } else if (errorMessage.includes('timeout')) { enhancedError = 'SSE connection timeout. The server may be slow or the endpoint may not support SSE.'; } else if (errorMessage.includes('Failed to fetch')) { enhancedError = 'SSE connection failed. Check if the server is running and accessible.';
       }
 
-      throw new Error(`SSE Plugin: ${enhancedError}`);
+      throw new Error(`SSE Plugin: ${enhancedError
+      }`);
     }
   }
 
-  async disconnect(): Promise<void> {
-    logger.debug('[SSEPlugin] Disconnecting...');
+  async disconnect(): Promise<void> { logger.debug('[SSEPlugin] Disconnecting...');
 
     if (this.transport) {
       try {
-        // SSE transport may not have explicit close method, but we clean up references
-        if ('close' in this.transport && typeof this.transport.close === 'function') {
+        // SSE transport may not have explicit close method, but we clean up references if ('close' in this.transport && typeof this.transport.close === 'function') {
           await (this.transport as any).close();
         }
       } catch (error) {
-        logger.warn('[SSEPlugin] Error during transport cleanup:', error);
+       logger.warn('[SSEPlugin] Error during transport cleanup:', error);
       }
     }
 
     this.transport = null;
     this.isConnectedFlag = false;
     this.connectionPromise = null;
-
-    logger.debug('[SSEPlugin] Disconnected');
+ logger.debug('[SSEPlugin] Disconnected');
   }
 
-  isConnected(): boolean {
-    // The plugin creates transports but doesn't manage connection state
+  isConnected(): boolean { // The plugin creates transports but doesn't manage connection state
     // Connection state is managed by the main client
     return this.transport !== null;
   }
@@ -120,9 +109,7 @@ export class SSEPlugin implements ITransportPlugin {
       keepAlive: true,
       connectionTimeout: 5000,
       readTimeout: 30000,
-      headers: {
-        Accept: 'text/event-stream',
-        'Cache-Control': 'no-cache',
+      headers: { Accept: 'text/event-stream', 'Cache-Control': 'no-cache',
       },
     };
   }
@@ -132,8 +119,7 @@ export class SSEPlugin implements ITransportPlugin {
       return false;
     }
 
-    try {
-      // For SSE, we can't easily ping the server, so we assume healthy if connected
+    try { // For SSE, we can't easily ping the server, so we assume healthy if connected
       // In a real implementation, you might want to track last received event timestamp
       return true;
     } catch (error) {
@@ -143,28 +129,29 @@ export class SSEPlugin implements ITransportPlugin {
   }
 
   async callTool(client: Client, toolName: string, args: any): Promise<any> {
-    if (!this.isConnected()) {
-      throw new Error('SSE Plugin: Not connected');
+    if (!this.isConnected()) { throw new Error('SSE Plugin: Not connected');
     }
 
-    logger.debug(`Calling tool: ${toolName}`);
+    logger.debug(`Calling tool: ${toolName
+    }`);
 
     try {
-      const result = await client.callTool({ name: toolName, arguments: args });
-      logger.debug(`Tool call completed: ${toolName}`);
+      const result = await client.callTool({ name: toolName, arguments: args
+      });
+      logger.debug(`Tool call completed: ${toolName
+      }`);
       return result;
     } catch (error) {
-      logger.error(`Tool call failed: ${toolName}`, error);
+      logger.error(`Tool call failed: ${toolName
+      }`, error);
       throw error;
     }
   }
 
   async getPrimitives(client: Client): Promise<any[]> {
-    if (!this.isConnected()) {
-      throw new Error('SSE Plugin: Not connected');
+    if (!this.isConnected()) { throw new Error('SSE Plugin: Not connected');
     }
-
-    logger.debug('[SSEPlugin] Getting primitives...');
+ logger.debug('[SSEPlugin] Getting primitives...');
 
     try {
       const capabilities = client.getServerCapabilities();
@@ -173,33 +160,37 @@ export class SSEPlugin implements ITransportPlugin {
 
       if (capabilities?.resources) {
         promises.push(
-          client.listResources().then(({ resources }) => {
-            resources.forEach(item => primitives.push({ type: 'resource', value: item }));
-          }),
+          client.listResources().then(({ resources
+        }) => { resources.forEach(item => primitives.push({ type: 'resource', value: item
+          }));
+        }),
         );
       }
 
       if (capabilities?.tools) {
         promises.push(
-          client.listTools().then(({ tools }) => {
-            tools.forEach(item => primitives.push({ type: 'tool', value: item }));
-          }),
+          client.listTools().then(({ tools
+        }) => { tools.forEach(item => primitives.push({ type: 'tool', value: item
+          }));
+        }),
         );
       }
 
       if (capabilities?.prompts) {
         promises.push(
-          client.listPrompts().then(({ prompts }) => {
-            prompts.forEach(item => primitives.push({ type: 'prompt', value: item }));
-          }),
+          client.listPrompts().then(({ prompts
+        }) => { prompts.forEach(item => primitives.push({ type: 'prompt', value: item
+          }));
+        }),
         );
       }
 
       await Promise.all(promises);
-      logger.debug(`Retrieved ${primitives.length} primitives`);
+      logger.debug(`Retrieved ${primitives.length
+      } primitives`);
       return primitives;
     } catch (error) {
-      logger.error('[SSEPlugin] Failed to get primitives:', error);
+       logger.error('[SSEPlugin] Failed to get primitives:', error);
       throw error;
     }
   }

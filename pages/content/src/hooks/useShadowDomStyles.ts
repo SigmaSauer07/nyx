@@ -13,8 +13,7 @@ export const useShadowDomStyles = (selector: string, cssRules: string): void => 
   const styleRef = useRef<HTMLStyleElement | null>(null);
 
   useEffect(() => {
-    // Find the shadow root
-    const shadowHost = document.getElementById('mcp-sidebar-shadow-host');
+    // Find the shadow root const shadowHost = document.getElementById('mcp-sidebar-shadow-host');
     if (!shadowHost) {
       logMessage('Shadow host not found for style injection');
       return;

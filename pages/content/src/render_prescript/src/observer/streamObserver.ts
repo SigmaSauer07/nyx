@@ -1,7 +1,5 @@
 // Declare global window properties for TypeScript
-import { createLogger } from '@extension/shared/lib/logger';
-
-const logger = createLogger('streamingObservers');
+import { createLogger } from '@extension/shared/lib/logger'; const logger = createLogger('streamingObservers');
 
 declare global {
   interface Window {
@@ -11,9 +9,7 @@ declare global {
     _updateQueue?: Map<string, HTMLElement>;
     _processUpdateQueue?: () => void;
   }
-}
-
-// Import required functions
+} // Import required functions
 import { CONFIG } from '../core/config';
 import { renderFunctionCall } from '../renderer/index';
 import { extractParameters, containsFunctionCalls, extractLanguageTag } from '../parser/index';
@@ -107,9 +103,7 @@ const contentAnalysisCache = new Map<
 
 // Debounced rendering to prevent rapid-fire updates
 const renderingDebouncer = new Map<string, number>();
-const RENDER_DEBOUNCE_MS = 50; // 50ms debounce for smooth rendering
-
-// Make resyncingBlocks globally accessible to prevent re-rendering during resync
+const RENDER_DEBOUNCE_MS = 50; // 50ms debounce for smooth rendering // Make resyncingBlocks globally accessible to prevent re-rendering during resync
 if (typeof window !== 'undefined') {
   (window as any).resyncingBlocks = resyncingBlocks;
 }
@@ -138,19 +132,16 @@ const parameterContentCache = new Map<string, Map<string, string>>(); // blockId
  * Store parameter content to prevent loss during streaming (supports both XML and JSON)
  */
 const cacheParameterContent = (blockId: string, content: string): void => {
-  // Detect format
-  const isJSON = content.includes('"type"') &&
-                 (content.includes('function_call_start') || content.includes('parameter'));
-
-  let params;
+  // Detect format const isJSON = content.includes('"type"') && (content.includes('function_call_start') || content.includes('parameter'));
+  
+    let params;
   if (isJSON) {
     // Extract JSON parameters
     const jsonParams = extractJSONParameters(content);
 
     // Convert to array format
     params = Object.entries(jsonParams).map(([name, value]) => ({
-      name,
-      value: typeof value === 'object' ? JSON.stringify(value, null, 2) : String(value),
+      name, value: typeof value === 'object' ? JSON.stringify(value, null, 2) : String(value),
     }));
   } else {
     // Extract XML parameters
@@ -161,8 +152,7 @@ const cacheParameterContent = (blockId: string, content: string): void => {
     const blockCache = parameterContentCache.get(blockId) || new Map();
 
     params.forEach(param => {
-      // Only update if new content is longer (more complete)
-      const existing = blockCache.get(param.name) || '';
+      // Only update if new content is longer (more complete) const existing = blockCache.get(param.name) || '';
       if (param.value.length > existing.length) {
         blockCache.set(param.name, param.value);
       }
@@ -170,8 +160,7 @@ const cacheParameterContent = (blockId: string, content: string): void => {
 
     parameterContentCache.set(blockId, blockCache);
 
-    if (CONFIG.debug) {
-      logger.debug(`Cached ${isJSON ? 'JSON' : 'XML'} parameter content for ${blockId}:`, Array.from(blockCache.entries()));
+    if (CONFIG.debug) { logger.debug(`Cached ${isJSON ? 'JSON' : 'XML'} parameter content for ${blockId}:`, Array.from(blockCache.entries()));
     }
   }
 };
@@ -187,11 +176,9 @@ const getCachedParameterContent = (blockId: string): Map<string, string> => {
  * Ultra-fast chunk detection for immediate streaming response
  */
 const detectFunctionChunk = (
-  content: string,
-  previousContent: string = '',
+  content: string, previousContent: string = '',
 ): {
-  hasNewChunk: boolean;
-  chunkType: 'function_start' | 'invoke' | 'parameter' | 'closing' | 'content' | null;
+  hasNewChunk: boolean; chunkType: 'function_start' | 'invoke' | 'parameter' | 'closing' | 'content' | null;
   isSignificant: boolean;
 } => {
   // Get only the new content since last check
@@ -202,40 +189,31 @@ const detectFunctionChunk = (
   }
 
   // Check for JSON patterns first
-  if (CHUNK_PATTERNS.jsonFunctionStart.test(newContent)) {
-    return { hasNewChunk: true, chunkType: 'function_start', isSignificant: true };
+  if (CHUNK_PATTERNS.jsonFunctionStart.test(newContent)) { return { hasNewChunk: true, chunkType: 'function_start', isSignificant: true };
   }
 
-  if (CHUNK_PATTERNS.jsonParameter.test(newContent)) {
-    return { hasNewChunk: true, chunkType: 'parameter', isSignificant: true };
+  if (CHUNK_PATTERNS.jsonParameter.test(newContent)) { return { hasNewChunk: true, chunkType: 'parameter', isSignificant: true };
   }
 
-  if (CHUNK_PATTERNS.jsonDescription.test(newContent)) {
-    return { hasNewChunk: true, chunkType: 'content', isSignificant: true };
+  if (CHUNK_PATTERNS.jsonDescription.test(newContent)) { return { hasNewChunk: true, chunkType: 'content', isSignificant: true };
   }
 
-  if (CHUNK_PATTERNS.jsonFunctionEnd.test(newContent)) {
-    return { hasNewChunk: true, chunkType: 'closing', isSignificant: true };
+  if (CHUNK_PATTERNS.jsonFunctionEnd.test(newContent)) { return { hasNewChunk: true, chunkType: 'closing', isSignificant: true };
   }
 
   // Check for XML patterns
-  if (CHUNK_PATTERNS.functionStart.test(newContent)) {
-    return { hasNewChunk: true, chunkType: 'function_start', isSignificant: true };
+  if (CHUNK_PATTERNS.functionStart.test(newContent)) { return { hasNewChunk: true, chunkType: 'function_start', isSignificant: true };
   }
 
-  if (CHUNK_PATTERNS.invokeStart.test(newContent)) {
-    return { hasNewChunk: true, chunkType: 'invoke', isSignificant: true };
+  if (CHUNK_PATTERNS.invokeStart.test(newContent)) { return { hasNewChunk: true, chunkType: 'invoke', isSignificant: true };
   }
 
-  if (CHUNK_PATTERNS.parameterStart.test(newContent)) {
-    return { hasNewChunk: true, chunkType: 'parameter', isSignificant: true };
+  if (CHUNK_PATTERNS.parameterStart.test(newContent)) { return { hasNewChunk: true, chunkType: 'parameter', isSignificant: true };
   }
 
-  if (CHUNK_PATTERNS.anyClosingTag.test(newContent)) {
-    return { hasNewChunk: true, chunkType: 'closing', isSignificant: true };
+  if (CHUNK_PATTERNS.anyClosingTag.test(newContent)) { return { hasNewChunk: true, chunkType: 'closing', isSignificant: true };
   }
-
-  // Check if it's any significant content (XML or JSON)
+ // Check if it's any significant content (XML or JSON)
   if (CHUNK_PATTERNS.significantChunk.test(newContent) ||
       CHUNK_PATTERNS.jsonSignificant.test(newContent) ||
       newContent.length > 20) {
@@ -273,12 +251,9 @@ const processChunkImmediate = (
 
   // For parameter content, use longer delays to allow content to accumulate
   let delay = 25; // Default delay
-
-  if (chunkInfo.chunkType === 'function_start') {
-    delay = 10; // Very fast for function starts
-  } else if (chunkInfo.chunkType === 'parameter') {
-    delay = 100; // Longer delay for parameters to accumulate content
-  } else if (chunkInfo.chunkType === 'content') {
+ if (chunkInfo.chunkType === 'function_start') {
+    delay = 10; // Very fast for function starts } else if (chunkInfo.chunkType === 'parameter') {
+    delay = 100; // Longer delay for parameters to accumulate content } else if (chunkInfo.chunkType === 'content') {
     delay = 150; // Even longer for parameter content
   }
 
@@ -287,8 +262,7 @@ const processChunkImmediate = (
     if (!completedStreams.has(blockId) && !resyncingBlocks.has(blockId)) {
       const targetQueue = window._updateQueue || updateQueue;
       targetQueue.set(blockId, target);
-
-      if (typeof window !== 'undefined' && window._processUpdateQueue) {
+ if (typeof window !== 'undefined' && window._processUpdateQueue) {
         window._processUpdateQueue();
       }
     }
@@ -412,8 +386,7 @@ const scheduleOptimizedRender = (blockId: string, target: HTMLElement): void => 
       const targetQueue = window._updateQueue || updateQueue;
       targetQueue.set(blockId, target);
 
-      // Process updates using the global function if available
-      if (typeof window !== 'undefined' && window._processUpdateQueue) {
+      // Process updates using the global function if available if (typeof window !== 'undefined' && window._processUpdateQueue) {
         window._processUpdateQueue();
       }
     }
@@ -430,20 +403,16 @@ const scheduleOptimizedRender = (blockId: string, target: HTMLElement): void => 
  */
 export const monitorNode = (node: HTMLElement, blockId: string): void => {
   if (streamingObservers.has(blockId)) return;
+ const content = node.textContent?.substring(0, 100) || ''; const isJSON = content.includes('"type"');
 
-  const content = node.textContent?.substring(0, 100) || '';
-  const isJSON = content.includes('"type"');
-
-  if (CONFIG.debug) {
-    logger.debug(`Setting up monitoring for block: ${blockId}, element: ${node.tagName}, format: ${isJSON ? 'JSON' : 'XML'}`);
+  if (CONFIG.debug) { logger.debug(`Setting up monitoring for block: ${blockId}, element: ${node.tagName}, format: ${isJSON ? 'JSON' : 'XML'}`);
     logger.debug(`Content preview:`, content);
   }
 
   // Initialize the last updated timestamp
   streamingLastUpdated.set(blockId, Date.now());
 
-  // Set an attribute on the node for easier identification
-  node.setAttribute('data-monitored-node', blockId);
+  // Set an attribute on the node for easier identification node.setAttribute('data-monitored-node', blockId);
 
   // Track consecutive inactive periods (no content changes)
   let inactivePeriods = 0;
@@ -457,29 +426,22 @@ export const monitorNode = (node: HTMLElement, blockId: string): void => {
       clearInterval(periodicChecker);
       return;
     }
-
-    const currentContent = node.textContent || '';
+ const currentContent = node.textContent || '';
     const currentLength = currentContent.length;
 
     // Check if content has incomplete tags (XML or JSON)
-    const hasOpenFunctionCallsTag =
-      currentContent.includes('<function_calls>') && !currentContent.includes('</function_calls>');
-    const hasOpenInvokeTag = currentContent.includes('<invoke') && !currentContent.includes('</invoke>');
+    const hasOpenFunctionCallsTag = currentContent.includes('<function_calls>') && !currentContent.includes('</function_calls>'); const hasOpenInvokeTag = currentContent.includes('<invoke') && !currentContent.includes('</invoke>');
     const hasOpenParameterTags =
       (currentContent.match(/<parameter[^>]*>/g) || []).length > (currentContent.match(/<\/parameter>/g) || []).length;
 
-    // Check for incomplete JSON
-    const hasJSONStart = currentContent.includes('"type"') && currentContent.includes('function_call_start');
-    const hasJSONEnd = currentContent.includes('"type"') &&
-                       (currentContent.includes('"function_call_end"') || currentContent.includes('"type": "function_call_end"'));
+    // Check for incomplete JSON const hasJSONStart = currentContent.includes('"type"') && currentContent.includes('function_call_start'); const hasJSONEnd = currentContent.includes('"type"') && (currentContent.includes('"function_call_end"') || currentContent.includes('"type": "function_call_end"'));
     const hasIncompleteJSON = hasJSONStart && !hasJSONEnd;
 
     // Detect incomplete tags (XML or JSON)
     if (hasOpenFunctionCallsTag || hasOpenInvokeTag || hasOpenParameterTags || hasIncompleteJSON) {
       detectedIncompleteTags = true;
     }
-
-    // If we previously detected incomplete tags, but content hasn't changed in 3 checks,
+ // If we previously detected incomplete tags, but content hasn't changed in 3 checks,
     // this might be an abruptly ended stream
     if (detectedIncompleteTags && currentLength === lastContentLength) {
       inactivePeriods++;
@@ -491,8 +453,7 @@ export const monitorNode = (node: HTMLElement, blockId: string): void => {
         // Signal this as stalled right away instead of waiting for timeout
         const functionBlock = document.querySelector(`.function-block[data-block-id="${blockId}"]`);
         if (functionBlock && functionBlock.classList.contains('function-loading')) {
-          // Use our custom event to trigger stalled stream handling
-          const event = new CustomEvent('stream-abruptly-ended', {
+          // Use our custom event to trigger stalled stream handling const event = new CustomEvent('stream-abruptly-ended', {
             detail: { blockId, element: functionBlock },
           });
           document.dispatchEvent(event);
@@ -511,8 +472,8 @@ export const monitorNode = (node: HTMLElement, blockId: string): void => {
       lastContentLength = currentLength;
     }
   }, 1000); // Check every second
-
-  const observer = new MutationObserver(mutations => {
+  
+    const observer = new MutationObserver(mutations => {
     const isProcessingFlag = window._isProcessing !== undefined ? window._isProcessing : isProcessing;
     if (isProcessingFlag) return;
 
@@ -520,8 +481,7 @@ export const monitorNode = (node: HTMLElement, blockId: string): void => {
     if (completedStreams.has(blockId)) return;
 
     // Skip if block is currently transitioning to prevent conflicts
-    const functionBlock = document.querySelector(`.function-block[data-block-id="${blockId}"]`);
-    if (functionBlock?.hasAttribute('data-completing')) return;
+    const functionBlock = document.querySelector(`.function-block[data-block-id="${blockId}"]`); if (functionBlock?.hasAttribute('data-completing')) return;
 
     if (CONFIG.debug) {
       logger.debug(`Mutation detected for blockId: ${blockId}, mutations: ${mutations.length}`);
@@ -532,30 +492,23 @@ export const monitorNode = (node: HTMLElement, blockId: string): void => {
     let functionCallPattern = false;
 
     // Batch analyze all mutations for better performance
-    for (const mutation of mutations) {
-      if (mutation.type === 'characterData' || mutation.type === 'childList') {
+    for (const mutation of mutations) { if (mutation.type === 'characterData' || mutation.type === 'childList') {
         contentChanged = true;
 
         // Get the content once for analysis
-        const targetNode = mutation.target;
-        const textContent = targetNode.textContent || '';
+        const targetNode = mutation.target; const textContent = targetNode.textContent || '';
 
         // Use fast pattern matching for both XML and JSON
         if (!functionCallPattern) {
           PATTERN_CACHE.allFunctionPatterns.lastIndex = 0;
-          const hasXMLPattern = PATTERN_CACHE.allFunctionPatterns.test(textContent);
-          const hasJSONPattern = textContent.includes('"type"') &&
-                                (textContent.includes('function_call') || textContent.includes('parameter'));
+          const hasXMLPattern = PATTERN_CACHE.allFunctionPatterns.test(textContent); const hasJSONPattern = textContent.includes('"type"') && (textContent.includes('function_call') || textContent.includes('parameter'));
           functionCallPattern = hasXMLPattern || hasJSONPattern;
         }
 
-        // Check for significant size changes in content
-        if (mutation.type === 'characterData') {
-          const oldValue = mutation.oldValue || '';
+        // Check for significant size changes in content if (mutation.type === 'characterData') { const oldValue = mutation.oldValue || '';
           const newValue = textContent;
 
-          // Get previous content for chunk detection
-          const previousContent = previousContentCache.get(blockId) || '';
+          // Get previous content for chunk detection const previousContent = previousContentCache.get(blockId) || '';
 
           // Use immediate chunk detection for instant response
           const chunkInfo = detectFunctionChunk(newValue, previousContent);
@@ -577,15 +530,13 @@ export const monitorNode = (node: HTMLElement, blockId: string): void => {
           // Update previous content cache
           previousContentCache.set(blockId, newValue);
         }
-
-        if (mutation.type === 'childList' && (mutation.addedNodes.length > 0 || mutation.removedNodes.length > 0)) {
+ if (mutation.type === 'childList' && (mutation.addedNodes.length > 0 || mutation.removedNodes.length > 0)) {
           significantChange = true;
         }
       }
     }
 
-    if (contentChanged) {
-      // Reset the inactive periods counter since we've seen new content
+    if (contentChanged) { // Reset the inactive periods counter since we've seen new content
       inactivePeriods = 0;
       lastContentLength = node.textContent?.length || 0;
 
@@ -639,8 +590,7 @@ export const monitorNode = (node: HTMLElement, blockId: string): void => {
  * Check for streaming updates in all active blocks
  */
 export const checkStreamingUpdates = (): void => {
-  if (CONFIG.debug) {
-    logger.debug('Checking streaming updates...');
+  if (CONFIG.debug) { logger.debug('Checking streaming updates...');
   }
   const targetContainers = [];
   for (const selector of CONFIG.streamingContainerSelectors) {
@@ -652,8 +602,7 @@ export const checkStreamingUpdates = (): void => {
   for (const container of targetContainers) {
     for (const selector of CONFIG.targetSelectors) {
       const elements = container.querySelectorAll<HTMLElement>(selector);
-      for (const element of elements) {
-        const blockId = element.getAttribute('data-block-id');
+      for (const element of elements) { const blockId = element.getAttribute('data-block-id');
         if (!blockId) continue;
 
         renderFunctionCall(element as HTMLPreElement, { current: false });
@@ -687,32 +636,26 @@ const performSeamlessCompletion = (blockId: string, finalContent: string): void 
     return;
   }
 
-  // Skip if already completed or currently transitioning
-  if (functionBlock.classList.contains('function-complete') || functionBlock.hasAttribute('data-completing')) {
+  // Skip if already completed or currently transitioning if (functionBlock.classList.contains('function-complete') || functionBlock.hasAttribute('data-completing')) {
     if (CONFIG.debug) {
       logger.debug(`Block ${blockId} already completed or completing`);
     }
     return;
   }
 
-  // Mark as transitioning to prevent duplicate completion attempts
-  functionBlock.setAttribute('data-completing', 'true');
+  // Mark as transitioning to prevent duplicate completion attempts functionBlock.setAttribute('data-completing', 'true');
 
   // Use multiple requestAnimationFrame calls for ultra-smooth transition
   requestAnimationFrame(() => {
     requestAnimationFrame(() => {
-      // Remove loading state and add complete state
-      functionBlock.classList.remove('function-loading');
-      functionBlock.classList.add('function-complete');
+      // Remove loading state and add complete state functionBlock.classList.remove('function-loading'); functionBlock.classList.add('function-complete');
 
-      // Remove spinner if present
-      const spinner = functionBlock.querySelector('.spinner');
+      // Remove spinner if present const spinner = functionBlock.querySelector('.spinner');
       if (spinner) {
         spinner.remove();
       }
 
-      // Remove data-completing attribute
-      functionBlock.removeAttribute('data-completing');
+      // Remove data-completing attribute functionBlock.removeAttribute('data-completing');
 
       // Mark as completed
       completedStreams.set(blockId, true);
@@ -766,8 +709,7 @@ export const resyncWithOriginalContent = (blockId: string): void => {
   // Extract final parameters from the original content
   const originalContent = originalPre.textContent.trim();
   const originalParams = extractParameters(originalContent);
-
-  // Get cached parameter content to ensure we don't lose any streaming content
+ // Get cached parameter content to ensure we don't lose any streaming content
   const cachedParams = getCachedParameterContent(blockId);
 
   // Merge original parameters with cached content (cached takes priority if longer)
@@ -792,14 +734,11 @@ export const resyncWithOriginalContent = (blockId: string): void => {
   // Use minimal, gradual updates to prevent jitter
 
   // Check if the function block is already stable before making changes
-  const isAlreadyComplete = functionBlock.classList.contains('function-complete');
-  const isCurrentlyLoading = functionBlock.classList.contains('function-loading');
+  const isAlreadyComplete = functionBlock.classList.contains('function-complete'); const isCurrentlyLoading = functionBlock.classList.contains('function-loading');
 
   // Use a single requestAnimationFrame to batch all updates
-  requestAnimationFrame(() => {
-    // Only update function name if it's actually different and won't cause jitter
-    if (originalFunctionName && !isAlreadyComplete) {
-      const functionNameElement = functionBlock.querySelector('.function-name-text');
+  requestAnimationFrame(() => { // Only update function name if it's actually different and won't cause jitter
+    if (originalFunctionName && !isAlreadyComplete) { const functionNameElement = functionBlock.querySelector('.function-name-text');
       if (functionNameElement && functionNameElement.textContent !== originalFunctionName) {
         functionNameElement.textContent = originalFunctionName;
       }
@@ -811,11 +750,9 @@ export const resyncWithOriginalContent = (blockId: string): void => {
       const paramId = `${blockId}-${param.name}`;
       const paramValueElement = functionBlock.querySelector(`.param-value[data-param-id="${paramId}"]`);
 
-      if (paramValueElement) {
-        const currentContent = paramValueElement.textContent || '';
+      if (paramValueElement) { const currentContent = paramValueElement.textContent || '';
         if (currentContent !== param.value) {
-          // Find or create pre element for seamless update
-          const preElement = paramValueElement.querySelector('pre');
+          // Find or create pre element for seamless update const preElement = paramValueElement.querySelector('pre');
           if (preElement) {
             if (preElement.textContent !== param.value) {
               preElement.textContent = param.value;
@@ -828,8 +765,7 @@ export const resyncWithOriginalContent = (blockId: string): void => {
         }
       }
     });
-
-    // Only transition to complete state if there were actual content changes and we're not already complete
+ // Only transition to complete state if there were actual content changes and we're not already complete
     if (hasContentChanges && isCurrentlyLoading && !isAlreadyComplete) {
       // Use the seamless completion function
       performSeamlessCompletion(blockId, originalContent);

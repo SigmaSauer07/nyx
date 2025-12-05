@@ -71,7 +71,6 @@ const PopoverPortal: React.FC<PopoverPortalProps> = ({ children, isOpen, trigger
           // Adjust to keep it within the viewport with some padding
           left = viewportWidth - popoverWidth / 2 - 10;
         }
-
         // Check if there's enough space above the trigger
         const spaceAbove = triggerRect.top;
         const spaceBelow = viewportHeight - triggerRect.bottom;
@@ -92,7 +91,6 @@ const PopoverPortal: React.FC<PopoverPortalProps> = ({ children, isOpen, trigger
             // Position it as high as possible while keeping it below the trigger
             top = Math.min(top, viewportHeight - popoverHeight - 10);
           }
-
           // Update the popover's after pseudo-element position via a class
           if (popoverElement.classList) {
             popoverElement.classList.remove('position-above');
@@ -109,7 +107,6 @@ const PopoverPortal: React.FC<PopoverPortalProps> = ({ children, isOpen, trigger
             // Position it as low as possible while keeping it above the trigger
             top = popoverHeight + 10;
           }
-
           // Update the popover's after pseudo-element position via a class
           if (popoverElement.classList) {
             popoverElement.classList.remove('position-below');
@@ -117,8 +114,7 @@ const PopoverPortal: React.FC<PopoverPortalProps> = ({ children, isOpen, trigger
           }
         }
 
-        // Apply the calculated position
-        portalContainer.style.position = 'fixed';
+        // Apply the calculated position portalContainer.style.position = 'fixed';
         portalContainer.style.left = `${left}px`;
         portalContainer.style.top = `${top}px`;
         portalContainer.style.transform = transform;
@@ -139,9 +135,7 @@ const PopoverPortal: React.FC<PopoverPortalProps> = ({ children, isOpen, trigger
     if (isOpen && portalContainer && triggerRef.current) {
       updatePosition();
 
-      // Update position on scroll and resize
-      window.addEventListener('scroll', updatePosition);
-      window.addEventListener('resize', updatePosition);
+      // Update position on scroll and resize window.addEventListener('scroll', updatePosition); window.addEventListener('resize', updatePosition);
 
       return () => {
         window.removeEventListener('scroll', updatePosition);
@@ -216,9 +210,7 @@ const PopoverPortal: React.FC<PopoverPortalProps> = ({ children, isOpen, trigger
           position: 'relative',
           opacity: isDragging ? 0.9 : 1,
           backdropFilter: isDragging ? 'blur(12px)' : 'none',
-          WebkitBackdropFilter: isDragging ? 'blur(12px)' : 'none',
-          // backgroundColor: isDragging ? 'rgba(255, 255, 255, 0.7)' : 'transparent',
-          transition: 'opacity 0.15s ease, backdrop-filter 0.15s ease, background-color 0.15s ease',
+          WebkitBackdropFilter: isDragging ? 'blur(12px)' : 'none', // backgroundColor: isDragging ? 'rgba(255, 255, 255, 0.7)' : 'transparent', transition: 'opacity 0.15s ease, backdrop-filter 0.15s ease, background-color 0.15s ease',
         }}>
         {children}
         <div ref={dragHandleRef} className="mcp-drag-handle" onMouseDown={handleDragStart} title="Drag to move" />

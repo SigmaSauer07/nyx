@@ -2,9 +2,7 @@
 export * from './functionBlock';
 export * from './functionResult';
 export * from './components';
-export * from './styles';
-
-// Import proper types and dependencies
+export * from './styles'; // Import proper types and dependencies
 import { CONFIG } from '../core/config';
 import type { FunctionInfo, ParamValueElement } from '../core/types';
 import { Parameter } from '../core/types';
@@ -33,28 +31,21 @@ const updateExistingFunctionBlock = (
   functionContent: string,
   functionInfo: FunctionInfo,
   options: RenderOptions,
-): void => {
-  const blockId = block.getAttribute('data-block-id');
+): void => { const blockId = block.getAttribute('data-block-id');
   if (!blockId) return;
 
   if (CONFIG.debug) console.debug(`Updating existing function block: ${blockId}`);
-
-  // Check if we're transitioning from loading to complete
+ // Check if we're transitioning from loading to complete
   const wasLoading = block.classList.contains('function-loading');
   const isComplete = functionInfo.isComplete;
 
   // Directly update state and content when transitioning or already complete
   if (isComplete) {
-    // Ensure loading class is removed and complete class is added
-    if (block.classList.contains('function-loading')) {
-      block.classList.remove('function-loading');
-    }
-    if (!block.classList.contains('function-complete')) {
-      block.classList.add('function-complete');
+    // Ensure loading class is removed and complete class is added if (block.classList.contains('function-loading')) { block.classList.remove('function-loading');
+    } if (!block.classList.contains('function-complete')) { block.classList.add('function-complete');
     }
 
-    // Update the function content area using safelySetContent
-    const contentArea = block.querySelector('.function-content');
+    // Update the function content area using safelySetContent const contentArea = block.querySelector('.function-content');
     if (contentArea) {
       safelySetContent(contentArea as ParamValueElement, functionContent);
     }
@@ -62,8 +53,7 @@ const updateExistingFunctionBlock = (
     // Update parameters if needed
     updateParameters(block, functionInfo, options);
 
-    // Add execute button if not already present
-    if (!block.querySelector('.execute-button')) {
+    // Add execute button if not already present if (!block.querySelector('.execute-button')) {
       // Find the original pre element to get the raw content
       const originalPre = document.querySelector(`div[data-block-id="${blockId}"]`);
       if (originalPre && originalPre.textContent?.trim()) {
@@ -71,20 +61,14 @@ const updateExistingFunctionBlock = (
       }
     }
   } else {
-    // Handle cases where block is still loading or becomes incomplete again
-    if (block.classList.contains('function-complete')) {
-      block.classList.remove('function-complete');
-    }
-    if (!block.classList.contains('function-loading')) {
-      block.classList.add('function-loading');
-      // Potentially remove execute button/toggle if added previously
-      const executeBtn = block.querySelector('.execute-button');
+    // Handle cases where block is still loading or becomes incomplete again if (block.classList.contains('function-complete')) { block.classList.remove('function-complete');
+    } if (!block.classList.contains('function-loading')) { block.classList.add('function-loading');
+      // Potentially remove execute button/toggle if added previously const executeBtn = block.querySelector('.execute-button');
       if (executeBtn) executeBtn.remove();
       // Add spinner etc. if needed (assuming functionBlock.ts handles this primarily)
     }
 
-    // Update the function content area using safelySetContent
-    const contentArea = block.querySelector('.function-content');
+    // Update the function content area using safelySetContent const contentArea = block.querySelector('.function-content');
     if (contentArea) {
       safelySetContent(contentArea as ParamValueElement, functionContent);
     }
@@ -99,13 +83,10 @@ const updateExistingFunctionBlock = (
  */
 const updateParameters = (block: HTMLElement, functionInfo: FunctionInfo, options: RenderOptions): void => {
   // Get extracted parameters
-  const parameters = extractParameters(
-      block.getAttribute('data-content') || '',
-    block.getAttribute('data-block-id') || null,
+  const parameters = extractParameters( block.getAttribute('data-content') || '', block.getAttribute('data-block-id') || null,
     );
 
-  // Update parameter values
-  const paramContainer = block.querySelector('.function-parameters');
+  // Update parameter values const paramContainer = block.querySelector('.function-parameters');
   if (!paramContainer) return;
 
   for (const param of parameters) {
@@ -116,14 +97,12 @@ const updateParameters = (block: HTMLElement, functionInfo: FunctionInfo, option
       createOrUpdateParamElement(
         block as HTMLDivElement,
         param.name,
-        param.value,
-        block.getAttribute('data-block-id') || '',
+        param.value, block.getAttribute('data-block-id') || '',
         true,
         param.isStreaming || false,
       );
     } else {
-      // Get the value container
-      const valueContainer = paramRow.querySelector('.param-value') as HTMLElement;
+      // Get the value container const valueContainer = paramRow.querySelector('.param-value') as HTMLElement;
       if (!valueContainer) continue;
 
       // Use smoothlyUpdateBlockContent to minimize DOM changes for streaming parameters
@@ -140,12 +119,8 @@ const updateParameters = (block: HTMLElement, functionInfo: FunctionInfo, option
       }
 
       // Update parameter state classes
-      if (param.isComplete) {
-        paramRow.classList.remove('param-streaming');
-        paramRow.classList.add('param-complete');
-      } else {
-        paramRow.classList.remove('param-complete'); // Ensure complete is removed
-        paramRow.classList.add('param-streaming');
+      if (param.isComplete) { paramRow.classList.remove('param-streaming'); paramRow.classList.add('param-complete');
+      } else { paramRow.classList.remove('param-complete'); // Ensure complete is removed paramRow.classList.add('param-streaming');
       }
     }
   }

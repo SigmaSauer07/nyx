@@ -19,9 +19,7 @@
 // Legacy code commented out - use new MCP client system instead
 // import { logMessage } from './helpers';
 // import type { ToolCallCallback, ConnectionStatusCallback, ToolCallRequest } from '../types/mcp';
-// import { Primitive } from '../types/mcp';
-
-// /**
+// import { Primitive } from '../types/mcp'; // /**
 //  * Class that handles communication with the background script for MCP tool calls
 //  */
 // class McpHandler {
@@ -58,9 +56,7 @@
 //    * Private constructor to enforce singleton pattern
 //    */
 //   private constructor() {
-//     this.connectionId = `mcp-connection-${Date.now()}-${Math.floor(Math.random() * 10000)}`;
-
-//     // Start with a clean initialization - don't connect immediately
+//     this.connectionId = `mcp-connection-${Date.now()}-${Math.floor(Math.random() * 10000)}`; //     // Start with a clean initialization - don't connect immediately
 //     // Just set up the handlers and let the first visibility check or manual action connect
 
 //     // Listen for page visibility changes to reconnect if needed
@@ -87,9 +83,7 @@
 //       this.connect();
 //       // Start the heartbeat only after initial connection attempt
 //       this.startHeartbeat();
-//     }, 500);
-
-//     logMessage('[MCP Handler] Initialized');
+//     }, 500); //     logMessage('[MCP Handler] Initialized');
 //   }
 
 //   /**
@@ -135,9 +129,7 @@
 
 //     this.staleRequestCleanupInterval = window.setInterval(() => {
 //       const now = Date.now();
-//       let expiredCount = 0;
-
-//       this.pendingRequests.forEach((request, requestId) => {
+//       let expiredCount = 0; //       this.pendingRequests.forEach((request, requestId) => {
 //         if (now - request.timestamp > this.pendingRequestTimeoutMs) {
 //           // Request has timed out, notify the callback
 //           try {
@@ -174,9 +166,7 @@
 //       if (!this.extensionContextValid) {
 //         this.stopHeartbeat();
 //         return;
-//       }
-
-//       if (!this.port) {
+//       } //       if (!this.port) {
 //         // If we don't have a port, try to reconnect (only if context is valid)
 //         if (!this.isReconnecting && this.extensionContextValid) {
 //           logMessage('[MCP Handler] No port in heartbeat, attempting to reconnect');
@@ -186,9 +176,7 @@
 //       }
 
 //       // Calculate time since last heartbeat response
-//       const timeSinceLastHeartbeat = this.lastHeartbeatResponse > 0 ? Date.now() - this.lastHeartbeatResponse : 0;
-
-//       // If we haven't received a heartbeat response in too long, reconnect
+//       const timeSinceLastHeartbeat = this.lastHeartbeatResponse > 0 ? Date.now() - this.lastHeartbeatResponse : 0; //       // If we haven't received a heartbeat response in too long, reconnect
 //       if (this.lastHeartbeatResponse > 0 && timeSinceLastHeartbeat > this.heartbeatTimeoutThreshold) {
 //         logMessage(`[MCP Handler] Heartbeat timeout: No response in ${timeSinceLastHeartbeat}ms, reconnecting`);
 //         this.disconnect(false);
@@ -205,9 +193,7 @@
 //         // logMessage('[MCP Handler] Sent heartbeat');
 //       } catch (error) {
 //         const errorMessage = error instanceof Error ? error.message : String(error);
-//         logMessage(`[MCP Handler] Error sending heartbeat: ${errorMessage}`);
-
-//         // Check for extension context invalidation
+//         logMessage(`[MCP Handler] Error sending heartbeat: ${errorMessage}`); //         // Check for extension context invalidation
 //         if (errorMessage.includes('Extension context invalidated')) {
 //           this.handleExtensionContextInvalidated();
 //           return;
@@ -218,9 +204,7 @@
 //         this.connect();
 //       }
 //     }, this.heartbeatFrequency);
-//   }
-
-//   /**
+//   } //   /**
 //    * Stop heartbeat interval
 //    */
 //   private stopHeartbeat(): void {
@@ -229,9 +213,7 @@
 //       this.heartbeatInterval = null;
 //       logMessage('[MCP Handler] Heartbeat stopped');
 //     }
-//   }
-
-//   /**
+//   } //   /**
 //    * Handle extension context invalidation
 //    * This is a special case when the extension is being reloaded/updated
 //    */
@@ -257,9 +239,7 @@
 //     if (this.staleRequestCleanupInterval !== null) {
 //       window.clearInterval(this.staleRequestCleanupInterval);
 //       this.staleRequestCleanupInterval = null;
-//     }
-
-//     // Fail all pending requests
+//     } //     // Fail all pending requests
 //     this.pendingRequests.forEach(request => {
 //       try {
 //         request.callback(null, 'Extension context invalidated');
@@ -271,9 +251,7 @@
 
 //     this.port = null;
 //     this.isReconnecting = false;
-//   }
-
-//   /**
+//   } //   /**
 //    * Connect to the background script
 //    */
 //   private connect(): void {
@@ -282,9 +260,7 @@
 //       if (!this.extensionContextValid) {
 //         logMessage('[MCP Handler] Extension context invalid, skipping connection attempt');
 //         return;
-//       }
-
-//       if (this.isReconnecting) {
+//       } //       if (this.isReconnecting) {
 //         logMessage('[MCP Handler] Already reconnecting, skipping connect request');
 //         return;
 //       }
@@ -298,9 +274,7 @@
 //       try {
 //         this.port = chrome.runtime.connect({ name: this.connectionId });
 //       } catch (connectError) {
-//         const errorMessage = connectError instanceof Error ? connectError.message : String(connectError);
-
-//         if (errorMessage.includes('Extension context invalidated')) {
+//         const errorMessage = connectError instanceof Error ? connectError.message : String(connectError); //         if (errorMessage.includes('Extension context invalidated')) {
 //           this.handleExtensionContextInvalidated();
 //           return;
 //         }
@@ -308,27 +282,19 @@
 //         throw connectError; // Re-throw for the outer catch block
 //       }
 
-//       this.port.onMessage.addListener(message => this.handleMessage(message));
-
-//       this.port.onDisconnect.addListener(() => {
+//       this.port.onMessage.addListener(message => this.handleMessage(message)); //       this.port.onDisconnect.addListener(() => {
 //         const error = chrome.runtime.lastError;
 //         const errorMessage = error ? error.message || 'Unknown error' : 'No error provided';
 
 //         if (error) {
-//           logMessage(`[MCP Handler] Connection error: ${errorMessage}`);
-
-//           if (errorMessage.includes('Extension context invalidated')) {
+//           logMessage(`[MCP Handler] Connection error: ${errorMessage}`); //           if (errorMessage.includes('Extension context invalidated')) {
 //             this.handleExtensionContextInvalidated();
 //             return;
 //           }
-//         }
-
-//         logMessage('[MCP Handler] Disconnected from background script');
+//         } //         logMessage('[MCP Handler] Disconnected from background script');
 //         this.port = null;
 //         this.isConnected = false;
-//         this.notifyConnectionStatus();
-
-//         // Always try to reconnect regardless of isReconnecting flag, but check if we should
+//         this.notifyConnectionStatus(); //         // Always try to reconnect regardless of isReconnecting flag, but check if we should
 //         if (this.reconnectAttempts < this.maxReconnectAttempts && this.extensionContextValid) {
 //           this.scheduleReconnect();
 //         } else {
@@ -342,14 +308,10 @@
 //       this.lastConnectionCheck = Date.now();
 //       this.lastHeartbeatResponse = Date.now(); // Initialize heartbeat tracker
 
-//       this.isReconnecting = false;
-
-//       logMessage('[MCP Handler] Connected to background script');
+//       this.isReconnecting = false; //       logMessage('[MCP Handler] Connected to background script');
 //     } catch (error) {
 //       const errorMessage = error instanceof Error ? error.message : String(error);
-//       logMessage(`[MCP Handler] Failed to connect: ${errorMessage}`);
-
-//       if (errorMessage.includes('Extension context invalidated')) {
+//       logMessage(`[MCP Handler] Failed to connect: ${errorMessage}`); //       if (errorMessage.includes('Extension context invalidated')) {
 //         this.handleExtensionContextInvalidated();
 //         return;
 //       }
@@ -382,9 +344,7 @@
 //       this.reconnectAttempts = 0;
 //       this.isReconnecting = false;
 //     }
-//   }
-
-//   /**
+//   } //   /**
 //    * Schedule a reconnection attempt
 //    */
 //   private scheduleReconnect(): void {
@@ -425,9 +385,7 @@
 //   private checkConnectionStatus(): void {
 //     if (!this.extensionContextValid) {
 //       return;
-//     }
-
-//     if (this.port) {
+//     } //     if (this.port) {
 //       try {
 //         // Send a connectivity check message
 //         this.port.postMessage({
@@ -439,9 +397,7 @@
 //         this.lastConnectionCheck = Date.now();
 //       } catch (error) {
 //         const errorMessage = error instanceof Error ? error.message : String(error);
-//         logMessage(`[MCP Handler] Error sending connection check: ${errorMessage}`);
-
-//         if (errorMessage.includes('Extension context invalidated')) {
+//         logMessage(`[MCP Handler] Error sending connection check: ${errorMessage}`); //         if (errorMessage.includes('Extension context invalidated')) {
 //           this.handleExtensionContextInvalidated();
 //           return;
 //         }
@@ -449,9 +405,7 @@
 //         // If we get an error sending a message, the port is dead
 //         this.port = null;
 //         this.isConnected = false;
-//         this.notifyConnectionStatus();
-
-//         // Schedule a reconnect
+//         this.notifyConnectionStatus(); //         // Schedule a reconnect
 //         if (!this.isReconnecting && this.extensionContextValid) {
 //           this.scheduleReconnect();
 //         }
@@ -470,28 +424,18 @@
 //     logMessage(`[MCP Handler] Received message: ${message.type}`);
 
 //     // Update the heartbeat response time for any message received
-//     this.lastHeartbeatResponse = Date.now();
-
-//     switch (message.type) {
+//     this.lastHeartbeatResponse = Date.now(); //     switch (message.type) {
 //       case 'HEARTBEAT_RESPONSE':
 //         // Just a heartbeat response, no need to do anything other than update lastHeartbeatResponse
-//         break;
-
-//       case 'CONNECTION_STATUS':
+//         break; //       case 'CONNECTION_STATUS':
 //         this.isConnected = message.isConnected;
 //         logMessage(`[MCP Handler] Connection status updated to: ${message.isConnected ? 'Connected' : 'Disconnected'}`);
 //         this.notifyConnectionStatus();
-//         break;
-
-//       case 'TOOL_CALL_RESULT':
+//         break; //       case 'TOOL_CALL_RESULT':
 //         this.handleToolCallResult(message.requestId, message.result);
-//         break;
-
-//       case 'TOOL_CALL_STATUS':
+//         break; //       case 'TOOL_CALL_STATUS':
 //         // Could handle intermediate status updates here
-//         break;
-
-//       case 'RECONNECT_STATUS':
+//         break; //       case 'RECONNECT_STATUS':
 //         // Handle reconnect status updates
 //         if (message.hasOwnProperty('isConnected')) {
 //           this.isConnected = message.isConnected;
@@ -500,16 +444,12 @@
 //           );
 //           this.notifyConnectionStatus();
 //         }
-//         break;
-
-//       case 'TOOL_DETAILS_RESULT':
+//         break; //       case 'TOOL_DETAILS_RESULT':
 //         // Check if this is a broadcast update (special requestId)
 //         if (message.requestId === 'broadcast-tools-update') {
 //           logMessage(`[MCP Handler] Received broadcast tools update with ${message.result?.length || 0} tools`);
 //           // Notify all broadcast tool update callbacks
-//           this.notifyBroadcastToolUpdate(message.result || []);
-
-//           // Find any pending requests for tool details and resolve them with the broadcast data
+//           this.notifyBroadcastToolUpdate(message.result || []); //           // Find any pending requests for tool details and resolve them with the broadcast data
 //           this.pendingRequests.forEach((request, reqId) => {
 //             if (reqId.startsWith('tool-details-')) {
 //               logMessage(`[MCP Handler] Resolving pending tool details request ${reqId} with broadcast data`);
@@ -521,21 +461,13 @@
 //           // Handle normal tool details result
 //           this.handleToolDetailsResult(message.requestId, message.result);
 //         }
-//         break;
-
-//       case 'RECONNECT_RESULT':
+//         break; //       case 'RECONNECT_RESULT':
 //         this.handleReconnectResult(message.requestId, message.success, message.isConnected);
-//         break;
-
-//       case 'SERVER_CONFIG_RESULT':
+//         break; //       case 'SERVER_CONFIG_RESULT':
 //         this.handleServerConfigResult(message.requestId, message.config);
-//         break;
-
-//       case 'UPDATE_SERVER_CONFIG_RESULT':
+//         break; //       case 'UPDATE_SERVER_CONFIG_RESULT':
 //         this.handleUpdateServerConfigResult(message.requestId, message.success);
-//         break;
-
-//       case 'ERROR':
+//         break; //       case 'ERROR':
 //         this.handleError(message);
 //         break;
 
@@ -624,9 +556,7 @@
 //   private handleError(message: any): void {
 //     const { errorType, errorMessage, requestId } = message;
 
-//     logMessage(`[MCP Handler] Error: ${errorType} - ${errorMessage}`);
-
-//     // Enhanced detection of server-related errors with specific categorization
+//     logMessage(`[MCP Handler] Error: ${errorType} - ${errorMessage}`); //     // Enhanced detection of server-related errors with specific categorization
 //     const isServerRelatedError =
 //       errorType === 'RECONNECT_ERROR' ||
 //       errorType === 'CONNECTION_ERROR' ||
@@ -645,9 +575,7 @@
 //       errorMessage.includes('403') ||
 //       errorMessage.includes('500') ||
 //       errorMessage.includes('Connection refused') ||
-//       errorMessage.includes('not found');
-
-//     // Tool-specific errors that should NOT trigger connection status changes
+//       errorMessage.includes('not found'); //     // Tool-specific errors that should NOT trigger connection status changes
 //     const isToolSpecificError =
 //       errorType === 'TOOL_NOT_FOUND' ||
 //       errorType === 'TOOL_CALL_ERROR' ||
@@ -656,9 +584,7 @@
 //       errorMessage.includes('not found in cached primitives') ||
 //       errorMessage.includes('MCP error -32602') ||
 //       errorMessage.includes('MCP error -32601') ||
-//       errorMessage.includes('MCP error -32600');
-
-//     // Only update connection status for actual server/connection errors, not tool errors
+//       errorMessage.includes('MCP error -32600'); //     // Only update connection status for actual server/connection errors, not tool errors
 //     if (isServerRelatedError && !isToolSpecificError) {
 //       logMessage(
 //         `[MCP Handler] Server-related error detected (${errorType}), updating connection status to disconnected`,
@@ -702,9 +628,7 @@
 //   private notifyConnectionStatus(): void {
 //     logMessage(
 //       `[MCP Handler] Connection status changed: ${this.isConnected}, notifying ${this.connectionStatusCallbacks.size} callbacks`,
-//     );
-
-//     if (this.connectionStatusCallbacks.size === 0) {
+//     ); //     if (this.connectionStatusCallbacks.size === 0) {
 //       logMessage('[MCP Handler] WARNING: No connection status callbacks registered!');
 //     }
 
@@ -734,9 +658,7 @@
 //         );
 //       }
 //     });
-//   }
-
-//   /**
+//   } //   /**
 //    * Call an MCP tool through the background script
 //    *
 //    * @param toolName The name of the tool to call
@@ -748,9 +670,7 @@
 //     if (!this.extensionContextValid) {
 //       callback(null, 'Extension context invalidated');
 //       return '';
-//     }
-
-//     if (!this.port) {
+//     } //     if (!this.port) {
 //       logMessage('[MCP Handler] Not connected to background script');
 //       callback(null, 'Not connected to background script');
 //       return '';
@@ -765,9 +685,7 @@
 //       args,
 //       callback,
 //       timestamp: Date.now(),
-//     });
-
-//     // Send the request to the background script
+//     }); //     // Send the request to the background script
 //     try {
 //       this.port.postMessage({
 //         type: 'CALL_TOOL',
@@ -779,21 +697,15 @@
 //       logMessage(`[MCP Handler] Sent tool call request: ${requestId} for tool: ${toolName}`);
 //     } catch (error) {
 //       const errorMessage = error instanceof Error ? error.message : String(error);
-//       logMessage(`[MCP Handler] Error sending tool call: ${errorMessage}`);
-
-//       if (errorMessage.includes('Extension context invalidated')) {
+//       logMessage(`[MCP Handler] Error sending tool call: ${errorMessage}`); //       if (errorMessage.includes('Extension context invalidated')) {
 //         this.handleExtensionContextInvalidated();
-//       }
-
-//       this.pendingRequests.delete(requestId);
+//       } //       this.pendingRequests.delete(requestId);
 //       callback(null, `Failed to send tool call: ${errorMessage}`);
 //       return '';
 //     }
 
 //     return requestId;
-//   }
-
-//   /**
+//   } //   /**
 //    * Get available tool primitives from the MCP server
 //    *
 //    * This method communicates with the background script which uses getPrimitivesWithSSE
@@ -807,26 +719,20 @@
 //     if (!this.extensionContextValid) {
 //       callback(null, 'Extension context invalidated');
 //       return '';
-//     }
-
-//     if (!this.port) {
+//     } //     if (!this.port) {
 //       logMessage('[MCP Handler] Not connected to background script');
 //       callback(null, 'Not connected to background script');
 //       return '';
 //     }
 
-//     const requestId = `tool-details-${Date.now()}-${Math.floor(Math.random() * 10000)}`;
-
-//     // Store the request
+//     const requestId = `tool-details-${Date.now()}-${Math.floor(Math.random() * 10000)}`; //     // Store the request
 //     this.pendingRequests.set(requestId, {
 //       requestId,
 //       toolName: '',
 //       args: {},
 //       callback,
 //       timestamp: Date.now(),
-//     });
-
-//     // Send the request to the background script
+//     }); //     // Send the request to the background script
 //     try {
 //       this.port.postMessage({
 //         type: 'GET_TOOL_DETAILS',
@@ -837,21 +743,15 @@
 //       logMessage(`[MCP Handler] Sent tool details request: ${requestId} (forceRefresh: ${forceRefresh})`);
 //     } catch (error) {
 //       const errorMessage = error instanceof Error ? error.message : String(error);
-//       logMessage(`[MCP Handler] Error sending get tool details: ${errorMessage}`);
-
-//       if (errorMessage.includes('Extension context invalidated')) {
+//       logMessage(`[MCP Handler] Error sending get tool details: ${errorMessage}`); //       if (errorMessage.includes('Extension context invalidated')) {
 //         this.handleExtensionContextInvalidated();
-//       }
-
-//       this.pendingRequests.delete(requestId);
+//       } //       this.pendingRequests.delete(requestId);
 //       callback(null, `Failed to send tool details request: ${errorMessage}`);
 //       return '';
 //     }
 
 //     return requestId;
-//   }
-
-//   /**
+//   } //   /**
 //    * Force a reconnection to the MCP server
 //    *
 //    * @param callback Callback function to receive the result or error
@@ -861,26 +761,20 @@
 //     if (!this.extensionContextValid) {
 //       callback(null, 'Extension context invalidated');
 //       return '';
-//     }
-
-//     if (!this.port) {
+//     } //     if (!this.port) {
 //       logMessage('[MCP Handler] Not connected to background script');
 //       callback(null, 'Not connected to background script');
 //       return '';
 //     }
 
-//     const requestId = `reconnect-${Date.now()}-${Math.floor(Math.random() * 10000)}`;
-
-//     // Store the request
+//     const requestId = `reconnect-${Date.now()}-${Math.floor(Math.random() * 10000)}`; //     // Store the request
 //     this.pendingRequests.set(requestId, {
 //       requestId,
 //       toolName: '',
 //       args: {},
 //       callback,
 //       timestamp: Date.now(),
-//     });
-
-//     // Send the request to the background script
+//     }); //     // Send the request to the background script
 //     try {
 //       this.port.postMessage({
 //         type: 'FORCE_RECONNECT',
@@ -890,13 +784,9 @@
 //       logMessage(`[MCP Handler] Sent force reconnect request: ${requestId}`);
 //     } catch (error) {
 //       const errorMessage = error instanceof Error ? error.message : String(error);
-//       logMessage(`[MCP Handler] Error sending force reconnect: ${errorMessage}`);
-
-//       if (errorMessage.includes('Extension context invalidated')) {
+//       logMessage(`[MCP Handler] Error sending force reconnect: ${errorMessage}`); //       if (errorMessage.includes('Extension context invalidated')) {
 //         this.handleExtensionContextInvalidated();
-//       }
-
-//       this.pendingRequests.delete(requestId);
+//       } //       this.pendingRequests.delete(requestId);
 //       callback(null, `Failed to send reconnect request: ${errorMessage}`);
 //       return '';
 //     }
@@ -954,9 +844,7 @@
 //    */
 //   public getConnectionStatus(): boolean {
 //     return this.isConnected;
-//   }
-
-//   /**
+//   } //   /**
 //    * Get the server configuration from the background script with request deduplication
 //    * @returns Promise that resolves to the server configuration
 //    */
@@ -965,9 +853,7 @@
 //       logMessage('[MCP Handler] Not connected to background script');
 //       callback(null, 'Not connected to background script');
 //       return '';
-//     }
-
-//     // If there's already a pending request, add this callback to the queue
+//     } //     // If there's already a pending request, add this callback to the queue
 //     if (this.serverConfigRequestId && this.pendingRequests.has(this.serverConfigRequestId)) {
 //       logMessage('[MCP Handler] Server config request already pending, adding callback to queue');
 //       this.pendingServerConfigCallbacks.push(callback);
@@ -975,9 +861,7 @@
 //     }
 
 //     const requestId = `server-config-${Date.now()}-${Math.floor(Math.random() * 10000)}`;
-//     this.serverConfigRequestId = requestId;
-
-//     // Store the request
+//     this.serverConfigRequestId = requestId; //     // Store the request
 //     this.pendingRequests.set(requestId, {
 //       requestId,
 //       toolName: '',
@@ -1002,9 +886,7 @@
 //         this.serverConfigRequestId = null;
 //       },
 //       timestamp: Date.now(),
-//     });
-
-//     // Send the request to the background script
+//     }); //     // Send the request to the background script
 //     this.port.postMessage({
 //       type: 'GET_SERVER_CONFIG',
 //       requestId,
@@ -1013,9 +895,7 @@
 //     logMessage(`[MCP Handler] Sent server config request: ${requestId}`);
 
 //     return requestId;
-//   }
-
-//   /**
+//   } //   /**
 //    * Update the server configuration in the background script
 //    * @param config The new server configuration
 //    * @returns Promise that resolves to a boolean indicating success
@@ -1027,18 +907,14 @@
 //       return '';
 //     }
 
-//     const requestId = `update-server-config-${Date.now()}-${Math.floor(Math.random() * 10000)}`;
-
-//     // Store the request
+//     const requestId = `update-server-config-${Date.now()}-${Math.floor(Math.random() * 10000)}`; //     // Store the request
 //     this.pendingRequests.set(requestId, {
 //       requestId,
 //       toolName: '',
 //       args: {},
 //       callback,
 //       timestamp: Date.now(),
-//     });
-
-//     // Send the request to the background script
+//     }); //     // Send the request to the background script
 //     this.port.postMessage({
 //       type: 'UPDATE_SERVER_CONFIG',
 //       config,

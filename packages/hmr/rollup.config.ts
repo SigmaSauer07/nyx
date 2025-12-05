@@ -13,17 +13,11 @@ export default [
   {
     plugins,
     input: 'lib/injections/reload.ts',
-    output: {
-      format: 'esm',
-      file: 'dist/lib/injections/reload.js',
-    },
+    output: { format: 'esm', file: 'dist/lib/injections/reload.js' },
   },
   {
     plugins,
     input: 'lib/injections/refresh.ts',
-    output: {
-      format: 'esm',
-      file: 'dist/lib/injections/refresh.js',
-    },
+    output: { format: 'esm', file: 'dist/lib/injections/refresh.js' },
   },
 ] satisfies RollupOptions[];

@@ -19,10 +19,8 @@ export const withPageConfig = (config: UserConfig) =>
   defineConfig(
     deepmerge(
       {
-        define: {
-          'process.env': env,
-        },
-        base: '',
+        define: { 'process.env': env,
+        }, base: '',
         plugins: [react(), IS_DEV && watchRebuildPlugin({ refresh: true })],
         build: {
           sourcemap: IS_DEV,
@@ -30,8 +28,7 @@ export const withPageConfig = (config: UserConfig) =>
           reportCompressedSize: IS_PROD,
           emptyOutDir: IS_PROD,
           watch: watchOption,
-          rollupOptions: {
-            external: ['chrome'],
+          rollupOptions: { external: ['chrome'],
           },
         },
       },

@@ -24,18 +24,14 @@ export type AdapterCapability =
   | 'screenshot-capture'
   | 'dom-manipulation';
 
-export type PluginType = 
-  | 'sidebar'
-  | 'website-adapter'
-  | 'core-ui'
-  | 'extension';
+export type PluginType = 'sidebar' | 'website-adapter' | 'core-ui' | 'extension';
 
 export interface PluginContext {
   eventBus: PluginEventBus; // Use the defined PluginEventBus interface
-  stores: { 
+  stores: {
     // These 'any' types are placeholders as per original spec.
     // In a fully typed system, these would be specific store instances or slices.
-    app: any; 
+    app: any;
     connection: any;
     tool: any;
     ui: any;
@@ -53,14 +49,17 @@ export interface PluginContext {
     info: (...args: any[]) => void;
     warn: (...args: any[]) => void;
     error: (...args: any[]) => void;
-  };
-  // Add a way to get the plugin's own configuration
+  }; // Add a way to get the plugin's own configuration
   getConfig?: <T extends Record<string, any>>() => T | undefined;
   cleanupFunctions?: (() => void)[]; // Added for plugin cleanup management
 }
 
 export interface PluginUtils {
-  createElement: <K extends keyof HTMLElementTagNameMap>(tag: K, attrs?: Record<string, any>, children?: (Node | string)[]) => HTMLElementTagNameMap[K];
+  createElement: <K extends keyof HTMLElementTagNameMap>(
+    tag: K,
+    attrs?: Record<string, any>,
+    children?: (Node | string)[],
+  ) => HTMLElementTagNameMap[K];
   waitForElement: (selector: string, timeout?: number, root?: Document | Element) => Promise<HTMLElement | null>;
   injectCSS: (css: string, id?: string) => HTMLStyleElement;
   observeChanges: (targetNode: Node, callback: MutationCallback, options: MutationObserverInit) => MutationObserver;
@@ -106,8 +105,7 @@ export interface AdapterPlugin {
 export interface AdapterConfig {
   id: string; // Unique identifier for the adapter configuration
   name: string; // Display name for the adapter configuration
-  description: string; // Description of the adapter
-  version: string; // Version of the adapter configuration or the adapter it's for
+  description: string; // Description of the adapter version: string; // Version of the adapter configuration or the adapter it's for
   enabled: boolean;
   priority: number;
   settings?: Record<string, any>;

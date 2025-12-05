@@ -5,9 +5,7 @@ import manifest from '../../../chrome-extension/manifest.ts';
 import deleteModules from './deleteModules.js';
 import recoverModules from './recoverModules.ts';
 import { execSync } from 'node:child_process';
-
 const manifestPath = path.resolve(import.meta.dirname, '..', '..', '..', 'chrome-extension', 'manifest.ts');
-
 const manifestObject = JSON.parse(JSON.stringify(manifest)) as chrome.runtime.ManifestV3;
 const manifestString = fs.readFileSync(manifestPath, 'utf-8');
 

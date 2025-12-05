@@ -1,10 +1,11 @@
 # UI Package (`@extension/ui`)
 
-This package provides React components and styling utilities that make up the MCP SuperAssistant user interface, integrated with the modern plugin architecture and state management system.
+This package provides React components and styling utilities that make up the Nyx user interface, integrated with the modern plugin architecture and state management system.
 
 ## Overview
 
 The UI package offers:
+
 - Pre-built React components with consistent styling
 - Tailwind CSS integration and theming
 - shadcn/ui component integration
@@ -14,6 +15,7 @@ The UI package offers:
 ## Integration with Extension Architecture
 
 ### State Management Integration
+
 Components in this package are designed to work seamlessly with the content script's Zustand stores and React hooks:
 
 ```tsx
@@ -23,13 +25,10 @@ import { Button, Card } from '@extension/ui';
 export function ToolExecutionPanel() {
   const { tools, isConnected } = useStores();
   const { currentAdapter, executeAction } = useAdapter();
-  
+
   return (
     <Card className="p-4">
-      <Button 
-        onClick={() => executeAction('submitForm')}
-        disabled={!isConnected}
-      >
+      <Button onClick={() => executeAction('submitForm')} disabled={!isConnected}>
         Execute Tool
       </Button>
     </Card>
@@ -38,6 +37,7 @@ export function ToolExecutionPanel() {
 ```
 
 ### Plugin System Integration
+
 UI components can leverage the plugin system for site-specific adaptations:
 
 ```tsx
@@ -45,10 +45,10 @@ import { useAdapter } from '@extension/content';
 
 export function AdaptiveButton() {
   const { currentAdapter } = useAdapter();
-  
+
   // Adapt button style based on current site adapter
   const buttonStyle = currentAdapter?.getUITheme?.() || 'default';
-  
+
   return <Button variant={buttonStyle}>Action</Button>;
 }
 ```

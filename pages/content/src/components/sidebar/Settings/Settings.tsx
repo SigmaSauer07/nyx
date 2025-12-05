@@ -6,11 +6,9 @@ import { AutomationService } from '@src/services/automation.service';
 import { cn } from '@src/lib/utils';
 import { createLogger } from '@extension/shared/lib/logger';
 
-// Default delay values in seconds
-
-const logger = createLogger('Settings');
-
-const DEFAULT_DELAYS = {
+// Default delay values in seconds const logger = createLogger('Settings');
+  
+  const DEFAULT_DELAYS = {
   autoInsertDelay: 2,
   autoSubmitDelay: 2,
   autoExecuteDelay: 2
@@ -19,8 +17,7 @@ const DEFAULT_DELAYS = {
 const Settings: React.FC = () => {
   const { preferences, updatePreferences } = useUserPreferences();
 
-  // Handle delay input changes
-  const handleDelayChange = (type: 'autoInsert' | 'autoSubmit' | 'autoExecute', value: string) => {
+  // Handle delay input changes const handleDelayChange = (type: 'autoInsert' | 'autoSubmit' | 'autoExecute', value: string) => {
     const delay = Math.max(0, parseInt(value) || 0); // Ensure non-negative integer
     logger.debug(`${type} delay changed to: ${delay}`);
     
@@ -28,14 +25,12 @@ const Settings: React.FC = () => {
     updatePreferences({ [`${type}Delay`]: delay });
 
     // Store in localStorage
-    try {
-      const storedDelays = JSON.parse(localStorage.getItem('mcpDelaySettings') || '{}');
-      localStorage.setItem('mcpDelaySettings', JSON.stringify({
+    try { const storedDelays = JSON.parse(localStorage.getItem('mcpDelaySettings') || '{}'); localStorage.setItem('mcpDelaySettings', JSON.stringify({
         ...storedDelays,
         [`${type}Delay`]: delay
       }));
     } catch (error) {
-      logger.error('[Settings] Error storing delay settings:', error);
+       logger.error('[Settings] Error storing delay settings:', error);
     }
 
     // Update automation state on window
@@ -44,21 +39,18 @@ const Settings: React.FC = () => {
 
   // Load stored delays on component mount, set default to 2 seconds if not set
   React.useEffect(() => {
-    try {
-      const storedDelays = JSON.parse(localStorage.getItem('mcpDelaySettings') || '{}');
+    try { const storedDelays = JSON.parse(localStorage.getItem('mcpDelaySettings') || '{}');
       // If no stored delays, use defaults
       if (Object.keys(storedDelays).length === 0) {
-        updatePreferences(DEFAULT_DELAYS);
-        localStorage.setItem('mcpDelaySettings', JSON.stringify(DEFAULT_DELAYS));
+        updatePreferences(DEFAULT_DELAYS); localStorage.setItem('mcpDelaySettings', JSON.stringify(DEFAULT_DELAYS));
       } else {
         // Use stored delays
         updatePreferences(storedDelays);
       }
     } catch (error) {
-      logger.error('[Settings] Error loading stored delay settings:', error);
+       logger.error('[Settings] Error loading stored delay settings:', error);
       // Set defaults on error
-      updatePreferences(DEFAULT_DELAYS);
-      localStorage.setItem('mcpDelaySettings', JSON.stringify(DEFAULT_DELAYS));
+      updatePreferences(DEFAULT_DELAYS); localStorage.setItem('mcpDelaySettings', JSON.stringify(DEFAULT_DELAYS));
     }
   }, [updatePreferences]);
 
@@ -83,8 +75,7 @@ const Settings: React.FC = () => {
                 id="auto-insert-delay"
                 type="number"
                 min="0"
-                value={preferences.autoInsertDelay || 0}
-                onChange={(e) => handleDelayChange('autoInsert', e.target.value)}
+                value={preferences.autoInsertDelay || 0} onChange={(e) => handleDelayChange('autoInsert', e.target.value)}
                 disabled={false}
                 className={cn(
                   "w-full p-2 text-sm border rounded-md",
@@ -110,8 +101,7 @@ const Settings: React.FC = () => {
                 id="auto-submit-delay"
                 type="number"
                 min="0"
-                value={preferences.autoSubmitDelay || 0}
-                onChange={(e) => handleDelayChange('autoSubmit', e.target.value)}
+                value={preferences.autoSubmitDelay || 0} onChange={(e) => handleDelayChange('autoSubmit', e.target.value)}
                 disabled={false}
                 className={cn(
                   "w-full p-2 text-sm border rounded-md",
@@ -137,8 +127,7 @@ const Settings: React.FC = () => {
                 id="auto-execute-delay"
                 type="number"
                 min="0"
-                value={preferences.autoExecuteDelay || 0}
-                onChange={(e) => handleDelayChange('autoExecute', e.target.value)}
+                value={preferences.autoExecuteDelay || 0} onChange={(e) => handleDelayChange('autoExecute', e.target.value)}
                 disabled={false}
                 className={cn(
                   "w-full p-2 text-sm border rounded-md",

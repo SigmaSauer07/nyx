@@ -6,7 +6,6 @@ import type { Manifest } from '@extension/dev-utils';
 import { colorLog, ManifestParser } from '@extension/dev-utils';
 import type { PluginOption } from 'vite';
 import { IS_DEV, IS_FIREFOX } from '@extension/env';
-
 const manifestFile = resolve(import.meta.dirname, '..', '..', 'manifest.js');
 const refreshFilePath = resolve(
   import.meta.dirname,
@@ -28,8 +27,7 @@ const withHMRId = (code: string) => {
 const getManifestWithCacheBurst = async () => {
   const withCacheBurst = (path: string) => `${path}?${Date.now().toString()}`;
 
-  /**
-   * In Windows, import() doesn't work without file:// protocol.
+  /** * In Windows, import() doesn't work without file:// protocol.
    * So, we need to convert path to file:// protocol. (url.pathToFileURL)
    */
   if (platform === 'win32') {
@@ -44,7 +42,6 @@ export default (config: { outDir: string }): PluginOption => {
     if (!existsSync(to)) {
       mkdirSync(to);
     }
-
     const manifestPath = resolve(to, 'manifest.json');
 
     if (IS_DEV) {
@@ -52,13 +49,11 @@ export default (config: { outDir: string }): PluginOption => {
     }
 
     writeFileSync(manifestPath, ManifestParser.convertManifestToString(manifest, IS_FIREFOX));
-
     const refreshFileString = readFileSync(refreshFilePath, 'utf-8');
 
     if (IS_DEV) {
       writeFileSync(resolve(to, 'refresh.js'), withHMRId(refreshFileString));
     }
-
     colorLog(`Manifest file copy complete: ${manifestPath}`, 'success');
   };
 

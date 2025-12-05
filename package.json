@@ -1,13 +1,13 @@
 {
-  "name": "mcp-superassistant",
-  "version": "0.5.8",
-  "description": "MCP SuperAssistant",
+  "name": "nyx",
+  "version": "1.0.0",
+  "description": "When automation meets tranquility: Nyx, the ultimate browser extension for seamless web interactions.",
   "license": "MIT",
   "private": true,
   "sideEffects": false,
   "repository": {
     "type": "git",
-    "url": "https://github.com/srbhptl39/MCP-SuperAssistant.git"
+    "url": "https://github.com/alsania-dev/nyx.git"
   },
   "type": "module",
   "scripts": {

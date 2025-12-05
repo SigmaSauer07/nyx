@@ -120,7 +120,7 @@ export interface AdapterConfig {
   version: string;
   lastUpdated: string;
   schemaVersion: number;
-  /** 
+  /**
    * Override configuration - when specified, these sections will use only remote config values
    * instead of merging with defaults. Provides fail-safe behavior with fallbacks.
    */

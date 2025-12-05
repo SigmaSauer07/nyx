@@ -5,8 +5,6 @@ import { SSEPlugin } from '../plugins/sse/SSEPlugin.js';
 import { WebSocketPlugin } from '../plugins/websocket/WebSocketPlugin.js';
 import { StreamableHttpPlugin } from '../plugins/streamable-http/StreamableHttpPlugin.js';
 import { createLogger } from '@extension/shared/lib/logger';
-
-
 const logger = createLogger('PluginRegistry');
 
 export class PluginRegistry extends EventEmitter<RegistryEvents> {
@@ -26,9 +24,7 @@ export class PluginRegistry extends EventEmitter<RegistryEvents> {
     }
 
     this.plugins.set(transportType, plugin);
-    logger.debug(`Registered plugin: ${plugin.metadata.name} v${plugin.metadata.version} (${transportType})`,
-    );
-
+    logger.debug(`Registered plugin: ${plugin.metadata.name} v${plugin.metadata.version} (${transportType})`);
     this.emit('registry:plugin-registered', { plugin });
   }
 
@@ -41,7 +37,6 @@ export class PluginRegistry extends EventEmitter<RegistryEvents> {
     this.plugins.delete(type);
     this.initialized.delete(type);
     logger.debug(`Unregistered plugin for transport: ${type}`);
-
     this.emit('registry:plugin-unregistered', { type });
     return true;
   }
@@ -107,7 +102,6 @@ export class PluginRegistry extends EventEmitter<RegistryEvents> {
 
       const loadedCount = this.plugins.size;
       logger.debug(`Loaded ${loadedCount} default plugins`);
-
       this.emit('registry:plugins-loaded', { count: loadedCount });
     } catch (error) {
       logger.error('[PluginRegistry] Failed to load default plugins:', error);

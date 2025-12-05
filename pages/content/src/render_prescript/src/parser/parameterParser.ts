@@ -10,9 +10,7 @@ export const streamingContentLengths = new Map<string, number>();
  * Detect if content is JSON format
  */
 const isJSONFormat = (content: string): boolean => {
-  const trimmed = content.trim();
-  return trimmed.includes('"type"') &&
-         (trimmed.includes('function_call_start') || trimmed.includes('parameter'));
+  const trimmed = content.trim(); return trimmed.includes('"type"') && (trimmed.includes('function_call_start') || trimmed.includes('parameter'));
 };
 
 /**
@@ -26,12 +24,9 @@ const extractParametersFromJSON = (content: string, blockId: string | null = nul
   const partialParams: PartialParameterState = blockId ? partialParameterState.get(blockId) || {} : {};
   const newPartialState: PartialParameterState = {};
 
-  // Check if streaming (no function_call_end)
-  const isStreaming = !content.includes('"type":"function_call_end"') &&
-                      !content.includes('"type": "function_call_end"');
-
-  Object.entries(jsonParams).forEach(([name, value]) => {
-    const displayValue = typeof value === 'object' ? JSON.stringify(value, null, 2) : String(value);
+  // Check if streaming (no function_call_end) const isStreaming = !content.includes('"type":"function_call_end"') && !content.includes('"type": "function_call_end"');
+  
+    Object.entries(jsonParams).forEach(([name, value]) => { const displayValue = typeof value === 'object' ? JSON.stringify(value, null, 2) : String(value);
 
     // Track content length for large content handling
     if (blockId && displayValue.length > CONFIG.largeContentThreshold) {
@@ -93,8 +88,7 @@ export const extractParameters = (content: string, blockId: string | null = null
     const paramName = match[1] || match[2];
     const fullMatch = match[0];
     const startPos = match.index + fullMatch.length;
-
-    const isIncompleteTag = !fullMatch.endsWith('>');
+ const isIncompleteTag = !fullMatch.endsWith('>');
 
     if (isIncompleteTag) {
       // Handle incomplete opening tag
@@ -119,16 +113,12 @@ export const extractParameters = (content: string, blockId: string | null = null
 
     // More robust tag matching algorithm
     for (let i = startPos; i < content.length; i++) {
-      // Check for another opening parameter tag
-      if (i + 10 < content.length && content.substring(i, i + 10) === '<parameter') {
-        // Only increment if it's actually a tag and not part of a string
-        // Look for whitespace or '>' after the tag name to confirm it's a tag
-        if (content.charAt(i + 10) === ' ' || content.charAt(i + 10) === '>') {
+      // Check for another opening parameter tag if (i + 10 < content.length && content.substring(i, i + 10) === '<parameter') { // Only increment if it's actually a tag and not part of a string
+        // Look for whitespace or '>' after the tag name to confirm it's a tag if (content.charAt(i + 10) === ' ' || content.charAt(i + 10) === '>') {
           nestLevel++;
         }
       }
-      // Check for closing parameter tag
-      else if (i + 12 < content.length && content.substring(i, i + 12) === '</parameter>') {
+      // Check for closing parameter tag else if (i + 12 < content.length && content.substring(i, i + 12) === '</parameter>') {
         nestLevel--;
         if (nestLevel === 0) {
           endPos = i;
@@ -190,25 +180,21 @@ export const extractParameters = (content: string, blockId: string | null = null
     }
   }
 
-  // Handle partial parameter tags at the end of content
-  if (blockId && content.includes('<parameter')) {
+  // Handle partial parameter tags at the end of content if (blockId && content.includes('<parameter')) {
     // More robust regex for partial opening tags
     const partialTagRegex = /<parameter(?:\s+(?:name="([^"]*)")?[^>]*)?$/;
     const partialTagMatch = content.match(partialTagRegex);
 
-    if (partialTagMatch) {
-      const paramName = partialTagMatch[1] || 'unnamed_parameter';
+    if (partialTagMatch) { const paramName = partialTagMatch[1] || 'unnamed_parameter';
       const partialTag = partialTagMatch[0];
 
       // Store the partial tag with timestamp to avoid collisions
       newPartialState[`__partial_tag_${Date.now()}`] = partialTag;
-
-      if (paramName && paramName !== 'unnamed_parameter') {
+ if (paramName && paramName !== 'unnamed_parameter') {
         const existingParam = parameters.find(p => p.name === paramName);
         if (!existingParam) {
           parameters.push({
-            name: paramName,
-            value: '(streaming...)',
+            name: paramName, value: '(streaming...)',
             isComplete: false,
             isStreaming: true,
             isIncompleteTag: true,
@@ -223,8 +209,7 @@ export const extractParameters = (content: string, blockId: string | null = null
 
     if (lastParamTagMatch) {
       // Use the first non-undefined group as the parameter name
-      const paramName = lastParamTagMatch[1] || lastParamTagMatch[2];
-      const partialContent = lastParamTagMatch[3] || '';
+      const paramName = lastParamTagMatch[1] || lastParamTagMatch[2]; const partialContent = lastParamTagMatch[3] || '';
 
       if (paramName && partialContent) {
         newPartialState[`__streaming_content_${paramName}`] = partialContent;

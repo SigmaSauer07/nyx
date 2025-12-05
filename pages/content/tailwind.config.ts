@@ -17,15 +17,9 @@ export default {
   //   function({ addBase, theme }) {
   //     addBase({
   //       // Target the shadow host and its contents
-  //       ':host': {
-  //         all: 'initial', // Reset all inherited styles
-  //         display: 'block', // Make the shadow host a block element
+  //       ':host': { //         all: 'initial', // Reset all inherited styles //         display: 'block', // Make the shadow host a block element
   //       },
-  //       // Add base styling for common elements within the Shadow DOM
-  //       'h1, h2, h3, h4, h5, h6, p, span, div, button, input, select, textarea': {
-  //         fontFamily: 'inherit',
-  //         fontSize: 'inherit',
-  //         color: 'inherit',
+  //       // Add base styling for common elements within the Shadow DOM //       'h1, h2, h3, h4, h5, h6, p, span, div, button, input, select, textarea': { //         fontFamily: 'inherit', //         fontSize: 'inherit', //         color: 'inherit',
   //       },
   //     });
   //   },

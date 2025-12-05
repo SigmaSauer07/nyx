@@ -28,7 +28,7 @@ tsconfig.tsbuildinfo
 # trash
 .trash
 .trash/*
-mcp-superassistant-proxy/bun.lock
+mcpnyx/bun.lock
 # pnpm-lock.yaml
 
 # Added by Task Master AI
@@ -91,3 +91,7 @@ pages/content/src/utils/migration-bridge.ts
 pages/content/src/utils/siteAdapter.ts
 pages/content/src/utils/themeDetector.ts
 clients.md
+
+
+#Ignore vscode AI rules
+.github/instructions/codacy.instructions.md

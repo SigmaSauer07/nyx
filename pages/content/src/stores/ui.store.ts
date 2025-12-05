@@ -6,8 +6,6 @@ import type { UserPreferences, SidebarState, Notification, GlobalSettings } from
 import type { RemoteNotification, NotificationAction } from './config.store';
 import { useAppStore, type AppState } from './app.store'; // Assuming AppState includes theme
 import { createLogger } from '@extension/shared/lib/logger';
-
-
 const logger = createLogger('useUIStore');
 
 export interface UIState {
@@ -46,8 +44,8 @@ const initialSidebarState: SidebarState = {
 
 const initialUserPreferences: UserPreferences = {
   autoSubmit: false,
-  autoInsert: false,   // New automation field
-  autoExecute: false,  // New automation field
+  autoInsert: false, // New automation field
+  autoExecute: false, // New automation field
   notifications: true,
   theme: 'system', // Default theme
   language: navigator.language || 'en-US',
@@ -56,12 +54,29 @@ const initialUserPreferences: UserPreferences = {
   isMinimized: false,
   customInstructions: '',
   customInstructionsEnabled: false,
-  autoInsertDelay: 2,  // Default delay in seconds
-  autoExecuteDelay: 2,  // Default delay in seconds
-  autoSubmitDelay: 2,   // Default delay in seconds
+  autoInsertDelay: 2, // Default delay in seconds
+  autoExecuteDelay: 2, // Default delay in seconds
+  autoSubmitDelay: 2, // Default delay in seconds
 };
 
-const initialState: Omit<UIState, 'toggleSidebar' | 'toggleMinimize' | 'resizeSidebar' | 'setSidebarVisibility' | 'updatePreferences' | 'addNotification' | 'addRemoteNotification' | 'removeNotification' | 'dismissNotification' | 'clearNotifications' | 'openModal' | 'closeModal' | 'setGlobalLoading' | 'setTheme' | 'setMCPEnabled'> = {
+const initialState: Omit<
+  UIState,
+  | 'toggleSidebar'
+  | 'toggleMinimize'
+  | 'resizeSidebar'
+  | 'setSidebarVisibility'
+  | 'updatePreferences'
+  | 'addNotification'
+  | 'addRemoteNotification'
+  | 'removeNotification'
+  | 'dismissNotification'
+  | 'clearNotifications'
+  | 'openModal'
+  | 'closeModal'
+  | 'setGlobalLoading'
+  | 'setTheme'
+  | 'setMCPEnabled'
+> = {
   sidebar: initialSidebarState,
   preferences: initialUserPreferences,
   notifications: [],
@@ -80,15 +95,17 @@ export const useUIStore = create<UIState>()(
         toggleSidebar: (reason?: string) => {
           const newVisibility = !get().sidebar.isVisible;
           set(state => ({ sidebar: { ...state.sidebar, isVisible: newVisibility } }));
-          logger.debug(`Sidebar toggled to ${newVisibility ? 'visible' : 'hidden'}. Reason: ${reason || 'user action'}`);
+          logger.debug(
+            `Sidebar toggled to ${newVisibility ? 'visible' : 'hidden'}. Reason: ${reason || 'user action'}`,
+          );
           eventBus.emit('ui:sidebar-toggle', { visible: newVisibility, reason: reason || 'user action' });
         },
 
         toggleMinimize: (reason?: string) => {
           const newMinimized = !get().sidebar.isMinimized;
-          set(state => ({ 
+          set(state => ({
             sidebar: { ...state.sidebar, isMinimized: newMinimized },
-            preferences: { ...state.preferences, isMinimized: newMinimized }
+            preferences: { ...state.preferences, isMinimized: newMinimized },
           }));
           logger.debug(`Sidebar ${newMinimized ? 'minimized' : 'expanded'}. Reason: ${reason || 'user action'}`);
           eventBus.emit('ui:sidebar-minimize', { minimized: newMinimized, reason: reason || 'user action' });
@@ -117,7 +134,6 @@ export const useUIStore = create<UIState>()(
             get().setTheme(prefs.theme);
           }
         },
-
         addNotification: (notificationData: Omit<Notification, 'id' | 'timestamp'>): string => {
           const newNotification: Notification = {
             ...notificationData,
@@ -134,34 +150,31 @@ export const useUIStore = create<UIState>()(
           // Import config store to check notification limits
           const { useConfigStore } = require('./config.store');
           const configStore = useConfigStore.getState();
-          
+
           // Check if notifications are enabled
           if (!configStore.notificationConfig.enabled) {
             logger.debug('[UIStore] Remote notifications disabled, ignoring:', notification.id);
             return '';
           }
-          
           // Check frequency limits
           const today = new Date().toDateString();
-          const todayNotifications = get().notifications.filter(n => 
-            new Date(n.timestamp).toDateString() === today &&
-            (n as any).source === 'remote'
+          const todayNotifications = get().notifications.filter(
+            n => new Date(n.timestamp).toDateString() === today && (n as any).source === 'remote',
           ).length;
-          
+
           if (todayNotifications >= configStore.notificationConfig.maxPerDay) {
             logger.debug('[UIStore] Daily notification limit reached, ignoring:', notification.id);
             eventBus.emit('notification:frequency-limited', {
               notificationId: notification.id,
-              reason: 'Daily limit exceeded'
+              reason: 'Daily limit exceeded',
             });
             return '';
           }
-          
           // Create enhanced notification
-          const newNotification: Notification & { 
-            source: 'remote'; 
-            campaignId?: string; 
-            actions?: NotificationAction[]; 
+          const newNotification: Notification & {
+            source: 'remote';
+            campaignId?: string;
+            actions?: NotificationAction[];
             priority?: number;
           } = {
             id: notification.id || `remote_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`,
@@ -173,27 +186,30 @@ export const useUIStore = create<UIState>()(
             source: 'remote',
             campaignId: notification.campaignId,
             actions: notification.actions,
-            priority: notification.priority || 1
+            priority: notification.priority || 1,
           };
-          
+
           // Add to notifications list, sorting by priority
-          set(state => ({ 
-            notifications: [...state.notifications, newNotification]
-              .sort((a, b) => ((b as any).priority || 1) - ((a as any).priority || 1))
+          set(state => ({
+            notifications: [...state.notifications, newNotification].sort(
+              (a, b) => ((b as any).priority || 1) - ((a as any).priority || 1),
+            ),
           }));
-          
+
           // Mark as shown in config store
           configStore.markNotificationShown(newNotification.id);
           configStore.addNotificationToHistory(newNotification.id);
-          
+
           // Emit events
-          eventBus.emit('ui:notification-added', { notification: newNotification });
+          eventBus.emit('ui:notification-added', {
+            notification: newNotification,
+          });
           eventBus.emit('notification:shown', {
             notificationId: newNotification.id,
             source: 'remote',
-            timestamp: Date.now()
+            timestamp: Date.now(),
           });
-          
+
           // Emit analytics event
           eventBus.emit('analytics:track', {
             event: 'notification_shown',
@@ -201,10 +217,9 @@ export const useUIStore = create<UIState>()(
               notification_id: newNotification.id,
               campaign_id: notification.campaignId,
               type: notification.type,
-              source: 'remote'
-            }
+              source: 'remote',
+            },
           });
-          
           logger.debug('[UIStore] Remote notification added:', newNotification);
           return newNotification.id;
         },
@@ -223,9 +238,9 @@ export const useUIStore = create<UIState>()(
               eventBus.emit('notification:dismissed', {
                 notificationId: id,
                 reason: reason || 'user_dismissed',
-                timestamp: Date.now()
+                timestamp: Date.now(),
               });
-              
+
               // Emit analytics event
               eventBus.emit('analytics:track', {
                 event: 'notification_dismissed',
@@ -233,12 +248,11 @@ export const useUIStore = create<UIState>()(
                   notification_id: id,
                   campaign_id: (notification as any).campaignId,
                   reason: reason || 'user_dismissed',
-                  source: 'remote'
-                }
+                  source: 'remote',
+                },
               });
             }
           }
-          
           // Remove the notification
           get().removeNotification(id);
         },
@@ -263,15 +277,14 @@ export const useUIStore = create<UIState>()(
           set({ isLoading: loading });
           logger.debug(`Global loading state: ${loading}`);
         },
-
         setTheme: (theme: GlobalSettings['theme']) => {
           set({ theme });
           logger.debug(`Theme changed to: ${theme}`);
           eventBus.emit('ui:theme-changed', { theme });
           // Also update preferences if they should be kept in sync
           if (get().preferences.theme !== theme) {
-             set(state => ({ preferences: { ...state.preferences, theme }}));
-             eventBus.emit('ui:preferences-updated', { preferences: get().preferences });
+            set(state => ({ preferences: { ...state.preferences, theme } }));
+            eventBus.emit('ui:preferences-updated', { preferences: get().preferences });
           }
         },
 
@@ -280,63 +293,55 @@ export const useUIStore = create<UIState>()(
           set({ mcpEnabled: enabled });
 
           logger.debug(`MCP toggle set to ${enabled}. Reason: ${reason || 'user action'}`);
-
           // When disabling MCP, hide sidebar (but don't change visibility state when enabling)
           // This allows sidebar visibility to be controlled independently when MCP is on
           if (enabled !== previousState && !enabled) {
             // MCP disabled - force hide sidebar
             get().setSidebarVisibility(false, reason || 'mcp-toggle');
-          }
-          // Note: When enabling MCP, we DON'T automatically show sidebar
+          } // Note: When enabling MCP, we DON'T automatically show sidebar
           // The sidebar will check mcpEnabled and isVisible separately on initialization
-
           // Emit event for components that need to react to MCP state changes
           eventBus.emit('ui:mcp-toggle', { enabled, reason: reason || 'user action', previousState });
         },
       }),
       {
-        name: 'mcp-super-assistant-ui-store',
+        name: 'nyx-ui-store',
         storage: createJSONStorage(() => localStorage),
-        partialize: (state) => ({
+        partialize: state => ({
           // Persist sidebar state and user preferences
-          sidebar: { 
-            width: state.sidebar.width, 
+          sidebar: {
+            width: state.sidebar.width,
             position: state.sidebar.position,
             isVisible: state.sidebar.isVisible,
-            isMinimized: state.sidebar.isMinimized
+            isMinimized: state.sidebar.isMinimized,
           },
           preferences: state.preferences,
           theme: state.theme, // Persist theme
           mcpEnabled: state.mcpEnabled, // Persist MCP toggle state across page refreshes
         }),
-      }
+      },
     ),
-    { name: 'UIStore', store: 'ui' }
-  )
-);
-
-// Sync theme from app.store's globalSettings if it changes there
+    { name: 'UIStore', store: 'ui' },
+  ),
+); // Sync theme from app.store's globalSettings if it changes there
 // This creates a two-way sync if app.store also updates its globalSettings.theme from ui.store.preferences.theme
 // Ensure this logic is robust or handled by a single source of truth for theme.
-useAppStore.subscribe(
-  (state: AppState, prevState: AppState) => {
-    const newTheme = state.globalSettings.theme;
-    const oldTheme = prevState.globalSettings.theme;
-    if (newTheme && newTheme !== oldTheme) {
-      // Check against current UIStore theme to prevent loops and unnecessary updates
-      if (newTheme !== useUIStore.getState().theme) { 
-        logger.debug('[UIStore] Theme changed in AppStore, syncing to UIStore:', newTheme);
-        useUIStore.getState().setTheme(newTheme); // Use the existing setTheme action
-        // The setTheme action itself emits 'ui:theme-changed', so no need to emit here again.
-      }
-    }
-    if (state.globalSettings.sidebarWidth !== prevState.globalSettings.sidebarWidth) {
-      if (useUIStore.getState().sidebar.width !== state.globalSettings.sidebarWidth) {
-        logger.debug('[UIStore] Syncing sidebar width from AppStore globalSettings:', state.globalSettings.sidebarWidth);
-        useUIStore.getState().resizeSidebar(state.globalSettings.sidebarWidth);
-      }
+useAppStore.subscribe((state: AppState, prevState: AppState) => {
+  const newTheme = state.globalSettings.theme;
+  const oldTheme = prevState.globalSettings.theme;
+  if (newTheme && newTheme !== oldTheme) {
+    // Check against current UIStore theme to prevent loops and unnecessary updates
+    if (newTheme !== useUIStore.getState().theme) {
+      logger.debug('[UIStore] Theme changed in AppStore, syncing to UIStore:', newTheme);
+      useUIStore.getState().setTheme(newTheme); // Use the existing setTheme action // The setTheme action itself emits 'ui:theme-changed', so no need to emit here again.
     }
   }
-);
+  if (state.globalSettings.sidebarWidth !== prevState.globalSettings.sidebarWidth) {
+    if (useUIStore.getState().sidebar.width !== state.globalSettings.sidebarWidth) {
+      logger.debug('[UIStore] Syncing sidebar width from AppStore globalSettings:', state.globalSettings.sidebarWidth);
+      useUIStore.getState().resizeSidebar(state.globalSettings.sidebarWidth);
+    }
+  }
+});
 
 // Consider calling unSubAppStore on cleanup if the content script can be unloaded/reloaded.

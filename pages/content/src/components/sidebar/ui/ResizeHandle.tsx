@@ -25,8 +25,7 @@ const ResizeHandle: React.FC<ResizeHandleProps> = ({
   const rafRef = useRef<number | null>(null);
 
   const handleMouseDown = (e: React.MouseEvent) => {
-    e.preventDefault();
-    // Get the current sidebar width from the parent element's style
+    e.preventDefault(); // Get the current sidebar width from the parent element's style
     const sidebarEl = handleRef.current?.parentElement;
     const currentWidth = sidebarEl ? parseInt(getComputedStyle(sidebarEl).width, 10) : defaultWidth;
 
