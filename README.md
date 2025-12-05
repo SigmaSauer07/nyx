@@ -22,18 +22,13 @@ Brings MCP to ChatGPT, Perplexity, Grok, Gemini, Google AI Studio, OpenRouter, K
    ![Latest Release](https://img.shields.io/github/v/release/alsania-dev/Nyx?style=flat-square&label=Latest%20Release&color=brightgreen)
    ![GitHub Stars](https://img.shields.io/github/stars/alsania-dev/Nyx?style=flat-square&label=Stars)
    ![License](https://img.shields.io/badge/License-MIT-blue?style=flat-square)
-   ![Chrome Users](https://img.shields.io/chrome-web-store/users/kngiafgkdnlkgmefdafaibkibegkcaef?style=flat-square&label=Chrome%20Users)
-   ![Firefox Users](https://img.shields.io/amo/users/nyx?style=flat-square&label=Firefox%20Users)
+   ![Chrome Users](coming soon)
+   ![Firefox Users](coming soon)
    ![Build Status](https://img.shields.io/badge/Status-Active-success?style=flat-square)
 
 </div>
 
 ## Installation
-
-<div align="center" style="display: flex; justify-content: center; gap: 20px; align-items: center;">
-   <a href="https://chromewebstore.google.com/detail/nyx/kngiafgkdnlkgmefdafaibkibegkcaef?hl=en"><img src="https://developer.chrome.com/static/docs/webstore/branding/image/HRs9MPufa1J1h5glNhut.png" alt="Chrome Web Store" width="200" height="auto" style="vertical-align: middle;" /></a>
-   <a href="https://addons.mozilla.org/en-US/firefox/addon/nyx/"><img src="https://blog.mozilla.org/addons/files/2015/11/get-the-addon.png" alt="Firefox Add-ons" width="200" height="auto" style="vertical-align: middle;" /></a>
-</div>
 
 <br>
 
@@ -57,28 +52,6 @@ Nyx is a Chrome extension that integrates the Model Context Protocol (MCP) tools
 - [Qwen Chat](https://chat.qwen.ai/)
 - [Z Chat](https://chat.z.ai/)
 
-
-## Demo Video
-
-Kimi.com
-
-[![Nyx Demo](https://img.youtube.com/vi/jnBPh2jzunM/0.jpg)](https://www.youtube.com/watch?v=jnBPh2jzunM)
-
-ChatGPT
-
-[![Nyx Demo](https://img.youtube.com/vi/PY0SKjtmy4E/0.jpg)](https://www.youtube.com/watch?v=PY0SKjtmy4E)
-
-Watch the demo to see Nyx in action!
-
-[Nyx Demo Playlist](https://www.youtube.com/playlist?list=PLOK1DBnkeaJFzxC4M-z7TU7_j04SShX_w)
-
-## Setup Tutorial
-
-[![Setup Tutorial](https://img.youtube.com/vi/h9f_GX1Ef20/0.jpg)](https://www.youtube.com/watch?v=h9f_GX1Ef20&pp=ygUTbWNwIHN1cGVyIGFzc2lzdGFudA%3D%3D)
-
-**New to Nyx?** Watch this complete setup guide to get started in minutes!
-
-[View Setup Tutorial](https://www.youtube.com/watch?v=h9f_GX1Ef20&pp=ygUTbWNwIHN1cGVyIGFzc2lzdGFudA%3D%3D)
 
 ## What is MCP?
 
@@ -121,7 +94,7 @@ To connect the Chrome extension to a local server for proxying connections:
    ```json
    {
      "mcpServers": {
-       "alsaniamcpr": {
+       "alsaniamcp": {
          "command": "npx",
          "args": [
            "-y",
