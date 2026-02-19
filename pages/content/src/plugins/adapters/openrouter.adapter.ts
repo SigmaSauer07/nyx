@@ -30,7 +30,8 @@ export class OpenRouterAdapter extends BaseAdapterPlugin { readonly name = 'Open
     // File preview elements - updated for OpenRouter structure FILE_PREVIEW: '.duration-200.bg-accent\\/80.flex.w-full.shadow-inner.p-2, .bg-background.relative.h-32.w-48, .group.relative.flex.shrink-0, .file-preview, .attachment-preview, .file-attachment',
     // Button insertion points (for MCP popover) - updated for new button container
     BUTTON_INSERTION_CONTAINER: '.relative.flex.w-full.min-w-0.items-center.gap-1, .flex.gap-1, .input-actions, .chat-input-actions',
-    // Alternative insertion points FALLBACK_INSERTION: '.flex.gap-1, .input-area, .chat-input-container, .conversation-input',
+    // Alternative insertion points
+    FALLBACK_INSERTION: '.flex.gap-1, .input-area, .chat-input-container, .conversation-input',
   };
 
   // URL patterns for navigation tracking private lastUrl: string = '';

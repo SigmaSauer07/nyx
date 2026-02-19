@@ -26,8 +26,10 @@ export class GrokAdapter extends BaseAdapterPlugin { readonly name = 'GrokAdapte
     // Main panel and container selectors MAIN_PANEL: '.chat-container, .grok-chat, .main-content',
     // Drop zones for file attachment DROP_ZONE: '.chat-input-container, .input-area, textarea, div[contenteditable="true"]',
     // File preview elements FILE_PREVIEW: '.file-preview, .attachment-preview, .file-attachment',
-    // Button insertion points (for MCP popover) BUTTON_INSERTION_CONTAINER: '.chat-input-actions, .input-actions, .chat-controls',
-    // Alternative insertion points FALLBACK_INSERTION: '.chat-input-container, .input-area, .chat-interface'
+    // Button insertion points (for MCP popover)
+    BUTTON_INSERTION_CONTAINER: '.chat-input-actions, .input-actions, .chat-controls',
+    // Alternative insertion points
+    FALLBACK_INSERTION: '.chat-input-container, .input-area, .chat-interface'
   };
 
   // URL patterns for navigation tracking private lastUrl: string = '';

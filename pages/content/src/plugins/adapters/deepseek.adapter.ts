@@ -26,8 +26,10 @@ export class DeepSeekAdapter extends BaseAdapterPlugin { readonly name = 'DeepSe
     // Main panel and container selectors MAIN_PANEL: '.chat-container, .main-content, .conversation-container, .chat-interface',
     // Drop zones for file attachment DROP_ZONE: '.chat-input-container, .input-area, .message-input, .chat-input, .file-drop-area',
     // File preview elements FILE_PREVIEW: '.file-preview, .attachment-preview, .uploaded-file',
-    // Button insertion points (for MCP popover) - DeepSeek specific BUTTON_INSERTION_CONTAINER: '.ec4f5d61, .chat-input-actions, .input-actions, .actions-wrapper',
-    // Alternative insertion points FALLBACK_INSERTION: '.input-area, .chat-input-container, ._24fad49, .bf38813a, .aaff8b8f'
+    // Button insertion points (for MCP popover) - DeepSeek specific
+    BUTTON_INSERTION_CONTAINER: '.ec4f5d61, .chat-input-actions, .input-actions, .actions-wrapper',
+    // Alternative insertion points
+    FALLBACK_INSERTION: '.input-area, .chat-input-container, ._24fad49, .bf38813a, .aaff8b8f'
   };
 
   // URL patterns for navigation tracking private lastUrl: string = '';

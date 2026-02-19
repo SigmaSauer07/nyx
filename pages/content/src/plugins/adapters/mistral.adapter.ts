@@ -26,9 +26,11 @@ export class MistralAdapter extends BaseAdapterPlugin { readonly name = 'Mistral
     // Main panel and container selectors MAIN_PANEL: '.relative.flex.w-full.flex-col.px-4.pt-3.pb-4',
     // Drop zones for file attachment - targeting the scroll area, ProseMirror, and main container DROP_ZONE: 'div.ProseMirror[contenteditable="true"][data-placeholder="Ask Le Chat anything"], div.ProseMirror[contenteditable="true"], div[data-radix-scroll-area-viewport], .relative.flex.w-full.flex-col.px-4.pt-3.pb-4, textarea[name="message.text"]', // File preview elements - updated for Mistral's specific file attachment UI
     FILE_PREVIEW: 'div.relative.rounded-md.border.border-default.bg-muted, .file-preview, .attachment-preview, .uploaded-file',
-    // Button insertion points (for MCP popover) - targeting the button container area BUTTON_INSERTION_CONTAINER: '.flex.w-full.max-w-full.items-center.justify-start.gap-3, .flex.gap-2.ms-auto',
+    // Button insertion points (for MCP popover) - targeting the button container area
+    BUTTON_INSERTION_CONTAINER: '.flex.w-full.max-w-full.items-center.justify-start.gap-3, .flex.gap-2.ms-auto',
     // Tools button selector TOOLS_BUTTON: 'button[data-testid="tools-selection-button"]',
-    // Alternative insertion points FALLBACK_INSERTION: '.relative.flex.w-full.flex-col.px-4.pt-3.pb-4, .chat-input-container'
+    // Alternative insertion points
+    FALLBACK_INSERTION: '.relative.flex.w-full.flex-col.px-4.pt-3.pb-4, .chat-input-container'
   };
 
   // URL patterns for navigation tracking private lastUrl: string = '';

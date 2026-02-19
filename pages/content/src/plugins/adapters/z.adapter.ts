@@ -27,7 +27,8 @@ export class ZAdapter extends BaseAdapterPlugin {
     FILE_PREVIEW: 'div.flex.relative.w-full.h-full > div > div.px-3.pb-3 > div.w-full.font-primary > div.transparent > div > div > form > div > div:nth-of-type(1)',
     // Button insertion points (for MCP popover) - looking for search/research toggle area
     BUTTON_INSERTION_CONTAINER: 'button[aria-label="More"], button[type="submit"]',
-    // Alternative insertion points FALLBACK_INSERTION: '#chat-input',
+    // Alternative insertion points
+    FALLBACK_INSERTION: '#chat-input',
   };
 
   // URL patterns for navigation tracking private lastUrl: string = '';

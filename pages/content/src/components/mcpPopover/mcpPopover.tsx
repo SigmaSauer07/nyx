@@ -75,16 +75,56 @@ const styles = `
 }
 
 .mcp-popover {
-  width: 650px;
+  width: min(650px, 95vw);
   background-color: #ffffff;
   border-radius: 12px;
   box-shadow: 0 4px 20px rgba(60,64,67,0.10), 0 2px 8px rgba(60,64,67,0.06);
   padding: 0;
   z-index: 1000;
-  border: 1px solid #dadce0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, sans-serif;
+  border: 1px solid #dadce0; 
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, sans-serif;
   overflow: visible;
   max-height: 90vh;
-  position: relative;
+}
+
+/* Responsive styles for mobile - conditional positioning for modal behavior */
+@media (max-width: 768px) {
+  .mcp-popover:not(.is-modal) {
+    width: 95vw;
+    max-width: 95vw;
+    min-height: 300px;
+    max-height: 80vh;
+    overflow-y: auto;
+  }
+  
+  /* Modal-style popover for mobile */
+  .mcp-popover.is-modal {
+    width: 95vw;
+    max-width: 95vw;
+    min-height: 300px;
+    max-height: 80vh;
+    position: relative; /* Let PopoverPortal control positioning */
+    overflow-y: auto;
+  }
+  
+  .mcp-popover.position-above::after,
+  .mcp-popover.position-below::after {
+    display: none;
+  }
+}
+
+/* Overlay for mobile */
+.mcp-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .mcp-close-button {
@@ -640,17 +680,45 @@ export const MCPPopover: React.FC<MCPPopoverProps> = ({ toggleStateManager, adap
 
   // Color scheme for the popover
   const theme = {
-    // Background colors mainBackground: isDarkMode ? '#2d2d2d' : '#ffffff', secondaryBackground: isDarkMode ? '#2d2d2d' : '#f8f9fa', buttonBackground: isDarkMode ? '#174ea6' : '#e8f0fe', buttonBackgroundHover: isDarkMode ? '#8ab4f8' : '#aecbfa', buttonBackgroundActive: isDarkMode ? '#8ab4f8' : '#1a73e8', toggleBackground: isDarkMode ? '#444' : '#dadce0', toggleBackgroundChecked: isDarkMode ? '#8ab4f8' : '#1a73e8', toggleBackgroundDisabled: isDarkMode ? '#444' : '#dadce0',
+    // Background colors
+    mainBackground: isDarkMode ? '#2d2d2d' : '#ffffff',
+    secondaryBackground: isDarkMode ? '#2d2d2d' : '#f8f9fa',
+    buttonBackground: isDarkMode ? '#174ea6' : '#e8f0fe',
+    buttonBackgroundHover: isDarkMode ? '#8ab4f8' : '#aecbfa',
+    buttonBackgroundActive: isDarkMode ? '#8ab4f8' : '#1a73e8',
+    toggleBackground: isDarkMode ? '#444' : '#dadce0',
+    toggleBackgroundChecked: isDarkMode ? '#8ab4f8' : '#1a73e8',
+    toggleBackgroundDisabled: isDarkMode ? '#444' : '#dadce0',
 
-    // Text colors primaryText: isDarkMode ? '#e8eaed' : '#202124', secondaryText: isDarkMode ? '#9aa0a6' : '#5f6368', disabledText: isDarkMode ? '#9aa0a6' : '#5f6368',
+    // Text colors
+    primaryText: isDarkMode ? '#e8eaed' : '#202124',
+    secondaryText: isDarkMode ? '#9aa0a6' : '#5f6368',
+    disabledText: isDarkMode ? '#9aa0a6' : '#5f6368',
 
-    // Border colors borderColor: isDarkMode ? '#444' : '#dadce0', dividerColor: isDarkMode ? '#444' : '#dadce0',
+    // Border colors
+    borderColor: isDarkMode ? '#444' : '#dadce0',
+    dividerColor: isDarkMode ? '#444' : '#dadce0',
 
     // Shadow
     boxShadow: isDarkMode
       ? '0 6px 24px rgba(20,20,20,0.25), 0 2px 8px rgba(20,20,20,0.15)'
       : '0 6px 24px rgba(60,64,67,0.10), 0 2px 8px rgba(60,64,67,0.06)',
     innerShadow: isDarkMode ? 'inset 0 1px 2px rgba(20,20,20,0.10)' : 'inset 0 1px 2px rgba(60,64,67,0.03)',
+  };
+
+  // Theme colors matching Cover5.jpg
+  const coverTheme = {
+    primary: '#6366f1',    // indigo
+    primaryDark: '#4f46e5',
+    secondary: '#8b5cf6',  // violet
+    secondaryDark: '#7c3aed',
+    accent: '#ec4899',     // pink
+    accentDark: '#db2777',
+    background: isDarkMode ? '#1e1e2e' : '#f8fafc',
+    surface: isDarkMode ? '#2d2d3d' : '#ffffff',
+    textPrimary: isDarkMode ? '#e2e8f0' : '#1e2b3a',
+    textSecondary: isDarkMode ? '#94a3b8' : '#64748b',
+    border: isDarkMode ? '#475569' : '#e2e8f0',
   };
   useInjectStyles();
   const [state, setState] = useState<MCPToggleState>(() => {
@@ -666,6 +734,7 @@ export const MCPPopover: React.FC<MCPPopoverProps> = ({ toggleStateManager, adap
   const [isHoverOverlayVisible, setIsHoverOverlayVisible] = useState(false);
   const [hoverOverlayPosition, setHoverOverlayPosition] = useState({ x: 0, y: 0 });
   const [isSidebarVisible, setIsSidebarVisible] = useState(true); // Track sidebar visibility
+  const [activeTab, setActiveTab] = useState<'tools' | 'profiles' | 'resources'>('tools');
   const popoverRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
   const hoverTimeoutRef = useRef<NodeJS.Timeout | null>(null);
@@ -1201,20 +1270,34 @@ export const MCPPopover: React.FC<MCPPopoverProps> = ({ toggleStateManager, adap
           </div>,
           document.body,
         )}
+      {/* Render modal overlay when popover is open */}
+      {isPopoverOpen && createPortal(
+        <div 
+          className="mcp-modal-overlay" 
+          onClick={() => setIsPopoverOpen(false)}
+          onKeyDown={(e) => {
+            if (e.key === 'Escape') {
+              setIsPopoverOpen(false);
+            }
+          }}
+          tabIndex={0}
+        />,
+        document.body
+      )}
+      
       <PopoverPortal isOpen={isPopoverOpen} triggerRef={buttonRef}>
         <div
-          className="mcp-popover position-above"
+          className={`mcp-popover ${window.innerWidth <= 768 ? 'is-modal' : 'position-above'}`}
           ref={popoverRef}
           style={{
             display: 'flex',
             flexDirection: 'row',
             minHeight: 280,
             padding: 0,
-            width: '650px',
             position: 'relative',
             borderRadius: '16px',
             boxShadow: theme.boxShadow,
-            overflow: 'hidden',
+            overflow: 'visible',
             backgroundColor: theme.mainBackground,
             border: `1px solid ${theme.borderColor}`,
           }}>

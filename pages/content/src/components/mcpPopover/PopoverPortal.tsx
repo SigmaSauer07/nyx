@@ -54,80 +54,108 @@ const PopoverPortal: React.FC<PopoverPortalProps> = ({ children, isOpen, trigger
         const popoverWidth = popoverElement.offsetWidth;
         const popoverHeight = popoverElement.offsetHeight;
 
-        // Calculate the ideal position (centered above the trigger)
-        let left = triggerRect.left + triggerRect.width / 2;
-        let top = triggerRect.top - 10;
-        let transformOrigin = 'center bottom';
-        let transform = 'translate(-50%, -100%)';
+        // Check if on mobile device (for modal behavior)
+        const isMobile = window.innerWidth <= 768;
+        
+        // Determine if we should show as modal (for mobile screens)
+        const shouldShowAsModal = isMobile && popoverElement.classList.contains('is-modal');
 
-        // Check if popover would go off the left edge of the screen
-        if (left - popoverWidth / 2 < 10) {
-          // Adjust to keep it within the viewport with some padding
-          left = popoverWidth / 2 + 10;
-        }
+        if (shouldShowAsModal) {
+          // Center the popover for mobile modal view
+          const left = (viewportWidth - popoverWidth) / 2;
+          const top = (viewportHeight - popoverHeight) / 2;
+          
+          portalContainer.style.position = 'fixed';
+          portalContainer.style.left = `${Math.max(left, 10)}px`; // Minimum 10px from edge
+          portalContainer.style.top = `${Math.max(top, 10)}px`;  // Minimum 10px from edge
+          portalContainer.style.transform = 'none';
 
-        // Check if popover would go off the right edge of the screen
-        if (left + popoverWidth / 2 > viewportWidth - 10) {
-          // Adjust to keep it within the viewport with some padding
-          left = viewportWidth - popoverWidth / 2 - 10;
-        }
-        // Check if there's enough space above the trigger
-        const spaceAbove = triggerRect.top;
-        const spaceBelow = viewportHeight - triggerRect.bottom;
+          // Update the position state
+          setPosition({
+            x: Math.max(left, 10),
+            y: Math.max(top, 10),
+          });
 
-        // Check if there's enough space in each direction and position accordingly
-        // First, check if we can position it below (preferred when near top of screen)
-        if (
-          triggerRect.top < popoverHeight + 30 ||
-          (spaceAbove < popoverHeight + 20 && spaceBelow >= popoverHeight + 20)
-        ) {
-          // Position below the trigger
-          top = triggerRect.bottom + 10;
-          transform = 'translate(-50%, 0)';
-          transformOrigin = 'center top';
-
-          // If this would push it off the bottom of the screen, adjust
-          if (top + popoverHeight > viewportHeight - 10) {
-            // Position it as high as possible while keeping it below the trigger
-            top = Math.min(top, viewportHeight - popoverHeight - 10);
-          }
-          // Update the popover's after pseudo-element position via a class
-          if (popoverElement.classList) {
-            popoverElement.classList.remove('position-above');
-            popoverElement.classList.add('position-below');
+          // Set transform origin for smooth transitions if needed
+          if (popoverElement) {
+            popoverElement.style.transformOrigin = 'center center';
           }
         } else {
-          // Position above the trigger (default)
-          top = triggerRect.top - 10;
-          transform = 'translate(-50%, -100%)';
-          transformOrigin = 'center bottom';
+          // Calculate the ideal position (centered above the trigger)
+          let left = triggerRect.left + triggerRect.width / 2;
+          let top = triggerRect.top - 10;
+          let transformOrigin = 'center bottom';
+          let transform = 'translate(-50%, -100%)';
 
-          // If this would push it off the top of the screen, adjust
-          if (top - popoverHeight < 10) {
-            // Position it as low as possible while keeping it above the trigger
-            top = popoverHeight + 10;
+          // Check if popover would go off the left edge of the screen
+          if (left - popoverWidth / 2 < 10) {
+            // Adjust to keep it within the viewport with some padding
+            left = popoverWidth / 2 + 10;
           }
-          // Update the popover's after pseudo-element position via a class
-          if (popoverElement.classList) {
-            popoverElement.classList.remove('position-below');
-            popoverElement.classList.add('position-above');
+
+          // Check if popover would go off the right edge of the screen
+          if (left + popoverWidth / 2 > viewportWidth - 10) {
+            // Adjust to keep it within the viewport with some padding
+            left = viewportWidth - popoverWidth / 2 - 10;
           }
-        }
+          // Check if there's enough space above the trigger
+          const spaceAbove = triggerRect.top;
+          const spaceBelow = viewportHeight - triggerRect.bottom;
 
-        // Apply the calculated position portalContainer.style.position = 'fixed';
-        portalContainer.style.left = `${left}px`;
-        portalContainer.style.top = `${top}px`;
-        portalContainer.style.transform = transform;
+          // Check if there's enough space in each direction and position accordingly
+          // First, check if we can position it below (preferred when near top of screen)
+          if (
+            triggerRect.top < popoverHeight + 30 ||
+            (spaceAbove < popoverHeight + 20 && spaceBelow >= popoverHeight + 20)
+          ) {
+            // Position below the trigger
+            top = triggerRect.bottom + 10;
+            transform = 'translate(-50%, 0)';
+            transformOrigin = 'center top';
 
-        // Update the position state
-        setPosition({
-          x: left,
-          y: top,
-        });
+            // If this would push it off the bottom of the screen, adjust
+            if (top + popoverHeight > viewportHeight - 10) {
+              // Position it as high as possible while keeping it below the trigger
+              top = Math.min(top, viewportHeight - popoverHeight - 10);
+            }
+            // Update the popover's after pseudo-element position via a class
+            if (popoverElement.classList) {
+              popoverElement.classList.remove('position-above');
+              popoverElement.classList.add('position-below');
+            }
+          } else {
+            // Position above the trigger (default)
+            top = triggerRect.top - 10;
+            transform = 'translate(-50%, -100%)';
+            transformOrigin = 'center bottom';
 
-        // Set transform origin for smooth transitions if needed
-        if (popoverElement) {
-          popoverElement.style.transformOrigin = transformOrigin;
+            // If this would push it off the top of the screen, adjust
+            if (top - popoverHeight < 10) {
+              // Position it as low as possible while keeping it above the trigger
+              top = popoverHeight + 10;
+            }
+            // Update the popover's after pseudo-element position via a class
+            if (popoverElement.classList) {
+              popoverElement.classList.remove('position-below');
+              popoverElement.classList.add('position-above');
+            }
+          }
+
+          // Apply the calculated position portalContainer.style.position = 'fixed';
+          portalContainer.style.left = `${left}px`;
+          portalContainer.style.top = `${top}px`;
+          portalContainer.style.transform = transform;
+
+          // Update the position state
+          setPosition({
+            x: left,
+            y: top,
+          });
+
+          // Set transform origin for smooth transitions if needed
+          if (popoverElement) {
+            popoverElement.style.transformOrigin = transformOrigin;
+          }
         }
       }
     };

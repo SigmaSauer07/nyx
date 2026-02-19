@@ -26,8 +26,10 @@ export class KimiAdapter extends BaseAdapterPlugin { readonly name = 'KimiAdapte
     // Main panel and container selectors MAIN_PANEL: '.chat-container, .main-content, .conversation-container, .chat-interface, .chat-editor',
     // Drop zones for file attachment DROP_ZONE: '.chat-editor, .chat-input-editor-container, .chat-input, .file-drop-area',
     // File preview elements FILE_PREVIEW: '.file-preview, .attachment-preview, .uploaded-file',
-    // Button insertion points (for MCP popover) - Kimi specific BUTTON_INSERTION_CONTAINER: '.chat-editor-action .right-area, .right-area, .chat-editor-action, .actions-wrapper',
-    // Alternative insertion points FALLBACK_INSERTION: '.chat-editor-action, .chat-input-editor-container, .left-area, .right-area'
+    // Button insertion points (for MCP popover) - Kimi specific
+    BUTTON_INSERTION_CONTAINER: '.chat-editor-action .right-area, .right-area, .chat-editor-action, .actions-wrapper',
+    // Alternative insertion points
+    FALLBACK_INSERTION: '.chat-editor-action, .chat-input-editor-container, .left-area, .right-area'
   };
 
   // URL patterns for navigation tracking private lastUrl: string = '';

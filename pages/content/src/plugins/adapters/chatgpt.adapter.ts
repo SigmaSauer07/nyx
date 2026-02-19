@@ -26,8 +26,10 @@ export class ChatGPTAdapter extends BaseAdapterPlugin { readonly name = 'ChatGPT
     // Main panel and container selectors MAIN_PANEL: 'main, .chat-container, [data-testid="conversation-turn-wrapper"]',
     // Drop zones for file attachment DROP_ZONE: '#prompt-textarea, .ProseMirror, [data-testid="composer-text-input"], .composer-parent',
     // File preview elements FILE_PREVIEW: '.file-preview, .attachment-preview, [data-testid="file-attachment"]',
-    // Button insertion points (for MCP popover) - targeting leading area next to plus button BUTTON_INSERTION_CONTAINER: '[grid-area="leading"], .composer-leading-actions, [data-testid="composer-plus-btn"]',
-    // Alternative insertion points FALLBACK_INSERTION: '.composer-parent, .relative.flex.w-full.items-end, [data-testid="composer-trailing-actions"]'
+    // Button insertion points (for MCP popover) - targeting leading area next to plus button
+    BUTTON_INSERTION_CONTAINER: '[grid-area="leading"], .composer-leading-actions, [data-testid="composer-plus-btn"]',
+    // Alternative insertion points
+    FALLBACK_INSERTION: '.composer-parent, .relative.flex.w-full.items-end, [data-testid="composer-trailing-actions"]'
   };
 
   // URL patterns for navigation tracking private lastUrl: string = '';

@@ -13,7 +13,8 @@ import { createLogger } from '@extension/shared/lib/logger';
 
 const logger = createLogger('GitHubCopilotAdapter');
 
-export class GitHubCopilotAdapter extends BaseAdapterPlugin { readonly name = 'GitHubCopilotAdapter'; readonly version = '2.0.0'; // Incremented for new architecture readonly hostnames = ['github.com/copilot'];
+export class GitHubCopilotAdapter extends BaseAdapterPlugin { readonly name = 'GitHubCopilotAdapter'; readonly version = '2.0.0'; // Incremented for new architecture
+  readonly hostnames = ['github.com', 'copilot.github.com'];
   readonly capabilities: AdapterCapability[] = [ 'text-insertion', 'form-submission', 'file-attachment', 'dom-manipulation'
   ];
  // CSS selectors for GitHub Copilot's UI elements
@@ -26,8 +27,10 @@ export class GitHubCopilotAdapter extends BaseAdapterPlugin { readonly name = 'G
     // Main panel and container selectors MAIN_PANEL: '.Layout-module__chatInputContainer--DXrKy, .ChatInput-module__container--NFzCy, main',
     // Drop zones for file attachment DROP_ZONE: '.ChatInput-module__inputContainer--BcExV, .Layout-module__chatInputContainer--DXrKy, #copilot-chat-textarea',
     // File preview elements FILE_PREVIEW: '.file-preview, .attachment-preview, .ChatInput-module__attachment',
-    // Button insertion points (for MCP popover) BUTTON_INSERTION_CONTAINER: '.ChatInput-module__toolbarLeft--cjV2H, .ChatInput-module__toolbar--ZtCiG, .ChatInput-module__toolbarRight--PiQJn',
-    // Alternative insertion points FALLBACK_INSERTION: '.ChatInput-module__container--NFzCy, .Layout-module__chatInputContainer--DXrKy'
+    // Button insertion points (for MCP popover)
+    BUTTON_INSERTION_CONTAINER: '.ChatInput-module__toolbarLeft--cjV2H, .ChatInput-module__toolbar--ZtCiG, .ChatInput-module__toolbarRight--PiQJn',
+    // Alternative insertion points
+    FALLBACK_INSERTION: '.ChatInput-module__container--NFzCy, .Layout-module__chatInputContainer--DXrKy'
   };
 
   // URL patterns for navigation tracking private lastUrl: string = '';

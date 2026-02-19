@@ -20,7 +20,7 @@ const manifest = {
   default_locale: 'en',
   name: 'Nyx',
   browser_specific_settings: {
-    gecko: { id: 'nyx@alsania-io.com' },
+    gecko: { id: 'nyx@alsania-io' },
   },
   version: packageJson.version,
   description: 'Nyx',
@@ -43,8 +43,9 @@ const manifest = {
     '*: //*.kimi.com/*',
     '*: //*.chat.z.ai/*',
     '*: //*.chat.qwen.ai/*',
+    '*: //*.qwen.ai/*',
   ],
-  permissions: ['storage', 'clipboardWrite'], // permissions: ['storage', 'scripting', 'clipboardWrite'], // options_page: 'options/index.html',
+  permissions: ['storage', 'scripting', 'clipboardWrite'], // permissions: ['storage', 'scripting', 'clipboardWrite'], // options_page: 'options/index.html',
   background: { service_worker: 'background.js', type: 'module' },
   // action: { //   default_popup: 'popup/index.html', //   default_icon: 'icon-34.png',
   // },
@@ -94,7 +95,7 @@ const manifest = {
     { matches: ['*: //*.kimi.com/*'], js: ['content/index.iife.js'], run_at: 'document_idle' },
     // Specific content script for chat.z.ai
     { matches: ['*: //*.chat.z.ai/*'], js: ['content/index.iife.js'], run_at: 'document_idle' },
-    { matches: ['*: //*.chat.qwen.ai/*'], js: ['content/index.iife.js'], run_at: 'document_idle' },
+    { matches: ['*: //*.chat.qwen.ai/*', '*: //*.qwen.ai/*'], js: ['content/index.iife.js'], run_at: 'document_idle' },
   ], // devtools_page: 'devtools/index.html',
   web_accessible_resources: [
     {

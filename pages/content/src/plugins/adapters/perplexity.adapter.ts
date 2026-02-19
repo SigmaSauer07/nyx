@@ -23,8 +23,10 @@ export class PerplexityAdapter extends BaseAdapterPlugin {
     // Main panel and container selectors MAIN_PANEL: '.main-content, .chat-container, .conversation-container',
     // Drop zones for file attachment DROP_ZONE: 'textarea[placeholder*="Ask"], .input-area, .chat-input-container',
     // File preview elements FILE_PREVIEW: '.file-preview, .attachment-preview, .file-upload-preview',
-    // Button insertion points (for MCP popover) - looking for search/research toggle area BUTTON_INSERTION_CONTAINER: 'div[role="radiogroup"].group.relative.isolate.flex, .flex.items-center, div.flex.items-end.gap-sm',
-    // Alternative insertion points FALLBACK_INSERTION: '.input-area, .chat-input-container, .conversation-input'
+    // Button insertion points (for MCP popover) - looking for search/research toggle area
+    BUTTON_INSERTION_CONTAINER: 'div[role="radiogroup"].group.relative.isolate.flex, .flex.items-center, div.flex.items-end.gap-sm',
+    // Alternative insertion points
+    FALLBACK_INSERTION: '.input-area, .chat-input-container, .conversation-input'
   };
 
   // URL patterns for navigation tracking private lastUrl: string = '';

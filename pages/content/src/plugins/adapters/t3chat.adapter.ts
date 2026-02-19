@@ -23,8 +23,10 @@ export class T3ChatAdapter extends BaseAdapterPlugin {
     // Main panel and container selectors MAIN_PANEL: '.chat-container, .main-content, .conversation-container',
     // Drop zones for file attachment DROP_ZONE: '.chat-input-container, .text-input-field, .input-area, textarea#chat-input',
     // File preview elements FILE_PREVIEW: '.file-preview, .attachment-preview, .uploaded-file',
-    // Button insertion points (for MCP popover) BUTTON_INSERTION_CONTAINER: 'div[aria-label="Message actions"], .message-actions, .chat-input-actions, .-mb-px.mt-2.flex.w-full.flex-row-reverse.justify-between',
-    // Alternative insertion points FALLBACK_INSERTION: '.chat-input-container, .input-area, .conversation-input'
+    // Button insertion points (for MCP popover)
+    BUTTON_INSERTION_CONTAINER: 'div[aria-label="Message actions"], .message-actions, .chat-input-actions, .-mb-px.mt-2.flex.w-full.flex-row-reverse.justify-between',
+    // Alternative insertion points
+    FALLBACK_INSERTION: '.chat-input-container, .input-area, .conversation-input'
   };
 
   // URL patterns for navigation tracking private lastUrl: string = '';

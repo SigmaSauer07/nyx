@@ -25,8 +25,10 @@ export class AIStudioAdapter extends BaseAdapterPlugin { readonly name = 'AIStud
  // CSS selectors for AI Studio's UI elements
   // Simplified since we're using chatInputHandler for most operations
   private readonly selectors = {
-    // Button insertion points (for MCP popover) - looking for prompt input wrapper BUTTON_INSERTION_CONTAINER: '.prompt-input-wrapper, .actions-container, footer .actions-container',
-    // Alternative insertion points FALLBACK_INSERTION: '.input-area, .chat-input-container, .conversation-input'
+    // Button insertion points (for MCP popover) - looking for prompt input wrapper
+    BUTTON_INSERTION_CONTAINER: '.prompt-input-wrapper, .actions-container, footer .actions-container',
+    // Alternative insertion points
+    FALLBACK_INSERTION: '.input-area, .chat-input-container, .conversation-input'
   };
 
   // URL patterns for navigation tracking private lastUrl: string = '';

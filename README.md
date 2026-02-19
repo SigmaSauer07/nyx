@@ -9,7 +9,7 @@ Where automation meets tranquility
 </p>
 
 <p align="center">
-   <a href="https://alsania-io.com/utils/nyx/" target="_blank"><strong>🌐 Visit Official Website</strong></a>
+   <a href="https://alsania-io.com/tools/nyx/" target="_blank"><strong>🌐 Visit Official Website</strong></a>
 </p>
 
 <!-- ![Nyx](chrome-extension/public/Cover3.jpg) -->
@@ -118,11 +118,11 @@ To connect the Chrome extension to a local server for proxying connections:
    ```
    or
    ```bash
-   npx -y @alsania-io/mcpnyx --config ./config.json --outputTransport streamableHttp
+   npx -y @alsania-io/mcpnyx@latest --config ./config.json --outputTransport streamableHttp
    ```
    or
    ```bash
-   npx -y @alsania-io/mcpnyx --config ./config.json --outputTransport ws
+   npx -y @alsania-io/mcpnyx@latest --config ./config.json --outputTransport ws
    ```
 
    **View all available options:**

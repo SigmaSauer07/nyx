@@ -30,7 +30,8 @@ export class QwenAdapter extends BaseAdapterPlugin { readonly name = 'QwenAdapte
     FILE_PREVIEW: 'div._fileListBox_71e98_10',
     // Button insertion points (for MCP popover) - looking for features area
     BUTTON_INSERTION_CONTAINER: 'div.scrollbar-none.flex.items-center.left-content.operationBtn, div.flex.items-center.pr-2',
-    // Alternative insertion points FALLBACK_INSERTION: '#chat-input',
+    // Alternative insertion points
+    FALLBACK_INSERTION: '#chat-input',
   };
 
   // URL patterns for navigation tracking private lastUrl: string = '';
